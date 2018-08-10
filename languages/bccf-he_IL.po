@@ -52,22 +52,22 @@ msgid "Insert  Reservation Calendar"
 msgstr "הוסף לוח שנה הזמנה"
 
 # RevTran=Select start date
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:11
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:11
 msgid "Select Start Date"
 msgstr "בחר תאריך התחלה"
 
 # RevTran=Select end date
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:12
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:12
 msgid "Select End Date"
 msgstr "בחר תאריך סיום"
 
 # RevTran=Multi-Select
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:13
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:13
 msgid "Cancel Selection"
 msgstr "ביטול בחירה"
 
 # RevTran=Good luck
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:14
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:14
 msgid "Successfully"
 msgstr "בהצלחה"
 
@@ -81,54 +81,54 @@ msgid "Next"
 msgstr "הבא"
 
 # RevTran=Calendars
-#: dex_scheduler.inc.php:6
+#: sc-res-scheduler.php:6
 msgid "Calendar"
 msgstr "לוח שנה"
 
 # RevTran=This book I received two awards, and the first of which:
-#: dex_scheduler.inc.php:7
+#: sc-res-scheduler.php:7
 msgid "The minimum number of nights to book is"
 msgstr "המספר המינימלי של לילות ספר זה"
 
 # RevTran=The maximum number of nights book
-#: dex_scheduler.inc.php:8
+#: sc-res-scheduler.php:8
 msgid "The maximum number of nights to book is"
 msgstr "המספר המרבי של לילות לפנקס"
 
 # RevTran=Key Filing Dates
-#: dex_scheduler.inc.php:9
+#: sc-res-scheduler.php:9
 msgid "Select start and end dates"
 msgstr "בחר תאריכי התחלה וסיום"
 
 # RevTran=Key Filing Dates
-#: dex_scheduler.inc.php:10
+#: sc-res-scheduler.php:10
 msgid "Please select start and end dates"
 msgstr "בחרו את תאריך הסיור"
 
-#: dex_scheduler.inc.php:15
+#: sc-res-scheduler.php:15
 msgid "Cost"
 msgstr "עלות"
 
 # RevTran=Microphone (Op- tional)
-#: dex_scheduler.inc.php:16
+#: sc-res-scheduler.php:16
 msgid "Coupon code (optional)"
 msgstr "קוד קופון (אופציונלי)"
 
-#: dex_scheduler.inc.php:17
+#: sc-res-scheduler.php:17
 msgid "Service"
 msgstr "השרות"
 
 # RevTran=Please enter a valid email address.
-#: dex_scheduler.inc.php:18
+#: sc-res-scheduler.php:18
 msgid "Please enter the security code"
 msgstr "אנא הזן את קוד האבטחה"
 
 # RevTran=Security code (lowercase)
-#: dex_scheduler.inc.php:19
+#: sc-res-scheduler.php:19
 msgid "Security Code (lowercase letters)"
 msgstr "קוד האבטחה (אותיות קטנות)"
 
 # RevTran=<g id=\"pt382\">Continuation<\/g><g id=\"pt383\">:<\/g>
-#: dex_scheduler.inc.php:20
+#: sc-res-scheduler.php:20
 msgid "Continue"
 msgstr "המשך"

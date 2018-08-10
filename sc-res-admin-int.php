@@ -543,7 +543,7 @@ for ($k=1;$k<100;$k++)
         <tr valign="top">
         <td colspan="2"> - The  <em>class="pbSubmit"</em> can be used to modify the button styles. <br />
         - The styles can be applied into any of the CSS files of your theme or into the CSS file <em>"booking-calendar-contact-form\css\stylepublic.css"</em>. <br />
-        - For further modifications the submit button is located at the end of the file <em>"dex_scheduler.inc.php"</em>.<br />
+        - For further modifications the submit button is located at the end of the file <em>"sc-res-scheduler.php"</em>.<br />
         - For general CSS styles modifications to the form and samples <a href="http://wordpress.dwbooster.com/faq/booking-calendar-contact-form#q100" target="_blank">check this FAQ</a>.
         </tr>
      </table>

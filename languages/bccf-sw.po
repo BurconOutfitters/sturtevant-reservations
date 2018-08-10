@@ -53,20 +53,20 @@ msgid "Insert  Reservation Calendar"
 msgstr "Infoga Reservation Kalender"
 
 # RevTran=Select start date
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:11
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:11
 msgid "Select Start Date"
 msgstr "Välj startdatum"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:12
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:12
 msgid "Select End Date"
 msgstr "Välj Slutdatum"
 
 # RevTran=Cancel selection
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:13
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:13
 msgid "Cancel Selection"
 msgstr "Avbryter markeringen"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:14
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:14
 msgid "Successfully"
 msgstr "Framgångsrikt"
 
@@ -80,53 +80,53 @@ msgstr "NO QUERY SPECIFIED. EXAMPLE REQUEST: GET?Q=HELLO&LANGPAIR=EN|IT"
 msgid "Next &raquo;"
 msgstr "Nästa"
 
-#: dex_scheduler.inc.php:6
+#: sc-res-scheduler.php:6
 msgid "Calendar"
 msgstr "Kalender"
 
 # RevTran=Minimum number of nights to book is
-#: dex_scheduler.inc.php:7
+#: sc-res-scheduler.php:7
 msgid "The minimum number of nights to book is"
 msgstr "Minsta antal nätter att boka är"
 
 # RevTran=The maximum number of nights that the book is
-#: dex_scheduler.inc.php:8
+#: sc-res-scheduler.php:8
 msgid "The maximum number of nights to book is"
 msgstr "Det maximala antalet nätter att boka är"
 
 # RevTran=Select the start and end dates
-#: dex_scheduler.inc.php:9
+#: sc-res-scheduler.php:9
 msgid "Select start and end dates"
 msgstr "Välj start- och slutdatum"
 
 # RevTran=Select the start and end dates
-#: dex_scheduler.inc.php:10
+#: sc-res-scheduler.php:10
 msgid "Please select start and end dates"
 msgstr "Välj start- och slutdatum"
 
 # RevTran=Expense
-#: dex_scheduler.inc.php:15
+#: sc-res-scheduler.php:15
 msgid "Cost"
 msgstr "Kostnad"
 
-#: dex_scheduler.inc.php:16
+#: sc-res-scheduler.php:16
 msgid "Coupon code (optional)"
 msgstr "Kupong kod (frivilligt)"
 
-#: dex_scheduler.inc.php:17
+#: sc-res-scheduler.php:17
 msgid "Service"
 msgstr "Service"
 
 # RevTran=Enter the security code
-#: dex_scheduler.inc.php:18
+#: sc-res-scheduler.php:18
 msgid "Please enter the security code"
 msgstr "Ange säkerhetskoden"
 
 # RevTran=Security code (lowercase)
-#: dex_scheduler.inc.php:19
+#: sc-res-scheduler.php:19
 msgid "Security Code (lowercase letters)"
 msgstr "Säkerhetskod (små bokstäver)"
 
-#: dex_scheduler.inc.php:20
+#: sc-res-scheduler.php:20
 msgid "Continue"
 msgstr "Fortsätt"

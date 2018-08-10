@@ -51,22 +51,22 @@ msgid "Insert  Reservation Calendar"
 msgstr "Salname"
 
 # RevTran=Start date
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:11
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:11
 msgid "Select Start Date"
 msgstr "Dîroka destpêkê"
 
 # RevTran=End date
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:12
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:12
 msgid "Select End Date"
 msgstr "Dîroka dawî"
 
 # RevTran=Cancel
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:13
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:13
 msgid "Cancel Selection"
 msgstr "Betal"
 
 # RevTran=Command successfully executed.
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:14
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:14
 msgid "Successfully"
 msgstr "Ferman bi serkeftî xebitî."
 
@@ -78,54 +78,54 @@ msgstr "A Berê"
 msgid "Next"
 msgstr "A Dû"
 
-#: dex_scheduler.inc.php:6
+#: sc-res-scheduler.php:6
 msgid "Calendar"
 msgstr "Salname"
 
 # RevTran=get the minimum of
-#: dex_scheduler.inc.php:7
+#: sc-res-scheduler.php:7
 msgid "The minimum number of nights to book is"
 msgstr "ya herî biçûk bistîne"
 
 # RevTran=Maximum number of ~records
-#: dex_scheduler.inc.php:8
+#: sc-res-scheduler.php:8
 msgid "The maximum number of nights to book is"
 msgstr "Hijmara herî jor a qeyda"
 
 # RevTran=Start
-#: dex_scheduler.inc.php:9
+#: sc-res-scheduler.php:9
 msgid "Select start and end dates"
 msgstr "Destpêk"
 
 # RevTran=Please select a data source
-#: dex_scheduler.inc.php:10
+#: sc-res-scheduler.php:10
 msgid "Please select start and end dates"
 msgstr "Ji kerema xwe re danegirekê hilbijêrin"
 
-#: dex_scheduler.inc.php:15
+#: sc-res-scheduler.php:15
 msgid "Cost"
 msgstr "Lêçûn"
 
 # RevTran=First coupon
-#: dex_scheduler.inc.php:16
+#: sc-res-scheduler.php:16
 msgid "Coupon code (optional)"
 msgstr "kopunê yekemîn"
 
 # RevTran=~Service
-#: dex_scheduler.inc.php:17
+#: sc-res-scheduler.php:17
 msgid "Service"
 msgstr "~Xizmet"
 
 # RevTran=Please enter the fax number.
-#: dex_scheduler.inc.php:18
+#: sc-res-scheduler.php:18
 msgid "Please enter the security code"
 msgstr "Numra faksê bidine."
 
 # RevTran=Lowercase
-#: dex_scheduler.inc.php:19
+#: sc-res-scheduler.php:19
 msgid "Security Code (lowercase letters)"
 msgstr "Tîpa piçûk"
 
-#: dex_scheduler.inc.php:20
+#: sc-res-scheduler.php:20
 msgid "Continue"
 msgstr "Bidomîne"

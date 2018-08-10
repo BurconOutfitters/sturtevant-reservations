@@ -50,21 +50,21 @@ msgstr "Masukkan Kalender Pemesanan"
 msgid "Insert  Reservation Calendar"
 msgstr "Insert Reservation Kalender"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:11
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:11
 msgid "Select Start Date"
 msgstr "Pilih Tanggal Mulai"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:12
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:12
 msgid "Select End Date"
 msgstr "Pilih Tanggal Akhir"
 
 # RevTran=Clear Selection
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:13
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:13
 msgid "Cancel Selection"
 msgstr "Batal Seleksi"
 
 # RevTran=Success
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:14
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:14
 msgid "Successfully"
 msgstr "Berhasil"
 
@@ -77,48 +77,48 @@ msgstr "Sebelumnya"
 msgid "Next"
 msgstr "Selanjutnya"
 
-#: dex_scheduler.inc.php:6
+#: sc-res-scheduler.php:6
 msgid "Calendar"
 msgstr "Kalender"
 
-#: dex_scheduler.inc.php:7
+#: sc-res-scheduler.php:7
 msgid "The minimum number of nights to book is"
 msgstr "Jumlah minimum malam untuk buku adalah"
 
-#: dex_scheduler.inc.php:8
+#: sc-res-scheduler.php:8
 msgid "The maximum number of nights to book is"
 msgstr "Jumlah maksimum malam untuk buku adalah"
 
-#: dex_scheduler.inc.php:9
+#: sc-res-scheduler.php:9
 msgid "Select start and end dates"
 msgstr "Pilih tanggal mulai dan akhir"
 
 # RevTran=Please select a start and end date
-#: dex_scheduler.inc.php:10
+#: sc-res-scheduler.php:10
 msgid "Please select start and end dates"
 msgstr "Silakan pilih awal dan akhir tanggal"
 
-#: dex_scheduler.inc.php:15
+#: sc-res-scheduler.php:15
 msgid "Cost"
 msgstr "Biaya"
 
-#: dex_scheduler.inc.php:16
+#: sc-res-scheduler.php:16
 msgid "Coupon code (optional)"
 msgstr "Kode kupon (opsional)"
 
-#: dex_scheduler.inc.php:17
+#: sc-res-scheduler.php:17
 msgid "Service"
 msgstr "Layanan"
 
-#: dex_scheduler.inc.php:18
+#: sc-res-scheduler.php:18
 msgid "Please enter the security code"
 msgstr "Silakan masukkan kode keamanan"
 
 # RevTran=Security Code (lowercase)
-#: dex_scheduler.inc.php:19
+#: sc-res-scheduler.php:19
 msgid "Security Code (lowercase letters)"
 msgstr "Kode Keamanan (huruf kecil)"
 
-#: dex_scheduler.inc.php:20
+#: sc-res-scheduler.php:20
 msgid "Continue"
 msgstr "Lanjutkan"

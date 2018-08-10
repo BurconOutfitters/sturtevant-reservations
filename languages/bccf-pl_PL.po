@@ -76,51 +76,51 @@ msgstr "Poprzedni"
 msgid "Next"
 msgstr "Dalej"
 
-#: dex_scheduler.inc.php:6
+#: sc-res-scheduler.php:6
 msgid "Calendar"
 msgstr "Kalendarz"
 
 # RevTran=Minimum number of nights on books
-#: dex_scheduler.inc.php:7
+#: sc-res-scheduler.php:7
 msgid "The minimum number of nights to book is"
 msgstr "Minimalna liczba noclegów na książki jest"
 
 # RevTran=The maximum number of days the book is
-#: dex_scheduler.inc.php:8
+#: sc-res-scheduler.php:8
 msgid "The maximum number of nights to book is"
 msgstr "Maksymalna liczba dni do książki jest"
 
-#: dex_scheduler.inc.php:9
+#: sc-res-scheduler.php:9
 msgid "Select start and end dates"
 msgstr "Wybierz daty rozpoczęcia i zakończenia"
 
 # RevTran=Please select a start and end date
-#: dex_scheduler.inc.php:10
+#: sc-res-scheduler.php:10
 msgid "Please select start and end dates"
 msgstr "Proszę wybrać datę rozpoczęcia i zakończenia"
 
-#: dex_scheduler.inc.php:15
+#: sc-res-scheduler.php:15
 msgid "Cost"
 msgstr "Koszt"
 
 # RevTran=Coupon (optional)
-#: dex_scheduler.inc.php:16
+#: sc-res-scheduler.php:16
 msgid "Coupon code (optional)"
 msgstr "Kupon (opcjonalnie)"
 
-#: dex_scheduler.inc.php:17
+#: sc-res-scheduler.php:17
 msgid "Service"
 msgstr "Serwis"
 
-#: dex_scheduler.inc.php:18
+#: sc-res-scheduler.php:18
 msgid "Please enter the security code"
 msgstr "Proszę wpisać kod zabezpieczający"
 
 # RevTran=Security code (lowercase)
-#: dex_scheduler.inc.php:19
+#: sc-res-scheduler.php:19
 msgid "Security Code (lowercase letters)"
 msgstr "Kod zabezpieczający (małe litery)"
 
-#: dex_scheduler.inc.php:20
+#: sc-res-scheduler.php:20
 msgid "Continue"
 msgstr "Kontynuuj"

@@ -53,21 +53,21 @@ msgstr "বুকিং ক্যালেন্ডার ঢোকান"
 msgid "Insert  Reservation Calendar"
 msgstr "সন্নিবেশ সংরক্ষণ ক্যালেন্ডার"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:11
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:11
 msgid "Select Start Date"
 msgstr "নির্বাচন স্টার্ট তারিখ"
 
 # RevTran=Select an end date
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:12
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:12
 msgid "Select End Date"
 msgstr "নির্বাচন শেষ তারিখ"
 
 # RevTran=Undo Selection
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:13
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:13
 msgid "Cancel Selection"
 msgstr "নির্বাচন বাতিল করুন"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:14
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:14
 msgid "Successfully"
 msgstr "সফলভাবে"
 
@@ -79,54 +79,54 @@ msgstr "পূর্ববর্তী"
 msgid "Next"
 msgstr "পরবর্তী"
 
-#: dex_scheduler.inc.php:6
+#: sc-res-scheduler.php:6
 msgid "Calendar"
 msgstr "পঞ্জিকা"
 
 # RevTran=Minimum number of nights booked
-#: dex_scheduler.inc.php:7
+#: sc-res-scheduler.php:7
 msgid "The minimum number of nights to book is"
 msgstr "বুক রাত্রি সর্বনিম্ন সংখ্যা"
 
 # RevTran=Book is the maximum number of nights
-#: dex_scheduler.inc.php:8
+#: sc-res-scheduler.php:8
 msgid "The maximum number of nights to book is"
 msgstr "বুক রাত্রি সর্বোচ্চ সংখ্যক হয়"
 
 # RevTran=Select the start and end dates
-#: dex_scheduler.inc.php:9
+#: sc-res-scheduler.php:9
 msgid "Select start and end dates"
 msgstr "নির্বাচন শুরু এবং শেষ তারিখগুলি"
 
 # RevTran=Please select the start and end dates
-#: dex_scheduler.inc.php:10
+#: sc-res-scheduler.php:10
 msgid "Please select start and end dates"
 msgstr "শুরু এবং শেষ তারিখগুলি দয়া করে নির্বাচন করুন"
 
 # RevTran=Price
-#: dex_scheduler.inc.php:15
+#: sc-res-scheduler.php:15
 msgid "Cost"
 msgstr "মূল্য"
 
-#: dex_scheduler.inc.php:16
+#: sc-res-scheduler.php:16
 msgid "Coupon code (optional)"
 msgstr "কুপন কোড (ঐচ্ছিক)"
 
 # RevTran=Services
-#: dex_scheduler.inc.php:17
+#: sc-res-scheduler.php:17
 msgid "Service"
 msgstr "সেবা"
 
 # RevTran=Enter the security code
-#: dex_scheduler.inc.php:18
+#: sc-res-scheduler.php:18
 msgid "Please enter the security code"
 msgstr "নিরাপত্তা কোড লিখুন"
 
 # RevTran=Security Code (lowercase)
-#: dex_scheduler.inc.php:19
+#: sc-res-scheduler.php:19
 msgid "Security Code (lowercase letters)"
 msgstr "যোগাযোগ কোড (ছোট হাতের অক্ষর)"
 
-#: dex_scheduler.inc.php:20
+#: sc-res-scheduler.php:20
 msgid "Continue"
 msgstr "চালিয়ে"

@@ -77,7 +77,7 @@ msgstr "ก่อน"
 msgid "Next"
 msgstr "ถัดไป"
 
-#: dex_scheduler.inc.php:6
+#: sc-res-scheduler.php:6
 msgid "Calendar"
 msgstr "ปฏิทิน"
 

@@ -20,35 +20,35 @@ msgstr ""
 msgid "Insert  Reservation Calendar"
 msgstr "Inserisci un Reservation Calendar"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:11
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:11
 msgid "Select Start Date"
 msgstr "Seleziona la data di inizio"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:12
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:12
 msgid "Select End Date"
 msgstr "Seleziona la data di fine"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:13
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:13
 msgid "Cancel Selection"
 msgstr "Cancellare la selezione"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:14
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:14
 #: dex_bccf_admin_int_bookings_list.inc.php:91
 msgid "&laquo; Previous"
 msgstr "&laquo; Precedente"
 
-#: dex_bccf_admin_int_bookings_list.inc.php:92 dex_scheduler.inc.php:6
+#: dex_bccf_admin_int_bookings_list.inc.php:92 sc-res-scheduler.php:6
 msgid "Calendar"
 msgstr "Calendario"
 
-#: dex_scheduler.inc.php:7 dex_scheduler.inc.php:8 dex_scheduler.inc.php:9
+#: sc-res-scheduler.php:7 sc-res-scheduler.php:8 sc-res-scheduler.php:9
 msgid "Select start and end dates"
 msgstr "Seleziona la data di inizio e fine"
 
-#: dex_scheduler.inc.php:10 dex_scheduler.inc.php:15
+#: sc-res-scheduler.php:10 sc-res-scheduler.php:15
 msgid "Cost"
 msgstr "Costo"
 
-#: dex_scheduler.inc.php:16
+#: sc-res-scheduler.php:16
 msgid "Coupon code (optional)"
 msgstr "Coupon di sconto (opzionale)"

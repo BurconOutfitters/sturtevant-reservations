@@ -52,22 +52,22 @@ msgstr "Legen Buchung Kalender"
 msgid "Insert  Reservation Calendar"
 msgstr "Legen Reservierungskalender"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:11
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:11
 msgid "Select Start Date"
 msgstr "Wählen Sie Startdatum"
 
 # RevTran=Select Date
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:12
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:12
 msgid "Select End Date"
 msgstr "Datum auswählen"
 
 # RevTran=Cancel selection
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:13
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:13
 msgid "Cancel Selection"
 msgstr "Aufheben der Auswahl"
 
 # RevTran=Successful
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:14
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:14
 msgid "Successfully"
 msgstr "Erfolgreich"
 
@@ -80,53 +80,53 @@ msgstr "Zurück"
 msgid "Next"
 msgstr "Weiter"
 
-#: dex_scheduler.inc.php:6
+#: sc-res-scheduler.php:6
 msgid "Calendar"
 msgstr "Kalender"
 
 # RevTran=The minimum number of nights is to book
-#: dex_scheduler.inc.php:7
+#: sc-res-scheduler.php:7
 msgid "The minimum number of nights to book is"
 msgstr "Die Mindestanzahl der Übernachtungen zu buchen ist"
 
 # RevTran=The maximum number of nights to book
-#: dex_scheduler.inc.php:8
+#: sc-res-scheduler.php:8
 msgid "The maximum number of nights to book is"
 msgstr "Die maximale Anzahl der Nächte zu buchen ist"
 
 # RevTran=Select start and end date
-#: dex_scheduler.inc.php:9
+#: sc-res-scheduler.php:9
 msgid "Select start and end dates"
 msgstr "Wählen Sie Start- und Enddatum"
 
 # RevTran=Please select the start and end date
-#: dex_scheduler.inc.php:10
+#: sc-res-scheduler.php:10
 msgid "Please select start and end dates"
 msgstr "Bitte wählen Sie Start- und Enddatum"
 
 # RevTran=Costs
-#: dex_scheduler.inc.php:15
+#: sc-res-scheduler.php:15
 msgid "Cost"
 msgstr "Kosten"
 
-#: dex_scheduler.inc.php:16
+#: sc-res-scheduler.php:16
 msgid "Coupon code (optional)"
 msgstr "Gutscheincode (optional)"
 
-#: dex_scheduler.inc.php:17
+#: sc-res-scheduler.php:17
 msgid "Service"
 msgstr "Dienstleistung"
 
-#: dex_scheduler.inc.php:18
+#: sc-res-scheduler.php:18
 msgid "Please enter the security code"
 msgstr "Bitte geben Sie den Sicherheitscode ein"
 
 # RevTran=Security Code (lowercase)
-#: dex_scheduler.inc.php:19
+#: sc-res-scheduler.php:19
 msgid "Security Code (lowercase letters)"
 msgstr "Sicherheits-Code (Kleinbuchstaben)"
 
 # RevTran=Next
-#: dex_scheduler.inc.php:20
+#: sc-res-scheduler.php:20
 msgid "Continue"
 msgstr "Weiter"

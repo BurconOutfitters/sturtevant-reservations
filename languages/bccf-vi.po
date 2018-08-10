@@ -54,22 +54,22 @@ msgstr "Chèn Đặt Lịch"
 msgid "Insert  Reservation Calendar"
 msgstr "Lắp Đặt Lịch"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:11
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:11
 msgid "Select Start Date"
 msgstr "Chọn Start Date"
 
 # RevTran=Select the End date
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:12
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:12
 msgid "Select End Date"
 msgstr "Select End ngày"
 
 # RevTran=Cancel selection
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:13
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:13
 msgid "Cancel Selection"
 msgstr "Hủy bỏ lựa chọn"
 
 # RevTran=Successfull
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:14
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:14
 msgid "Successfully"
 msgstr "Thành công"
 
@@ -82,52 +82,52 @@ msgstr "Lùi"
 msgid "Next"
 msgstr "Kế"
 
-#: dex_scheduler.inc.php:6
+#: sc-res-scheduler.php:6
 msgid "Calendar"
 msgstr "Lịch"
 
 # RevTran=Minimum number of nights to book is
-#: dex_scheduler.inc.php:7
+#: sc-res-scheduler.php:7
 msgid "The minimum number of nights to book is"
 msgstr "Số lượng tối thiểu của đêm để đặt là"
 
 # RevTran=The maximum number of the night to put the
-#: dex_scheduler.inc.php:8
+#: sc-res-scheduler.php:8
 msgid "The maximum number of nights to book is"
 msgstr "Số lượng tối đa của đêm để đặt là"
 
 # RevTran=Select the start and end
-#: dex_scheduler.inc.php:9
+#: sc-res-scheduler.php:9
 msgid "Select start and end dates"
 msgstr "Chọn ngày bắt đầu và kết thúc"
 
 # RevTran=Please select a start and end date
-#: dex_scheduler.inc.php:10
+#: sc-res-scheduler.php:10
 msgid "Please select start and end dates"
 msgstr "Vui lòng chọn bắt đầu và ngày kết thúc"
 
-#: dex_scheduler.inc.php:15
+#: sc-res-scheduler.php:15
 msgid "Cost"
 msgstr "Chi phí"
 
 # RevTran=Coupon (optional)
-#: dex_scheduler.inc.php:16
+#: sc-res-scheduler.php:16
 msgid "Coupon code (optional)"
 msgstr "Phiếu mua hàng (tùy chọn)"
 
-#: dex_scheduler.inc.php:17
+#: sc-res-scheduler.php:17
 msgid "Service"
 msgstr "Dịch vụ"
 
-#: dex_scheduler.inc.php:18
+#: sc-res-scheduler.php:18
 msgid "Please enter the security code"
 msgstr "Vui lòng nhập mã bảo mật"
 
 # RevTran=Security Code (lowercase)
-#: dex_scheduler.inc.php:19
+#: sc-res-scheduler.php:19
 msgid "Security Code (lowercase letters)"
 msgstr "Mã bảo vệ (chữ thường)"
 
-#: dex_scheduler.inc.php:20
+#: sc-res-scheduler.php:20
 msgid "Continue"
 msgstr "Tiếp tục"

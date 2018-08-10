@@ -13,11 +13,11 @@ msgstr ""
 
 #: database
 msgid "Email"
-msgstr "Ríomhphost"
+msgstr "Rï¿½omhphost"
 
 #: database
 msgid "Subject"
-msgstr "Ábhar"
+msgstr "ï¿½bhar"
 
 #: database
 msgid "Message"
@@ -38,31 +38,31 @@ msgstr "Iarratas ar athruithe saincheaptha"
 
 #: dex_bccf.php:450 dex_bccf_admin_int.inc.php:562
 msgid "Insert Booking Calendar"
-msgstr "Ionsáigh Áirithint Féilire"
+msgstr "Ionsï¿½igh ï¿½irithint Fï¿½ilire"
 
 # RevTran=Insert Reservation Calendar
 # RevTran=Insert Reservation Calendar
 msgid "Insert  Reservation Calendar"
-msgstr "Ionsáigh Reservation Féilire"
+msgstr "Ionsï¿½igh Reservation Fï¿½ilire"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:11
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:11
 msgid "Select Start Date"
-msgstr "Roghnaigh Dáta Tosaigh"
+msgstr "Roghnaigh Dï¿½ta Tosaigh"
 
 # RevTran=Choose a Closing Date
 # RevTran=Choose a Closing Date
 msgid "Select End Date"
-msgstr "Roghnaigh Dáta Deiridh"
+msgstr "Roghnaigh Dï¿½ta Deiridh"
 
 # RevTran=Choosing Cancel
 # RevTran=Choosing Cancel
 msgid "Cancel Selection"
-msgstr "Cealaigh Roghnú"
+msgstr "Cealaigh Roghnï¿½"
 
 # RevTran=INVALID LANGUAGE PAIR SPECIFIED. EXAMPLE: LANGPAIR=EN|IT USING 2 LETTER ISO OR RFC3066 LIKE ZH-CN. ALMOST ALL LANGUAGES SUPPORTED BUT SOME MAY HAVE NO CONTENT
 # RevTran=INVALID LANGUAGE PAIR SPECIFIED. EXAMPLE: LANGPAIR=EN|IT USING 2 LETTER ISO OR RFC3066 LIKE ZH-CN. ALMOST ALL LANGUAGES SUPPORTED BUT SOME MAY HAVE NO CONTENT
 msgid "Successfully"
-msgstr "D&#39;éirigh le"
+msgstr "D&#39;ï¿½irigh le"
 
 # RevTran=Back
 # RevTran=Back
@@ -76,26 +76,26 @@ msgstr "Ar aghaidh"
 # RevTran=List of historical anniversaries
 # RevTran=List of historical anniversaries
 msgid "Calendar"
-msgstr "Féilire"
+msgstr "Fï¿½ilire"
 
 # RevTran=The minimum number of nights to be booked
 # RevTran=The minimum number of nights to be booked
 msgid "The minimum number of nights to book is"
-msgstr "Is é an líon íosta na n-oícheanta a chur in áirithe"
+msgstr "Is ï¿½ an lï¿½on ï¿½osta na n-oï¿½cheanta a chur in ï¿½irithe"
 
 # RevTran=The maximum number of nights to be booked
 # RevTran=The maximum number of nights to be booked
 msgid "The maximum number of nights to book is"
-msgstr "Is é an líon uasta na n-oícheanta a chur in áirithe"
+msgstr "Is ï¿½ an lï¿½on uasta na n-oï¿½cheanta a chur in ï¿½irithe"
 
-#: dex_scheduler.inc.php:9
+#: sc-res-scheduler.php:9
 msgid "Select start and end dates"
-msgstr "Roghnaigh tús agus dátaí deiridh"
+msgstr "Roghnaigh tï¿½s agus dï¿½taï¿½ deiridh"
 
 # RevTran=Select start and end dates, please
 # RevTran=Select start and end dates, please
 msgid "Please select start and end dates"
-msgstr "Roghnaigh dátaí tosaithe agus deiridh, le do thoil"
+msgstr "Roghnaigh dï¿½taï¿½ tosaithe agus deiridh, le do thoil"
 
 # RevTran=cost
 # RevTran=cost
@@ -104,21 +104,21 @@ msgstr "costas"
 
 # RevTran=MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIONS FOR TODAY. VISIT HTTP:\/\/MYMEMORY.TRANSLATED.NET\/DOC\/QUOTAREACHED TO TRANSLATE MORE
 msgid "Coupon code (optional)"
-msgstr "Cód Cúpón (roghnach)"
+msgstr "Cï¿½d Cï¿½pï¿½n (roghnach)"
 
 # RevTran=MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIONS FOR TODAY. VISIT HTTP:\/\/MYMEMORY.TRANSLATED.NET\/DOC\/QUOTAREACHED TO TRANSLATE MORE
 msgid "Service"
-msgstr "Seirbhís"
+msgstr "Seirbhï¿½s"
 
 # RevTran=MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIONS FOR TODAY. VISIT HTTP:\/\/MYMEMORY.TRANSLATED.NET\/DOC\/QUOTAREACHED TO TRANSLATE MORE
 # RevTran=Enter the security code
 msgid "Please enter the security code"
-msgstr "Cuir isteach an Cód slándála"
+msgstr "Cuir isteach an Cï¿½d slï¿½ndï¿½la"
 
 # RevTran=MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIONS FOR TODAY. VISIT HTTP:\/\/MYMEMORY.TRANSLATED.NET\/DOC\/QUOTAREACHED TO TRANSLATE MORE
 msgid "Security Code (lowercase letters)"
-msgstr "Chód Slándála (litreacha CásÍochtair)"
+msgstr "Chï¿½d Slï¿½ndï¿½la (litreacha Cï¿½sï¿½ochtair)"
 
 # RevTran=MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIONS FOR TODAY. VISIT HTTP:\/\/MYMEMORY.TRANSLATED.NET\/DOC\/QUOTAREACHED TO TRANSLATE MORE
 msgid "Continue"
-msgstr "Leanúint ar aghaidh"
+msgstr "Leanï¿½int ar aghaidh"

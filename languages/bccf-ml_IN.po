@@ -58,7 +58,7 @@ msgstr "Previo"
 msgid "Next"
 msgstr "Siguiente"
 
-#: dex_scheduler.inc.php:6
+#: sc-res-scheduler.php:6
 msgid "Calendar"
 msgstr "കലണ്ടർ"
 

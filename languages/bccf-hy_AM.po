@@ -53,7 +53,7 @@ msgstr "Տեղադրեք ամրագրում Օրացույց"
 msgid "Select Start Date"
 msgstr "Ընտրել Start Date"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:12
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:12
 msgid "Select End Date"
 msgstr "Ընտրել End Date"
 
@@ -62,7 +62,7 @@ msgstr "Ընտրել End Date"
 msgid "Cancel Selection"
 msgstr "Չեղյալ ընտրություն"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:14
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:14
 msgid "Successfully"
 msgstr "Հաջողությամբ"
 
@@ -74,7 +74,7 @@ msgstr "Նախորդ"
 msgid "Next"
 msgstr "Հաջորդ"
 
-#: dex_scheduler.inc.php:6
+#: sc-res-scheduler.php:6
 msgid "Calendar"
 msgstr "Օրացույց"
 

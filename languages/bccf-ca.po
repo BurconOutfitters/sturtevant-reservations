@@ -13,7 +13,7 @@ msgstr ""
 
 #: database
 msgid "Email"
-msgstr "Correu electrònic"
+msgstr "Correu electrï¿½nic"
 
 #: database
 msgid "Subject"
@@ -25,7 +25,7 @@ msgstr "Missatge"
 
 #: dex_bccf.php:418
 msgid "Settings"
-msgstr "Configuració"
+msgstr "Configuraciï¿½"
 
 #: dex_bccf.php:425
 msgid "Help"
@@ -34,7 +34,7 @@ msgstr "Ajuda"
 # RevTran=Apply changes custom
 # RevTran=Apply changes custom
 msgid "Request custom changes"
-msgstr "Sol·licitar canvis personalitzats"
+msgstr "Solï¿½licitar canvis personalitzats"
 
 # RevTran=Add Book Calendar
 # RevTran=Add Book Calendar
@@ -59,12 +59,12 @@ msgstr "Selecciona una data"
 # RevTran=Cancel selection
 # RevTran=Cancel selection
 msgid "Cancel Selection"
-msgstr "Cancel·la la selecció"
+msgstr "Cancelï¿½la la selecciï¿½"
 
 # RevTran=Successful
 # RevTran=Successful
 msgid "Successfully"
-msgstr "Amb èxit"
+msgstr "Amb ï¿½xit"
 
 #: dex_bccf_admin_int_bookings_list.inc.php:91
 msgid "Previous"
@@ -72,21 +72,21 @@ msgstr "Anterior"
 
 #: dex_bccf_admin_int_bookings_list.inc.php:92
 msgid "Next"
-msgstr "Següent"
+msgstr "Segï¿½ent"
 
-#: dex_scheduler.inc.php:6
+#: sc-res-scheduler.php:6
 msgid "Calendar"
 msgstr "Calendari"
 
 # RevTran=MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIONS FOR TODAY. VISIT HTTP:\/\/MYMEMORY.TRANSLATED.NET\/DOC\/QUOTAREACHED TO TRANSLATE MORE
 # RevTran=MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIONS FOR TODAY. VISIT HTTP:\/\/MYMEMORY.TRANSLATED.NET\/DOC\/QUOTAREACHED TO TRANSLATE MORE
 msgid "The minimum number of nights to book is"
-msgstr "El nombre mínim de nits per reservar és"
+msgstr "El nombre mï¿½nim de nits per reservar ï¿½s"
 
 # RevTran=MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIONS FOR TODAY. VISIT HTTP:\/\/MYMEMORY.TRANSLATED.NET\/DOC\/QUOTAREACHED TO TRANSLATE MORE
 # RevTran=The maximum number of nights booked is
 msgid "The maximum number of nights to book is"
-msgstr "El nombre màxim de nits per reservar és"
+msgstr "El nombre mï¿½xim de nits per reservar ï¿½s"
 
 # RevTran=MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIONS FOR TODAY. VISIT HTTP:\/\/MYMEMORY.TRANSLATED.NET\/DOC\/QUOTAREACHED TO TRANSLATE MORE
 # RevTran=INVALID LANGUAGE PAIR SPECIFIED. EXAMPLE: LANGPAIR=EN|IT USING 2 LETTER ISO OR RFC3066 LIKE ZH-CN. ALMOST ALL LANGUAGES SUPPORTED BUT SOME MAY HAVE NO CONTENT
@@ -113,12 +113,12 @@ msgstr "Servei"
 
 # RevTran=MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIONS FOR TODAY. VISIT HTTP:\/\/MYMEMORY.TRANSLATED.NET\/DOC\/QUOTAREACHED TO TRANSLATE MORE
 msgid "Please enter the security code"
-msgstr "Si us plau introduïu el codi de seguretat"
+msgstr "Si us plau introduï¿½u el codi de seguretat"
 
 # RevTran=MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIONS FOR TODAY. VISIT HTTP:\/\/MYMEMORY.TRANSLATED.NET\/DOC\/QUOTAREACHED TO TRANSLATE MORE
 # RevTran=Security Code (lowercase)
 msgid "Security Code (lowercase letters)"
-msgstr "Codi de seguretat (lletres minúscules)"
+msgstr "Codi de seguretat (lletres minï¿½scules)"
 
 # RevTran=MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIONS FOR TODAY. VISIT HTTP:\/\/MYMEMORY.TRANSLATED.NET\/DOC\/QUOTAREACHED TO TRANSLATE MORE
 msgid "Continue"

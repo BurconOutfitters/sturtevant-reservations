@@ -50,21 +50,21 @@ msgstr "Ўстаўце Браніраванне каляндар"
 msgid "Insert  Reservation Calendar"
 msgstr "Уставіць Браніраванне Каляндар"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:11
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:11
 msgid "Select Start Date"
 msgstr "Выберыце Дата пачатку"
 
 # RevTran=Select the end date
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:12
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:12
 msgid "Select End Date"
 msgstr "Выберыце Калі выбегла"
 
 # RevTran=Deselect
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:13
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:13
 msgid "Cancel Selection"
 msgstr "Адмяніць вылучэнне"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:14
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:14
 msgid "Successfully"
 msgstr "Паспяхова"
 
@@ -77,54 +77,54 @@ msgstr "Папярэдні"
 msgid "Next"
 msgstr "Далей"
 
-#: dex_scheduler.inc.php:6
+#: sc-res-scheduler.php:6
 msgid "Calendar"
 msgstr "Каляндар"
 
 # RevTran=Minimum number of nights to Book
-#: dex_scheduler.inc.php:7
+#: sc-res-scheduler.php:7
 msgid "The minimum number of nights to book is"
 msgstr "Мінімальная колькасць начэй, каб Кніга"
 
 # RevTran=Maximum number of nights to Book
-#: dex_scheduler.inc.php:8
+#: sc-res-scheduler.php:8
 msgid "The maximum number of nights to book is"
 msgstr "Максімальную колькасць начэй, каб Кніга"
 
 # RevTran=Select the start and end dates
-#: dex_scheduler.inc.php:9
+#: sc-res-scheduler.php:9
 msgid "Select start and end dates"
 msgstr "Выберыце даты пачатку і заканчэння"
 
 # RevTran=Specify the start and end dates
-#: dex_scheduler.inc.php:10
+#: sc-res-scheduler.php:10
 msgid "Please select start and end dates"
 msgstr "Калі ласка, абярыце даты пачатку і заканчэння"
 
-#: dex_scheduler.inc.php:15
+#: sc-res-scheduler.php:15
 msgid "Cost"
 msgstr "Кошт"
 
 # RevTran=Coupon Code (optional)
-#: dex_scheduler.inc.php:16
+#: sc-res-scheduler.php:16
 msgid "Coupon code (optional)"
 msgstr "Код купона (па жаданні)"
 
 # RevTran=Office
-#: dex_scheduler.inc.php:17
+#: sc-res-scheduler.php:17
 msgid "Service"
 msgstr "Служба"
 
 # RevTran=Enter the security code
-#: dex_scheduler.inc.php:18
+#: sc-res-scheduler.php:18
 msgid "Please enter the security code"
 msgstr "Калі ласка, увядзіце ахоўны код"
 
 # RevTran=Code (lowercase)
-#: dex_scheduler.inc.php:19
+#: sc-res-scheduler.php:19
 msgid "Security Code (lowercase letters)"
 msgstr "Код (малыя літары)"
 
-#: dex_scheduler.inc.php:20
+#: sc-res-scheduler.php:20
 msgid "Continue"
 msgstr "Далей"

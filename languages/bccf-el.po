@@ -50,20 +50,20 @@ msgid "Insert  Reservation Calendar"
 msgstr "Εισάγετε Ημερολόγιο Κράτηση"
 
 # RevTran=Select Date
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:11
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:11
 msgid "Select Start Date"
 msgstr "Επιλέξτε Ημερομηνία Έναρξης"
 
 # RevTran=Select Date
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:12
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:12
 msgid "Select End Date"
 msgstr "Επιλογή ημερομηνίας"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:13
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:13
 msgid "Cancel Selection"
 msgstr "Ακύρωση Επιλογής"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:14
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:14
 msgid "Successfully"
 msgstr "Επιτυχώς"
 
@@ -75,51 +75,51 @@ msgstr "Προηγούμενο"
 msgid "Next"
 msgstr "Επόμενο"
 
-#: dex_scheduler.inc.php:6
+#: sc-res-scheduler.php:6
 msgid "Calendar"
 msgstr "Ημερολόγιο"
 
 # RevTran=The minimum number of nights to do is
-#: dex_scheduler.inc.php:7
+#: sc-res-scheduler.php:7
 msgid "The minimum number of nights to book is"
 msgstr "Ο ελάχιστος αριθμός των διανυκτερεύσεων να κάνετε είναι"
 
 # RevTran=The maximum number of nights to do is
-#: dex_scheduler.inc.php:8
+#: sc-res-scheduler.php:8
 msgid "The maximum number of nights to book is"
 msgstr "Ο μέγιστος αριθμός των διανυκτερεύσεων να κάνετε είναι"
 
-#: dex_scheduler.inc.php:9
+#: sc-res-scheduler.php:9
 msgid "Select start and end dates"
 msgstr "Επιλέξτε ημερομηνίες έναρξης και λήξης"
 
-#: dex_scheduler.inc.php:10
+#: sc-res-scheduler.php:10
 msgid "Please select start and end dates"
 msgstr "Παρακαλούμε επιλέξτε ημερομηνίες έναρξης και λήξης"
 
 # RevTran=Mandatory
-#: dex_scheduler.inc.php:15
+#: sc-res-scheduler.php:15
 msgid "Cost"
 msgstr "Κόστος"
 
 # RevTran=Coupon Code (optional)
-#: dex_scheduler.inc.php:16
+#: sc-res-scheduler.php:16
 msgid "Coupon code (optional)"
 msgstr "Ο κωδικός κουπονιού (προαιρετικό)"
 
-#: dex_scheduler.inc.php:17
+#: sc-res-scheduler.php:17
 msgid "Service"
 msgstr "Εξυπηρέτηση"
 
-#: dex_scheduler.inc.php:18
+#: sc-res-scheduler.php:18
 msgid "Please enter the security code"
 msgstr "Παρακαλώ εισάγετε τον κωδικό ασφαλείας"
 
 # RevTran=Security Code (lowercase)
-#: dex_scheduler.inc.php:19
+#: sc-res-scheduler.php:19
 msgid "Security Code (lowercase letters)"
 msgstr "Κωδικός Ασφαλείας (πεζά γράμματα)"
 
-#: dex_scheduler.inc.php:20
+#: sc-res-scheduler.php:20
 msgid "Continue"
 msgstr "Συνέχεια"

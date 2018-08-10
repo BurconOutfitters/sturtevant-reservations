@@ -62,7 +62,7 @@ msgstr "終了日を選択"
 msgid "Cancel Selection"
 msgstr "選択の解除"
 
-#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:14
+#: dex_bccf_admin_int.inc.php:96 sc-res-scheduler.php:14
 msgid "Successfully"
 msgstr "首尾よく"
 
