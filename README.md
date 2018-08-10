@@ -1,2 +1,3 @@
-# sturtevant-reservations
+# Sturtevant Reservations
+
 WordPress reservations plugin for Sturtevant Camp.
