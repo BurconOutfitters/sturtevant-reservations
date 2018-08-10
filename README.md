@@ -1,6 +1,6 @@
 # Sturtevant Reservations
 
-WordPress reservations plugin for Sturtevant Camp.
+WordPress plugin for the cabin reservation and payment system.
 
 ![WordPress](https://img.shields.io/wordpress/v/akismet.svg?style=flat-square)
 ![PHP version](https://img.shields.io/php-eye/symfony/symfony.svg?style=flat-square)
