@@ -80,7 +80,7 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
     ?>
     <script type="text/javascript">
         function cp_deleteMessageItem(id) {
-            if ( confirm( '<?php _e( 'Are you sure that you want to delete this item?', 'sc-res' ); ?>' ) ) {
+            if ( confirm( '<?php _e( 'Are you sure that you want to delete this reservation?', 'sc-res' ); ?>' ) ) {
                 document.location = 'admin.php?page=dex_bccf&cal=<?php echo $_GET['cal']; ?>&list=1&ld=' + id + '&r=' + Math.random();
             }
         }
