@@ -1,0 +1,80 @@
+/**
+ * Reservations general.
+ */
+.reservations section {
+	max-width: 1024px;
+	box-sizing: border-box;
+	padding: 0.5em 0;
+}
+
+.reservations section:not(:first-of-type) {
+	border-top: 1px solid #fafafa;
+}
+
+.reservations section:not(:last-of-type) {
+	border-bottom: 1px solid #d9d9d9;
+}
+
+/**
+ * Reservations list/main page.
+ */
+.reservations-table-head,
+.reservations-table-row {
+	font-size: 0;
+}
+
+.reservations-table-head {
+	font-weight: bold;
+	font-weight: 600;
+}
+
+.reservations-table-head span,
+.reservations-table-row span {
+	display: inline-block;
+	padding: 0.3em;
+	vertical-align: middle;
+	font-size: 0.8rem;
+}
+
+.reservations-table-head span:first-of-type,
+.reservations-table-row span:first-of-type {
+	width: 20px;
+}
+
+.reservations-table-head span:nth-of-type(2),
+.reservations-table-row span:nth-of-type(2) {
+	width: auto;
+	min-width: 160px;
+}
+
+.reservations-table-row span:nth-of-type(2) input {
+	width: 100%;
+}
+
+.reservations-table-head span:nth-of-type(3),
+.reservations-table-row span:nth-of-type(3),
+.reservations-table-row span:nth-of-type(3) select {
+	width: 100px;
+	margin: 0;
+	display: none;
+}
+
+.reservations-table-head span:nth-of-type(4),
+.reservations-table-row span:nth-of-type(4) {
+	width: 50px;
+	text-align: center;
+}
+
+.reservations-table-head span:nth-of-type(5),
+.reservations-table-row span:nth-of-type(5) {
+	width: 440px;
+}
+
+.reservations-table-head span:last-of-type,
+.reservations-table-row span:last-of-type {
+	width: auto;
+	-webkit-user-select: all;
+	   -moz-user-select: all;
+	    -ms-user-select: all;
+	        user-select: all;
+}

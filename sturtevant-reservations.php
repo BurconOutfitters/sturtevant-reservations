@@ -23,120 +23,365 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+/**
+ * Get database table constants.
+ *
+ * @since  1.0.0
+ * @access public
+ * @return void
+ */
+require_once plugin_dir_path( __FILE__ ) . 'includes/constants-table.php';
 
-/* initialization / install / uninstall functions */
+/**
+ * The core plugin class.
+ *
+ * Defines constants, gets the initialization class file
+ * plus the activation and deactivation classes.
+ *
+ * @since  1.0.0
+ * @access public
+ */
+final class Sturtevant_Reservations {
 
-define('DEX_BCCF_DEFAULT_form_structure', '[[{"name":"email","index":0,"title":"Email","ftype":"femail","userhelp":"","csslayout":"","required":true,"predefined":"","size":"medium"},{"name":"subject","index":1,"title":"Subject","required":true,"ftype":"ftext","userhelp":"","csslayout":"","predefined":"","size":"medium"},{"name":"message","index":2,"size":"large","required":true,"title":"Message","ftype":"ftextarea","userhelp":"","csslayout":"","predefined":""}],[{"title":"","description":"","formlayout":"top_aligned"}]]');
+    /**
+	 * Get an instance of the class.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return object Returns the instance.
+	 */
+	public static function instance() {
 
-define('DEX_BCCF_DEFAULT_DEFER_SCRIPTS_LOADING', (get_option('CP_BCCF_LOAD_SCRIPTS',"1") == "1"?true:false));
+		// Varialbe for the instance to be used outside the class.
+		static $instance = null;
 
-define('DEX_BCCF_DEFAULT_SERVICES_FIELDS', 6);
+		if ( is_null( $instance ) ) {
 
-define('DEX_BCCF_DEFAULT_COLOR_STARTRES', '#CAFFCA');
-define('DEX_BCCF_DEFAULT_COLOR_HOLIDAY', '#FF8080');
+			// Set variable for new instance.
+			$instance = new self;
 
-define('DEX_BCCF_DEFAULT_CALENDAR_LANGUAGE', '');
-define('DEX_BCCF_DEFAULT_CALENDAR_DATEFORMAT', 'false');
-define('DEX_BCCF_DEFAULT_CALENDAR_WEEKDAY', '0');
-define('DEX_BCCF_DEFAULT_CALENDAR_MINDATE', 'today');
-define('DEX_BCCF_DEFAULT_CALENDAR_MAXDATE', '');
-define('DEX_BCCF_DEFAULT_CALENDAR_PAGES', 2);
-define('DEX_BCCF_DEFAULT_CALENDAR_OVERLAPPED', 'false');
-define('DEX_BCCF_DEFAULT_CALENDAR_ENABLED', 'true');
+			// Define plugin constants.
+			$instance->constants();
 
-define('DEX_BCCF_DEFAULT_cu_user_email_field', 'email');
-define('TDE_BCCFCALENDAR_DEFAULT_COLOR', '6FF');
+			// Require the core plugin class files.
+			$instance->dependencies();
 
-define('DEX_BCCF_DEFAULT_ENABLE_PAYPAL', 1);
-define('DEX_BCCF_DEFAULT_PAYPAL_EMAIL','put_your@email_here.com');
-define('DEX_BCCF_DEFAULT_PRODUCT_NAME','Reservation');
-define('DEX_BCCF_DEFAULT_COST','25');
-define('DEX_BCCF_DEFAULT_OK_URL',get_site_url());
-define('DEX_BCCF_DEFAULT_CANCEL_URL',get_site_url());
-define('DEX_BCCF_DEFAULT_CURRENCY','USD');
-define('DEX_BCCF_DEFAULT_PAYPAL_LANGUAGE','EN');
+		}
 
-define('DEX_BCCF_DEFAULT_PAYPAL_OPTION_YES', 'Pay with PayPal.');
-define('DEX_BCCF_DEFAULT_PAYPAL_OPTION_NO', 'Pay later.');
+		// Return the instance.
+		return $instance;
 
-define('DEX_BCCF_DEFAULT_vs_text_is_required', 'This field is required.');
-define('DEX_BCCF_DEFAULT_vs_text_is_email', 'Please enter a valid email address.');
+    }
 
-define('DEX_BCCF_DEFAULT_vs_text_datemmddyyyy', 'Please enter a valid date with this format(mm/dd/yyyy)');
-define('DEX_BCCF_DEFAULT_vs_text_dateddmmyyyy', 'Please enter a valid date with this format(dd/mm/yyyy)');
-define('DEX_BCCF_DEFAULT_vs_text_number', 'Please enter a valid number.');
-define('DEX_BCCF_DEFAULT_vs_text_digits', 'Please enter only digits.');
-define('DEX_BCCF_DEFAULT_vs_text_max', 'Please enter a value less than or equal to {0}.');
-define('DEX_BCCF_DEFAULT_vs_text_min', 'Please enter a value greater than or equal to {0}.');
+    /**
+	 * Constructor method.
+	 *
+	 * @since  1.0.0
+	 * @access private
+	 * @return self
+	 */
+	private function __construct() {
 
+        // Add admin pages.
+		add_action( 'admin_menu', [ $this, 'admin_pages' ] );
 
-define('DEX_BCCF_DEFAULT_SUBJECT_CONFIRMATION_EMAIL', 'Thank you for your request');
-define('DEX_BCCF_DEFAULT_CONFIRMATION_EMAIL', "We have received your request with the following information:\n\n%INFORMATION%\n\nThank you.\n\nBest regards.");
-define('DEX_BCCF_DEFAULT_SUBJECT_NOTIFICATION_EMAIL','New reservation requested');
-define('DEX_BCCF_DEFAULT_NOTIFICATION_EMAIL', "New reservation made with the following information:\n\n%INFORMATION%\n\nBest regards.");
+    }
 
-define('DEX_BCCF_DEFAULT_REMINDER_CONTENT', "This is a reminder for your booking with the following information:\n\n%INFORMATION%\n\nThank you.\n\nBest regards.");
-define('DEX_BCCF_DEFAULT_REMINDER_CONTENT_AFTER', "Thank you for your booking. here is the booking information for future reference:\n\n%INFORMATION%\n\nThank you.\n\nBest regards.");
+	/**
+	 * Throw error on object clone.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
+	 */
+	public function __clone() {
 
-define('DEX_BCCF_DEFAULT_CP_CAL_CHECKBOXES',"");
-define('DEX_BCCF_DEFAULT_CP_CAL_CHECKBOXES_TYPE',"0");
-define('DEX_BCCF_DEFAULT_EXPLAIN_CP_CAL_CHECKBOXES',"80.00 | 2 Guests\n120.00 | 3 Guests\n160.00 | 4 Guests");
+		// Cloning instances of the class is forbidden.
+		_doing_it_wrong( __FUNCTION__, __( 'This is not allowed.', 'sc-res' ), '1.0.0' );
 
+	}
 
-// tables
+	/**
+	 * Disable unserializing of the class.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
+	 */
+	public function __wakeup() {
 
-define('DEX_BCCF_TABLE_NAME_NO_PREFIX', "bccf_dex_bccf_submissions");
-define('DEX_BCCF_TABLE_NAME', @$wpdb->prefix . DEX_BCCF_TABLE_NAME_NO_PREFIX);
+		// Unserializing instances of the class is forbidden.
+		_doing_it_wrong( __FUNCTION__, __( 'This is not allowed.', 'sc-res' ), '1.0.0' );
 
-define('DEX_BCCF_CALENDARS_TABLE_NAME_NO_PREFIX', "bccf_reservation_calendars_data");
-define('DEX_BCCF_CALENDARS_TABLE_NAME', @$wpdb->prefix ."bccf_reservation_calendars_data");
+	}
 
-define('DEX_BCCF_CONFIG_TABLE_NAME_NO_PREFIX', "bccf_reservation_calendars");
-define('DEX_BCCF_CONFIG_TABLE_NAME', @$wpdb->prefix ."bccf_reservation_calendars");
+	/**
+	 * Define general plugin constants.
+     *
+     * More specific constants are defined by separate classes.
+	 *
+	 * @since  1.0.0
+	 * @access private
+	 * @return void
+	 */
+	private function constants() {
 
-define('DEX_BCCF_DISCOUNT_CODES_TABLE_NAME_NO_PREFIX', "bccf_dex_discount_codes");
-define('DEX_BCCF_SEASON_PRICES_TABLE_NAME_NO_PREFIX', "bccf_dex_season_prices");
-define('DEX_BCCF_DISCOUNT_CODES_TABLE_NAME', @$wpdb->prefix ."bccf_dex_discount_codes");
+        /**
+		 * Keeping the version at 1.0.0 as this is a starter plugin but
+		 * you may want to start counting as you develop for your use case.
+		 *
+		 * @since  1.0.0
+		 * @return string Returns the latest plugin version.
+		 */
+		if ( ! defined( 'SC_RES_VERSION' ) ) {
+			define( 'SC_RES_VERSION', '1.0.0' );
+		}
 
-// calendar constants
+		/**
+		 * Plugin folder path.
+		 *
+		 * @since  1.0.0
+		 * @return string Returns the filesystem directory path (with trailing slash)
+		 *                for the plugin __FILE__ passed in.
+		 */
+		if ( ! defined( 'SC_RES_PATH' ) ) {
+			define( 'SC_RES_PATH', plugin_dir_path( __FILE__ ) );
+		}
 
-define("TDE_BCCFDEFAULT_CALENDAR_ID","1");
-define("TDE_BCCFDEFAULT_CALENDAR_LANGUAGE","EN");
-define("DEX_BCCF_DEFAULT_CALENDAR_MODE","true");
+		/**
+		 * Plugin folder URL.
+		 *
+		 * @since  1.0.0
+		 * @return string Returns the URL directory path (with trailing slash)
+		 *                for the plugin __FILE__ passed in.
+		 */
+		if ( ! defined( 'SC_RES_URL' ) ) {
+			define( 'SC_RES_URL', plugin_dir_url( __FILE__ ) );
+        }
 
-define("TDE_BCCFCAL_PREFIX", "RCalendar");
-define("TDE_BCCFCONFIG",DEX_BCCF_CONFIG_TABLE_NAME);
-define("TDE_BCCFCONFIG_ID","id");
-define("TDE_BCCFCONFIG_TITLE","title");
-define("TDE_BCCFCONFIG_USER","uname");
-define("TDE_BCCFCONFIG_PASS","passwd");
-define("TDE_BCCFCONFIG_LANG","lang");
-define("TDE_BCCFCONFIG_CPAGES","cpages");
-define("TDE_BCCFCONFIG_MSG","msg");
-define("TDE_BCCFCALDELETED_FIELD","caldeleted");
+        /**
+		 * Form and calendar constants.
+         *
+         * Excludes database table constants.
+		 *
+		 * @since  1.0.0
+		 * @return void Gets the file which contains the form and calendar constants.
+		 */
+        require_once plugin_dir_path( __FILE__ ) . 'includes/constants-form.php';
 
-define("TDE_BCCFCALENDAR_DATA_TABLE",DEX_BCCF_CALENDARS_TABLE_NAME);
-define("TDE_BCCFDATA_ID","id");
-define("TDE_BCCFDATA_IDCALENDAR","reservation_calendar_id");
-define("TDE_BCCFDATA_DATETIME_S","datatime_s");
-define("TDE_BCCFDATA_DATETIME_E","datatime_e");
-define("TDE_BCCFDATA_TITLE","title");
-define("TDE_BCCFDATA_DESCRIPTION","description");
-// end calendar constants
+    }
 
-define('TDE_BCCFDEFAULT_dexcv_enable_captcha', 'true');
-define('TDE_BCCFDEFAULT_dexcv_width', '180');
-define('TDE_BCCFDEFAULT_dexcv_height', '60');
-define('TDE_BCCFDEFAULT_dexcv_chars', '5');
-define('TDE_BCCFDEFAULT_dexcv_font', 'font-1.ttf');
-define('TDE_BCCFDEFAULT_dexcv_min_font_size', '25');
-define('TDE_BCCFDEFAULT_dexcv_max_font_size', '35');
-define('TDE_BCCFDEFAULT_dexcv_noise', '200');
-define('TDE_BCCFDEFAULT_dexcv_noise_length', '4');
-define('TDE_BCCFDEFAULT_dexcv_background', 'ffffff');
-define('TDE_BCCFDEFAULT_dexcv_border', '000000');
-define('DEX_BCCF_DEFAULT_dexcv_text_enter_valid_captcha', 'Please enter a valid captcha code.');
+    /**
+	 * Require the core plugin class files.
+	 *
+	 * @since  1.0.0
+	 * @access private
+	 * @return void Gets the file which contains the core plugin class.
+	 */
+	private function dependencies() {
 
+		// The hub of all other dependency files.
+		require_once SC_RES_PATH . 'includes/class-init.php';
+
+		// Include the activation class.
+		require_once SC_RES_PATH . 'includes/class-activate.php';
+
+		// Include the deactivation class.
+        require_once SC_RES_PATH . 'includes/class-deactivate.php';
+
+        // Reguire data source file.
+        require_once SC_RES_PATH . 'sc-res-source.php';
+
+    }
+
+    /**
+	 * Add admin pages.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
+	 */
+	public function admin_pages() {
+
+        // Reservations management page w/ help tab.
+		$this->help_reservations = add_menu_page(
+			__( 'Reservations', 'sc-res' ),
+			__( 'Reservations', 'sc-res' ),
+			'edit_pages',
+			'dex_bccf',
+			[ $this, 'admin_page_output' ],
+			'dashicons-book',
+			3
+		);
+
+		// Add content to the Help tab.
+		add_action( 'load-' . $this->help_reservations, [ $this, 'help_reservations' ] );
+
+    }
+
+    /**
+	 * Conditionally get the templates for admin pages.
+	 *
+	 * @since  1.0.0
+	 * @access public
+	 * @return void
+	 */
+	public function admin_page_output() {
+
+    if ( isset($_GET["cal"]) && $_GET["cal"] != '' ) {
+        if (isset($_GET["list"]) && $_GET["list"] == '1')
+            @include_once dirname( __FILE__ ) . '/sc-res-admin-int-bookings-list.php';
+        else if (isset($_GET["edit"]) && $_GET["edit"] != '')
+            @include_once dirname( __FILE__ ) . '/sc-res-admin-int-edit-booking.php';
+        else if (isset($_GET["list2"]) && $_GET["list2"] == '1')
+            @include_once dirname( __FILE__ ) . '/sc-res-admin-int-non-completed-bookings-list.php';
+        else
+            @include_once dirname( __FILE__ ) . '/sc-res-admin-int.php';
+    } else {
+        @include_once dirname( __FILE__ ) . '/sc-res-admin-int-calendar-list.php';
+    }
+
+}
+
+    /**
+     * Add tabs to the about page contextual help section.
+	 *
+	 * @since      1.0.0
+     */
+    public function help_reservations() {
+
+		// Add to the about page.
+		$screen = get_current_screen();
+		if ( $screen->id != $this->help_reservations ) {
+			return;
+		}
+
+		// More information tab.
+		$screen->add_help_tab( [
+			'id'       => 'help_reservations_submissions',
+			'title'    => __( 'View Reservations', 'controlled-chaos-plugin' ),
+			'content'  => null,
+			'callback' => [ $this, 'help_reservations_submissions' ]
+		] );
+
+        // Convert plugin tab.
+		$screen->add_help_tab( [
+			'id'       => 'help_reservations_updates',
+			'title'    => __( 'Calendar Updates', 'controlled-chaos-plugin' ),
+			'content'  => null,
+			'callback' => [ $this, 'help_reservations_updates' ]
+		] );
+
+    }
+
+    /**
+     * Get more information help tab content.
+	 *
+	 * @since      1.0.0
+     */
+	public function help_reservations_submissions() {
+
+		include_once SC_RES_PATH . 'admin/partials/help-reservations-submissions.php';
+
+	}
+
+	/**
+     * Get more information help tab content.
+	 *
+	 * @since      1.0.0
+     */
+	public function help_reservations_updates() {
+
+		include_once SC_RES_PATH . 'admin/partials/help-reservations-updates.php';
+
+    }
+
+}
+// End core plugin class.
+
+/**
+ * Put an instance of the plugin class into a function.
+ *
+ * @since  1.0.0
+ * @access public
+ * @return object Returns the instance of the `Controlled_Chaos_Plugin` class.
+ */
+function sc_res_plugin() {
+
+	return Sturtevant_Reservations::instance();
+
+}
+
+// Begin plugin functionality.
+sc_res_plugin();
+
+/**
+ * Register the activaction & deactivation hooks.
+ *
+ * @since  1.0.0
+ * @access public
+ * @return void
+ */
+register_activation_hook( __FILE__, '\sc_res_activate_plugin' );
+register_deactivation_hook( __FILE__, '\sc_res_deactivate_plugin' );
+
+/**
+ * The code that runs during plugin activation.
+ *
+ * @since  1.0.0
+ * @access public
+ * @return void
+ */
+function sc_res_activate_plugin() {
+
+	// Run the activation class.
+	sc_res_activate();
+
+}
+
+/**
+ * The code that runs during plugin deactivation.
+ *
+ * @since  1.0.0
+ * @access public
+ * @return void
+ */
+function sc_res_deactivate_plugin() {
+
+	// Run the deactivation class.
+	sc_res_deactivate();
+
+}
+
+/**
+ * Add link to the plugin settings pages on the plugins page.
+ *
+ * @param  array $links Default plugin links on the 'Plugins' admin page.
+ * @since  1.0.0
+ * @access public
+ * @return mixed[] Returns an HTML string for the settings page link.
+ *                 Returns an array of the settings link with the default plugin links.
+ */
+function sc_res_settings_link( $links ) {
+
+    if ( is_admin() ) {
+
+        // Add links to settings pages.
+        $settings = [
+            sprintf(
+                '<a href="%1s">%2s</a>',
+                esc_url( admin_url( 'admin.php?page=reservations' ) ),
+                esc_attr( __( 'Manage', 'sc-res' ) )
+            )
+        ];
+
+        // Return the full array of links.
+        return array_merge( $settings, $links );
+
+    }
+
+}
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'sc_res_settings_link' );
 
 // loading add-ons
 // -----------------------------------------
@@ -175,16 +420,8 @@ dexbccf_loading_add_ons();
 // code initialization, hooks
 // -----------------------------------------
 
-require_once 'sc-res-source.php';
-
 
 register_activation_hook(__FILE__,'dex_bccf_install');
-register_deactivation_hook( __FILE__, 'dex_bccf_remove' );
-
-function dex_bccf_plugin_init() {
-  load_plugin_textdomain( 'bccf', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-}
-add_action('plugins_loaded', 'dex_bccf_plugin_init');
 
 function dex_bccf_install($networkwide)  {
 	global $wpdb;
@@ -207,181 +444,8 @@ function dex_bccf_install($networkwide)  {
 }
 
 function _dex_bccf_install() {
-    global $wpdb;
-
-    $sql = "CREATE TABLE ".$wpdb->prefix.DEX_BCCF_DISCOUNT_CODES_TABLE_NAME_NO_PREFIX." (
-         id mediumint(9) NOT NULL AUTO_INCREMENT,
-         cal_id mediumint(9) NOT NULL DEFAULT 1,
-         code VARCHAR(250) DEFAULT '' NOT NULL,
-         discount VARCHAR(250) DEFAULT '' NOT NULL,
-         expires datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-         availability int(10) unsigned NOT NULL DEFAULT 0,
-         used int(10) unsigned NOT NULL DEFAULT 0,
-         UNIQUE KEY id (id)
-         );";
-    $wpdb->query($sql);
-
-    $sql = "CREATE TABLE ".$wpdb->prefix.DEX_BCCF_SEASON_PRICES_TABLE_NAME_NO_PREFIX." (
-         id mediumint(9) NOT NULL AUTO_INCREMENT,
-         cal_id mediumint(9) NOT NULL DEFAULT 1,
-         price VARCHAR(250) DEFAULT '' NOT NULL,
-         date_from datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-         date_to datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-         UNIQUE KEY id (id)
-         );";
-    $wpdb->query($sql);
-
-
-    $sql = "CREATE TABLE ".$wpdb->prefix.DEX_BCCF_TABLE_NAME_NO_PREFIX." (
-         id mediumint(9) NOT NULL AUTO_INCREMENT,
-         calendar INT NOT NULL,
-         time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-         booked_time_s VARCHAR(250) DEFAULT '' NOT NULL,
-         booked_time_e VARCHAR(250) DEFAULT '' NOT NULL,
-         booked_time_unformatted_s VARCHAR(250) DEFAULT '' NOT NULL,
-         booked_time_unformatted_e VARCHAR(250) DEFAULT '' NOT NULL,
-         name VARCHAR(250) DEFAULT '' NOT NULL,
-         email VARCHAR(250) DEFAULT '' NOT NULL,
-         phone VARCHAR(250) DEFAULT '' NOT NULL,
-         notifyto VARCHAR(250) DEFAULT '' NOT NULL,
-         question mediumtext,
-         buffered_date mediumtext,
-         UNIQUE KEY id (id)
-         );";
-    $wpdb->query($sql);
-
-
-    $sql = "CREATE TABLE `".$wpdb->prefix.DEX_BCCF_CONFIG_TABLE_NAME."` (".
-                   "`".TDE_BCCFCONFIG_ID."` int(10) unsigned NOT NULL auto_increment,".
-                   "`".TDE_BCCFCONFIG_TITLE."` varchar(255) NOT NULL default '',".
-                   "`".TDE_BCCFCONFIG_USER."` varchar(100) default NULL,".
-                   "`".TDE_BCCFCONFIG_PASS."` varchar(100) default NULL,".
-                   "`".TDE_BCCFCONFIG_LANG."` varchar(5) default NULL,".
-                   "`".TDE_BCCFCONFIG_CPAGES."` tinyint(3) unsigned default NULL,".
-                   "`".TDE_BCCFCONFIG_MSG."` varchar(255) NOT NULL default '',".
-                   "`".TDE_BCCFCALDELETED_FIELD."` tinyint(3) unsigned default NULL,".
-                   "`conwer` INT NOT NULL,".
-                   "`form_structure` mediumtext,".
-                   "`master` varchar(50) DEFAULT '' NOT NULL,".
-                   "`calendar_language` varchar(10) DEFAULT '' NOT NULL,".
-                   "`calendar_mode` varchar(10) DEFAULT '' NOT NULL,".
-                   "`calendar_dateformat` varchar(10) DEFAULT '',".
-                   "`calendar_overlapped` varchar(10) DEFAULT '',".
-                   "`calendar_enabled` varchar(10) DEFAULT '',".
-                   "`calendar_pages` varchar(10) DEFAULT '' NOT NULL,".
-                   "`calendar_weekday` varchar(10) DEFAULT '' NOT NULL,".
-                   "`calendar_mindate` varchar(255) DEFAULT '' NOT NULL,".
-                   "`calendar_maxdate` varchar(255) DEFAULT '' NOT NULL,".
-                   "`calendar_minnights` varchar(255) DEFAULT '0' NOT NULL,".
-                   "`calendar_maxnights` varchar(255) DEFAULT '365' NOT NULL,".
-                   "`calendar_suplement` varchar(255) DEFAULT '0' NOT NULL,".
-                   "`calendar_suplementminnight` varchar(255) DEFAULT '0' NOT NULL,".
-                   "`calendar_suplementmaxnight` varchar(255) DEFAULT '0' NOT NULL,".
-                   "`calendar_startres` text,".
-                   "`calendar_holidays` text,".
-                   "`calendar_fixedmode` varchar(10) DEFAULT '0' NOT NULL,".
-                   "`calendar_holidaysdays` varchar(20) DEFAULT '1111111' NOT NULL,".
-                   "`calendar_startresdays` varchar(20) DEFAULT '1111111' NOT NULL,".
-                   "`calendar_fixedreslength` varchar(20) DEFAULT '1' NOT NULL,".
-                   "`calendar_showcost` varchar(1) DEFAULT '1' NOT NULL,".
-                   // paypal
-                   "`enable_paypal` varchar(10) DEFAULT '' NOT NULL,".
-                   "`paypal_email` varchar(255) DEFAULT '' NOT NULL ,".
-                   "`request_cost` varchar(255) DEFAULT '' NOT NULL ,".
-                   "`max_slots` varchar(20) DEFAULT '0' NOT NULL ,".
-                   "`paypal_product_name` varchar(255) DEFAULT '' NOT NULL,".
-                   "`currency` varchar(10) DEFAULT '' NOT NULL,".
-                   "`request_taxes` varchar(20) DEFAULT '' NOT NULL ,".
-                   "`url_ok` text,".
-                   "`url_cancel` text,".
-                   "`paypal_language` varchar(10) DEFAULT '' NOT NULL,".
-                   // copy to user
-                   "`cu_user_email_field` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`notification_from_email` text,".
-                   "`notification_destination_email` text,".
-                   "`email_subject_confirmation_to_user` text,".
-                   "`email_confirmation_to_user` text,".
-                   "`email_subject_notification_to_admin` text,".
-                   "`email_notification_to_admin` text,".
-                   // validation
-                   "`enable_paypal_option_yes` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`enable_paypal_option_no` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_use_validation` VARCHAR(10) DEFAULT '' NOT NULL,".
-                   "`vs_text_is_required` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_text_is_email` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_text_datemmddyyyy` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_text_dateddmmyyyy` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_text_number` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_text_digits` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_text_max` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_text_min` VARCHAR(250) DEFAULT '' NOT NULL,".
-
-                   "`vs_text_submitbtn` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_text_previousbtn` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_text_nextbtn` VARCHAR(250) DEFAULT '' NOT NULL,  ".
-
-                   "`calendar_depositenable` VARCHAR(20) DEFAULT '' NOT NULL,  ".
-                   "`calendar_depositamount` VARCHAR(20) DEFAULT '' NOT NULL,  ".
-                   "`calendar_deposittype` VARCHAR(20) DEFAULT '' NOT NULL,  ".
-                   "`enable_beanstream_id` VARCHAR(250) DEFAULT '' NOT NULL,  ".
-
-                   "`enable_reminder` VARCHAR(20) DEFAULT '' NOT NULL, ".
-
-                   "`reminder_hours` VARCHAR(20) DEFAULT '' NOT NULL, ".
-                   "`reminder_subject` VARCHAR(250) DEFAULT '' NOT NULL, ".
-                   "`reminder_content` text ,".
-                   "`nremind_emailformat` VARCHAR(20) DEFAULT '' NOT NULL, ".
-
-                   "`reminder_hours2` VARCHAR(20) DEFAULT '' NOT NULL, ".
-                   "`reminder_subject2` VARCHAR(250) DEFAULT '' NOT NULL, ".
-                   "`reminder_content2` text ,".
-                   "`nremind_emailformat2` VARCHAR(20) DEFAULT '' NOT NULL, ".
-
-                   // captcha
-                   "`dexcv_enable_captcha` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_width` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_height` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_chars` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_min_font_size` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_max_font_size` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_noise` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_noise_length` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_background` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_border` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_font` varchar(100) DEFAULT '' NOT NULL,".
-                   "`cv_text_enter_valid_captcha` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   // services field
-                   "`cp_cal_checkboxes` text,".
-                   "`cp_cal_checkboxes_type` varchar(10) DEFAULT '' NOT NULL,".
-                   "PRIMARY KEY (`".TDE_BCCFCONFIG_ID."`)); ";
-    $wpdb->query($sql);
-
-    $sql = 'INSERT INTO `'.$wpdb->prefix.DEX_BCCF_CONFIG_TABLE_NAME.'` (`'.TDE_BCCFCONFIG_ID.'`,`form_structure`,`'.TDE_BCCFCONFIG_TITLE.'`,`'.TDE_BCCFCONFIG_USER.'`,`'.TDE_BCCFCONFIG_PASS.'`,`'.TDE_BCCFCONFIG_LANG.'`,`'.TDE_BCCFCONFIG_CPAGES.'`,`'.TDE_BCCFCONFIG_MSG.'`,`'.TDE_BCCFCALDELETED_FIELD.'`,calendar_mode) VALUES("1","'.esc_sql(DEX_BCCF_DEFAULT_form_structure).'","cal1","Calendar Item 1","","ENG","1","Please, select your reservation.","0","true");';
-    $wpdb->query($sql);
-
-    $sql = "CREATE TABLE `".$wpdb->prefix.DEX_BCCF_CALENDARS_TABLE_NAME."` (".
-                   "`".TDE_BCCFDATA_ID."` int(10) unsigned NOT NULL auto_increment,".
-                   "`".TDE_BCCFDATA_IDCALENDAR."` int(10) unsigned default NULL,".
-                   "`".TDE_BCCFDATA_DATETIME_S."`datetime NOT NULL default '0000-00-00 00:00:00',".
-                   "`".TDE_BCCFDATA_DATETIME_E."`datetime NOT NULL default '0000-00-00 00:00:00',".
-                   "`".TDE_BCCFDATA_TITLE."` varchar(250) default NULL,".
-                   "`".TDE_BCCFDATA_DESCRIPTION."` mediumtext,".
-                   "`viadmin` varchar(10) DEFAULT '0' NOT NULL,".
-                   "`reference` varchar(20) DEFAULT '' NOT NULL,".
-                   "`reminder` varchar(1) DEFAULT '' NOT NULL,".
-                   "`color` varchar(10),".
-                   "PRIMARY KEY (`".TDE_BCCFDATA_ID."`)) ;";
-    $wpdb->query($sql);
-
-
-
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    
 }
-
-function dex_bccf_remove() {
-
-}
-
 
 /* Filter for placing the maps into the contents */
 
@@ -400,7 +464,7 @@ function dex_bccf_filter_content($atts) {
 	$atts = apply_filters( 'dexbccf_pre_form',  $atts );
 
     if ($calendar != '')
-        define ('DEX_BCCF_CALENDAR_FIXED_ID',$calendar);
+        define ('DEX_BCCF_CALENDAR_FIXED_ID',intval($calendar));
     else if ($user != '')
     {
         $users = $wpdb->get_results( "SELECT user_login,ID FROM ".$wpdb->users." WHERE user_login='".esc_sql($user)."'" );
@@ -577,34 +641,11 @@ function dex_bccf_show_booking_form($id = "")
 if ( is_admin() ) {
     add_action('media_buttons', 'set_dex_bccf_insert_button', 100);
     add_action('admin_enqueue_scripts', 'set_dex_bccf_insert_adminScripts', 1);
-    add_action('admin_menu', 'dex_bccf_admin_menu');
-
-    function dex_bccf_admin_menu() {
-        add_options_page('Reservation Forms & Lists', 'Reservation Forms & Lists', 'manage_options', 'dex_bccf', 'dex_bccf_html_post_page' );
-        add_menu_page( 'Reservation Forms & Lists', 'Reservations', 'edit_pages', 'dex_bccf', 'dex_bccf_html_post_page', 'dashicons-feedback', 3.5 );
-    }
 }
 else
 {
     add_shortcode( 'CP_BCCF_FORM', 'dex_bccf_filter_content' );
     add_shortcode( 'CP_BCCF_ALLCALS', 'dex_bccf_filter_content_allcalendars' );
-}
-
-function dex_bccf_html_post_page() {
-    if (isset($_GET["cal"]) && $_GET["cal"] != '')
-    {
-        if (isset($_GET["list"]) && $_GET["list"] == '1')
-            @include_once dirname( __FILE__ ) . '/sc-res-admin-int-bookings-list.php';
-        else if (isset($_GET["edit"]) && $_GET["edit"] != '')
-            @include_once dirname( __FILE__ ) . '/sc-res-admin-int-edit-booking.php';
-        else if (isset($_GET["list2"]) && $_GET["list2"] == '1')
-            @include_once dirname( __FILE__ ) . '/sc-res-admin-int-non-completed-bookings-list.php';
-        else
-            @include_once dirname( __FILE__ ) . '/sc-res-admin-int.php';
-    }
-    else
-        @include_once dirname( __FILE__ ) . '/sc-res-admin-int-calendar-list.php';
-
 }
 
 function set_dex_bccf_insert_button() {
@@ -657,6 +698,13 @@ function dex_bccf_echo_services($dex_buffer) {
 
 function dex_bccf_export_iCal() {
     global $wpdb;
+
+    if (!($_GET["id"] != '' && substr(md5($_GET["id"].$_SERVER["DOCUMENT_ROOT"]),0,10) == $_GET["verify"]))
+    {
+        echo 'Access denied - verify value is not correct.';
+        exit;
+    }
+    
     header("Content-type: application/octet-stream");
     header("Content-Disposition: attachment; filename=events".date("Y-M-D_H.i.s").".ics");
 
