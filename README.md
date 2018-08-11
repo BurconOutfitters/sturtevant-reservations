@@ -11,6 +11,6 @@ The plugin from which this was forked, Booking Calendar Contact Form, is not ide
 
 ### Original Plugin
 
-This is the "pro" version of the following plugin.
+This started as the "pro" version of the following plugin.
 
 [http://wordpress.dwbooster.com/calendars/booking-calendar-contact-form](http://wordpress.dwbooster.com/calendars/booking-calendar-contact-form)
