@@ -95,11 +95,11 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
     </script>
 
 <div class="wrap reservations reservation-submissions">
-    <h1><?php _e( 'Reservation Form Submissions', 'sc-res' ); ?></h1>
-    <p class="description"><?php _e( 'List of completed and submitted reservation forms.', 'sc-res' ); ?></p>
-    <p>
-        <input class="button" type="button" name="backbtn" value="<?php _e( 'Back to Forms', 'sc-res' ); ?>" onclick="document.location='admin.php?page=dex_bccf';">
-        <input class="button" type="button" name="noncbtn" value="<?php _e( 'Forms Not Completed', 'sc-res' ); ?>" onclick="document.location='admin.php?page=dex_bccf&cal=<?php echo $_GET["cal"]; ?>&list2=1';">
+    <h1><?php echo esc_html__( 'Reservation Form Submissions', 'sc-res' ); ?></h1>
+    <p class="description"><?php echo esc_html__( 'List of completed and submitted reservation forms.', 'sc-res' ); ?></p>
+    <p class="reservations-admin-header-buttons">
+        <input class="button" type="button" name="backbtn" value="<?php echo esc_attr__( 'Back to Forms', 'sc-res' ); ?>" onclick="document.location='admin.php?page=dex_bccf';">
+        <input class="button" type="button" name="noncbtn" value="<?php echo esc_attr__( 'Forms Not Completed', 'sc-res' ); ?>" onclick="document.location='admin.php?page=dex_bccf&cal=<?php echo $_GET["cal"]; ?>&list2=1';">
     </p>
     <hr />
     <h2><?php _e( 'This list applies only to ', 'sc-res' ); ?><?php echo $mycalendarrows[0]->uname; ?></h2>

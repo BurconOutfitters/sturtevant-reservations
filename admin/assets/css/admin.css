@@ -15,6 +15,12 @@
 	border-bottom: 1px solid #d9d9d9;
 }
 
+.reservations-admin-header-buttons .button {
+	float: none;
+	font-family: inherit;
+	font-weight: normal;
+}
+
 /**
  * Reservations list/main page.
  */

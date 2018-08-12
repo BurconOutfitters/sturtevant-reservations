@@ -99,7 +99,7 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
 <div class="wrap reservations reservation-submissions-inc">
     <h1><?php _e( 'Incomplete Reservation Form Submissions', 'sc-res' ); ?></h1>
     <p class="description"><?php _e( 'List of reservation forms that were not completed and submitted.', 'sc-res' ); ?></p>
-    <p>
+    <p class="reservations-admin-header-buttons">
         <input class="button" type="button" name="backbtn" value="<?php _e( 'Back to Forms', 'sc-res' ); ?>" onclick="document.location='admin.php?page=dex_bccf';">
         <input class="button" type="button" name="noncbtn" value="<?php _e( 'Completed Submissions', 'sc-res' ); ?>" onclick="document.location='admin.php?page=dex_bccf&cal=<?php echo $_GET['cal']; ?>&list=1';">
     </p>

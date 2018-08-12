@@ -1,96 +1,103 @@
 <?php
+/**
+ * The admin page for creating and editing forms and calendars.
+ *
+ * @package    Sturtevant_Reservations
+ * @subpackage Admin
+ *
+ * @since      1.0.0
+ * @author     Greg Sweet <greg@ccdzine.com>
+ */
 
-if ( !is_admin() )
-{
-    echo 'Direct access not allowed.';
-    exit;
+// If this file is called directly, abort.
+if ( ! defined( 'WPINC' ) ) {
+	die;
 }
 
-dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "master", "varchar(50) DEFAULT '0' NOT NULL");
+dex_bccf_add_field_verify( DEX_BCCF_CONFIG_TABLE_NAME, "master", "varchar(50) DEFAULT '0' NOT NULL" );
 
-if (!defined('CP_BCCF_CALENDAR_ID'))
-    define ('CP_BCCF_CALENDAR_ID',intval($_GET["cal"]));
+if ( ! defined( 'CP_BCCF_CALENDAR_ID' ) ) {
+	define ( 'CP_BCCF_CALENDAR_ID', intval( $_GET['cal'] ) );
+}
 
 global $wpdb, $dexbccf_addons_objs_list, $dexbccf_addons_active_list;
-$mycalendarrows = $wpdb->get_results( 'SELECT * FROM '.DEX_BCCF_CONFIG_TABLE_NAME .' WHERE `'.TDE_BCCFCONFIG_ID.'`='.CP_BCCF_CALENDAR_ID);
 
+$mycalendarrows = $wpdb->get_results( 'SELECT * FROM '.DEX_BCCF_CONFIG_TABLE_NAME .' WHERE `'.TDE_BCCFCONFIG_ID.'`='.CP_BCCF_CALENDAR_ID );
 
-if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_POST['dex_bccf_post_options'] ) )
-    echo "<div id='setting-error-settings_updated' class='updated settings-error'> <p><strong>Settings saved.</strong></p></div>";
+$message = __( 'Form and calendar settings saved.', 'sc-res' );
+
+if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_POST['dex_bccf_post_options'] ) ) {
+	echo '<div id="setting-error-settings_updated" class="notice notice-success is-dismissible"> <p><strong>' . $message . '</strong></p></div>';
+}
 
 $current_user = wp_get_current_user();
 
-if (cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->ID) {
+if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->ID ) :
 
+	$request_costs = explode( ';', dex_bccf_get_option( 'request_cost', DEX_BCCF_DEFAULT_COST ) );
 
-$request_costs = explode(";",dex_bccf_get_option('request_cost',DEX_BCCF_DEFAULT_COST));
-if (!count($request_costs)) $request_costs[0] = DEX_BCCF_DEFAULT_COST;
+	if ( ! count( $request_costs ) ) {
+		$request_costs[0] = DEX_BCCF_DEFAULT_COST;
+	}
 
-$request_costs_exploded = "'".str_replace("'","\'",$request_costs[0])."'";
-for ($k=1;$k<100;$k++)
-   if (isset($request_costs[$k]))
-       $request_costs_exploded .= ",'".str_replace("'","\'",$request_costs[$k])."'";
-   else
-       $request_costs_exploded .= ",'".str_replace("'","\'",$request_costs[0]*($k))."'";
+	$request_costs_exploded = "'".str_replace("'","\'",$request_costs[0])."'";
 
-
+	for ( $k = 1; $k < 100; $k++ ) {
+		if ( isset( $request_costs[$k] ) ) {
+			$request_costs_exploded .= ",'" . str_replace( "'","\'", $request_costs[$k] ) . "'";
+		} else {
+			$request_costs_exploded .= ",'" . str_replace( "'","\'", $request_costs[0]*($k) ) . "'";
+		}
+	}
 ?>
-<link href="<?php echo plugins_url('css/style.css', __FILE__); ?>" type="text/css" rel="stylesheet" />
-<link href="<?php echo plugins_url('css/calendar.css', __FILE__); ?>" type="text/css" rel="stylesheet" />
-<link href="<?php echo plugins_url('css/admin.css', __FILE__); ?>" type="text/css" rel="stylesheet" />
- 
-<script type="text/javascript"> 
-  if (false)
-  {
-    document.write ("<"+"script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></"+"script>");
-    document.write ("<"+"script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.20/jquery-ui.min.js'></"+"script>");
-  }
+<link href="<?php echo plugins_url( 'css/style.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
+<link href="<?php echo plugins_url( 'css/calendar.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
+<link href="<?php echo plugins_url( 'css/admin.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript">
+	if ( false ) {
+		document.write ("<"+"script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></"+"script>");
+		document.write ("<"+"script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.20/jquery-ui.min.js'></"+"script>");
+	}
 </script>
+<div class="wrap reservations reservation-form-edit">
+	<h1><?php echo esc_html__( 'Reservation Form & Calendar Settings', 'sc-res' ); ?></h1>
+	<p class="description"><?php echo esc_html__( 'Create and edit a unique form and/or calendar.', 'sc-res' ); ?></p>
+	<p class="reservations-admin-header-buttons">
+		<input class="button" type="button" name="backbtn" value="<?php echo esc_attr__( 'Back to Forms', 'sc-res' ); ?>" onclick="document.location='admin.php?page=dex_bccf';" />
+	</p>
+	<hr />
+	<h2><?php echo __( 'These settings only apply to ', 'sc-res' ) . $mycalendarrows[0]->uname; ?></h2>
+	<form method="post" name="dexconfigofrm" action="">
+		<section>
+			<input name="dex_bccf_post_options" type="hidden" value="1" />
+			<input name="dex_item" type="hidden" value="<?php echo intval( $_GET['cal'] ); ?>" />
+			<table class="form-table">
+				<tbody>
+					<tr valign="top">
+						<th scope="row"><?php echo esc_html__( 'Master Calendar', 'sc-res' ); ?></th>
+						<td>
+							<?php
+							$value     = dex_bccf_get_option( 'master', '0' );
+							$calendars = $wpdb->get_results( 'SELECT * FROM '.DEX_BCCF_CONFIG_TABLE_NAME .' WHERE (master=\'0\' Or master=\'\') AND  `id`<>'.CP_BCCF_CALENDAR_ID );
+							?>
+							<select name="master" id="masteritem" onchange="shcalarea();">
+								<option value="0" <?php if ( $value == '0' ) {  echo ' selected="selected"'; } ?>> - </option>
+								<?php foreach ( $calendars as $item ) { ?>
+								<option value="<?php echo $item->id; ?>" <?php if ( intval( $value ) == $item->id ) { echo ' selected="selected"'; } ?>> <?php echo $item->uname; ?></option>
+								<?php } ?>
+							</select>
+							<br />
+							<p class="description"><?php _e( 'If selected, calendar will be used as the source for the availability, so it will be used as the "master calendar".', 'sc-res' ); ?>
+							<br /><?php _e( 'The reservations for all the calendars with the same assigned "master calendar" will count together for the availability verification.', 'sc-res' ); ?></p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+		<section>
 
-
-<div class="wrap">
-<h1>Reservation Form Settings</h1>
-
-<input type="button" name="backbtn" value="Back to items list..." onclick="document.location='admin.php?page=dex_bccf';">
-
-<form method="post" name="dexconfigofrm" action="">
-<input name="dex_bccf_post_options" type="hidden" value="1" />
-<input name="dex_item" type="hidden" value="<?php echo intval($_GET["cal"]); ?>" />
-
-<div id="normal-sortables" class="meta-box-sortables">
-
- <hr />
- <h2>These settings only apply to <?php echo $mycalendarrows[0]->uname; ?></h2>
-
- <div id="metabox_basic_settings" class="postbox" >
-  <h2 class='hndle' style="padding:5px;"><span>Advanced Settings</span></h2>
-  <div class="inside">
-       <table class="form-table">
-        <tr valign="top">        
-        <th scope="row">Master Calendar</th>
-        <td>
-             <?php 
-               $value = dex_bccf_get_option('master','0'); 
-               $calendars = $wpdb->get_results( 'SELECT * FROM '.DEX_BCCF_CONFIG_TABLE_NAME .' WHERE (master=\'0\' Or master=\'\') AND  `id`<>'.CP_BCCF_CALENDAR_ID); 
-             ?>             
-             <select name="master" id="masteritem" onchange="shcalarea();">               
-               <option value="0" selected="selected" <?php if ($value == '0') echo ' selected="selected"'; ?>> - </option>               
-               <?php foreach ($calendars as $item) { ?>
-               <option value="<?php echo $item->id; ?>" <?php if (intval($value) == $item->id) echo ' selected="selected"'; ?>> <?php echo $item->uname; ?> </option>
-               <?php } ?> 
-            </select><br />
-            * If selected, the selected calendar will be used as source for the availability, so it will be used as the 
-            "master calendar". The bookings for all the calendars with the same assigned "master calendar" will count together for the 
-            availability verification.
-        </td>
-        </tr>        
-       </table> 
-  </div>  
-</div>  
-
- <div id="metabox_basic_settings" class="postbox" >
-  <h2 class='hndle' style="padding:5px;"><span>Calendar Configuration / Administration</span></h2>
-  <div class="inside">
+  <h2>Calendar Configuration / Administration</h2>
      <table class="form-table">
         <tr valign="top">
         <td colspan="5">
@@ -103,14 +110,14 @@ for ($k=1;$k<100;$k++)
         </td>
         </tr>
      </table>
-<div id="metabox_basic_settings_cal1" style=""> 
+<div id="metabox_basic_settings_cal1" style="">
 <?php
     $option_use_calendar = $option;
     $option_overlapped = dex_bccf_get_option('calendar_overlapped', DEX_BCCF_DEFAULT_CALENDAR_OVERLAPPED);
     $calendar_language = dex_bccf_get_option('calendar_language',DEX_BCCF_DEFAULT_CALENDAR_LANGUAGE);
-    
-    if ($calendar_language == '') $calendar_language = dex_bccf_autodetect_language();  
-    
+
+    if ($calendar_language == '') $calendar_language = dex_bccf_autodetect_language();
+
     $calendar_dateformat = dex_bccf_get_option('calendar_dateformat',DEX_BCCF_DEFAULT_CALENDAR_DATEFORMAT);
     $dformat = ((dex_bccf_get_option('calendar_dateformat', DEX_BCCF_DEFAULT_CALENDAR_DATEFORMAT)==0)?"mm/dd/yy":"dd/mm/yy");
     $dformat_php = ((dex_bccf_get_option('calendar_dateformat', DEX_BCCF_DEFAULT_CALENDAR_DATEFORMAT)==0)?"m/d/Y":"d/m/Y");
@@ -142,12 +149,12 @@ for ($k=1;$k<100;$k++)
    var pathCalendar_full = pathCalendar + "wp-content/plugins/<?php echo basename(dirname(__FILE__));?>/css/images/corners";
    </script>
 
-   <div id="cal<?php echo CP_BCCF_CALENDAR_ID; ?>" class="rcalendar"><span style="color:#009900">Loading calendar data...</span></em></div>
+   <div id="cal<?php echo CP_BCCF_CALENDAR_ID; ?>" class="rcalendar"><span class="loading-calendar-data">Loading calendar data&hellip;</span></div>
 <?php if ($calendar_language != '') { ?><script type="text/javascript" src="<?php echo plugins_url('js/languages/jquery.ui.datepicker-'.$calendar_language.'.js', __FILE__); ?>"></script><?php } ?>
 
    <script type="text/javascript">
     jQuery(function(){
-    (function($) {   
+    (function($) {
         $calendarjQuery = jQuery.noConflict();
         $calendarjQuery(function() {
         $calendarjQuery("#cal<?php echo CP_BCCF_CALENDAR_ID; ?>").rcalendar({"calendarId":<?php echo CP_BCCF_CALENDAR_ID; ?>,
@@ -160,7 +167,7 @@ for ($k=1;$k<100;$k++)
                                             "firstDay":<?php echo dex_bccf_get_option('calendar_weekday', DEX_BCCF_DEFAULT_CALENDAR_WEEKDAY); ?>,
                                             "numberOfMonths":<?php echo dex_bccf_get_option('calendar_pages',DEX_BCCF_DEFAULT_CALENDAR_PAGES); ?>
                                             });
-       
+
         });
     })(jQuery);
     });
@@ -177,9 +184,9 @@ for ($k=1;$k<100;$k++)
 <?php } ?>
 
 </div>
-<div id="metabox_basic_settings_cal2" style="display:none;background-color:#bbffff;width:450px;border: 1px solid black;padding:10px;margin:10px;"> 
+<div id="metabox_basic_settings_cal2" style="display:none;background-color:#bbffff;width:450px;border: 1px solid black;padding:10px;margin:10px;">
     The calendar availability is disabled in these settings because are being loaded from another "<strong>Master Calendar</strong>". See the "<strong>Master Calendar</strong>" selected above.
-</div> 
+</div>
 
 <?php if ($option_use_calendar != 'false') { ?>
    <div id="demo" class="yui-navset"></div>
@@ -190,7 +197,7 @@ for ($k=1;$k<100;$k++)
          <td colspan="4" style="padding:0px;background-color:#E2EFF8;color:#666666;font-weight:bold;text-align:center">
            <strong>Settings for both admin and public calendars</strong>
          </td>
-        </tr> 
+        </tr>
         <tr valign="top">
         <td colspan="4">
 
@@ -213,9 +220,9 @@ for ($k=1;$k<100;$k++)
              </select>
           </div>
 
-          <div style="float:left;width:200px;">          
+          <div style="float:left;width:200px;">
             <strong>Calendar language</strong><br />
-<?php $v = dex_bccf_get_option('calendar_language',DEX_BCCF_DEFAULT_CALENDAR_LANGUAGE); ?>            
+<?php $v = dex_bccf_get_option('calendar_language',DEX_BCCF_DEFAULT_CALENDAR_LANGUAGE); ?>
              <select name="calendar_language" id="calendar_language">
 <option <?php if ($v == '') echo 'selected'; ?> value=""> - auto-detect - </option>
 <option <?php if ($v == 'af') echo 'selected'; ?> value="af">Afrikaans</option>
@@ -330,34 +337,34 @@ for ($k=1;$k<100;$k++)
        </tr>
        <tr>
         <td valign="top" colspan="4">
-           <div style="width:190px;float:left"> 
+           <div style="width:190px;float:left">
           <strong>Show cost below calendar?</strong><br />
              <?php $value = dex_bccf_get_option('calendar_showcost','1'); ?>
              <select name="calendar_showcost">
                <option value="1" <?php if ($value == '1') echo ' selected="selected"'; ?>>Yes</option>
                <option value="0" <?php if ($value == '0') echo ' selected="selected"'; ?>>No</option>
-             </select>            
-           </div>             
-           <div style="width:140px;float:left"> 
+             </select>
+           </div>
+           <div style="width:140px;float:left">
              <strong>Reservation Mode</strong><br />
              <?php $value = dex_bccf_get_option('calendar_mode',DEX_BCCF_DEFAULT_CALENDAR_MODE); ?>
              <select name="calendar_mode">
                <option value="true" <?php if ($value == 'true') echo ' selected="selected"'; ?>>Partial Days</option>
                <option value="false" <?php if ($value == 'false') echo ' selected="selected"'; ?>>Complete Days</option>
              </select>
-           </div>  
-           <div style="width:500px;float:left;padding-top:10px;"> 
+           </div>
+           <div style="width:500px;float:left;padding-top:10px;">
              <em style="font-size:11px;">Complete day means that the first and the last days booked are charged as full days;<br />Partial Day means that they are charged as half-days only.</em>
-           </div>  
+           </div>
         </td>
        </tr>
-       
+
         <tr valign="top">
          <td colspan="4" style="padding:0px;background-color:#E2EFF8;color:#666666;font-weight:bold;text-align:center">
 			<strong>Settings for the public calendar</strong>
          </td>
-        </tr> 
-               
+        </tr>
+
        <tr>
         <td width="1%" nowrap valign="top" colspan="2">
          <strong>Minimum  available date:</strong><br />
@@ -411,7 +418,7 @@ for ($k=1;$k<100;$k++)
          <input type="checkbox" class="srCheck" value="1" name="sd6" id="c5" <?php echo ($cfmode[5]=='1'?'checked="checked"':''); ?> /> Fr &nbsp; &nbsp; &nbsp;
          <input type="checkbox" class="srCheck" value="1" name="sd7" id="c6" <?php echo ($cfmode[6]=='1'?'checked="checked"':''); ?> /> Sa &nbsp; &nbsp; &nbsp;
          <br /><em style="font-size:11px;">Use this for allowing specific weekdays as start of the reservation.</em>
-         </div> 
+         </div>
          <br />
          <div style="background:#E2EFF8;border: 1px dotted #888888;padding:10px;">
              <div><strong><input type="checkbox" value="1" name="calendar_fixedmode" <?php echo esc_attr((dex_bccf_get_option('calendar_fixedmode', '')=='1'?'checked="checked"':'')); ?> id="fixedreservation"> Enable Fixed Reservation Length?</strong>
@@ -425,7 +432,7 @@ for ($k=1;$k<100;$k++)
                   <?php for ($k=1;$k<30;$k++) echo '<option value="'.$k.'"'.($k.""==$v?' selected ':'').'>'.$k.'</option>'; ?>
                  </select>
                  <br /><br />
-                 
+
 
              </div>
          </div>
@@ -435,10 +442,10 @@ for ($k=1;$k<100;$k++)
         <td width="1%" nowrap valign="top" colspan="2">
           <strong>Disabled and special dates (see legend below):</strong>
           <div id="calConfig"><em><span style="color:#009900">Loading calendar data...</span></em></div>
-          
+
           <div style="margin-top:5px;margin-left:10px;"><div style="float:left;width:20px;height:20px;margin-right:10px;background-color:#FEA69A;"></div> <strong>Non-available dates:</strong> Click once to mark the date as non-available.</div>
           <div style="clear:both"></div>
-          <div id="startreslegend" style="margin-top:5px;margin-left:10px;"><div style="float:left;width:20px;height:20px;margin-right:10px;background-color:#80BF92;"></div> <strong>Start reservation dates:</strong> Click twice to mark the date as start date.</div>          
+          <div id="startreslegend" style="margin-top:5px;margin-left:10px;"><div style="float:left;width:20px;height:20px;margin-right:10px;background-color:#80BF92;"></div> <strong>Start reservation dates:</strong> Click twice to mark the date as start date.</div>
           <div style="clear:both"></div>
           <div style="margin-left:35px;"><em style="font-size:11px;">Every time a date is cliked it status changes. Click it to mark/unmark it.</em></div>
         </td>
@@ -454,14 +461,9 @@ for ($k=1;$k<100;$k++)
     <input type="hidden" name="calendar_mindate" value="<?php echo esc_attr(dex_bccf_get_option('calendar_mindate',DEX_BCCF_DEFAULT_CALENDAR_MINDATE)); ?>" />
     <input type="hidden" name="calendar_maxdate" value="<?php echo esc_attr(dex_bccf_get_option('calendar_maxdate',DEX_BCCF_DEFAULT_CALENDAR_MAXDATE)); ?>" />
 <?php } ?>
-
-  </div>
- </div>
-
-
- <div id="metabox_basic_settings" class="postbox" >
-  <h2 class='hndle' style="padding:5px;"><span>Form Builder</span></h2>
-  <div class="inside">
+		</section>
+ 		<section>
+			<h2>Form Builder</h2>
 
      <input type="hidden" name="form_structure" id="form_structure" size="180" value="<?php echo str_replace('"','&quot;',str_replace("\r","",str_replace("\n","",esc_attr(dex_bccf_cleanJSON(dex_bccf_get_option('form_structure', DEX_BCCF_DEFAULT_form_structure)))))); ?>" />
      <input type="hidden" name="templates" id="templates" value="<?php echo esc_attr( json_encode( dex_bccf_available_templates() ) ); ?>" />
@@ -519,15 +521,10 @@ for ($k=1;$k<100;$k++)
          <div class="clearer"></div>
 
      </div>
-
-  </div>
- </div>
- 
- 
- <div id="metabox_basic_settings" class="postbox" >
-  <h2 class='hndle' style="padding:5px;"><span>Submit Button</span></h2>
-  <div class="inside">   
-     <table class="form-table">    
+		</section>
+		<section>
+			<h2>Submit Button</h2>
+			<table class="form-table">
         <tr valign="top">
         <th scope="row">Submit button label (text):</th>
         <td><input type="text" name="vs_text_submitbtn" size="40" value="<?php $label = esc_attr(dex_bccf_get_option('vs_text_submitbtn', 'Continue')); echo ($label==''?'Continue':$label); ?>" /></td>
@@ -535,26 +532,21 @@ for ($k=1;$k<100;$k++)
         <tr valign="top">
         <th scope="row">Previous button label (text):</th>
         <td><input type="text" name="vs_text_previousbtn" size="40" value="<?php $label = esc_attr(dex_bccf_get_option('vs_text_previousbtn', 'Previous')); echo ($label==''?'Previous':$label); ?>" /></td>
-        </tr>    
+        </tr>
         <tr valign="top">
         <th scope="row">Next button label (text):</th>
         <td><input type="text" name="vs_text_nextbtn" size="40" value="<?php $label = esc_attr(dex_bccf_get_option('vs_text_nextbtn', 'Next')); echo ($label==''?'Next':$label); ?>" /></td>
-        </tr>  
+        </tr>
         <tr valign="top">
         <td colspan="2"> - The  <em>class="pbSubmit"</em> can be used to modify the button styles. <br />
         - The styles can be applied into any of the CSS files of your theme or into the CSS file <em>"booking-calendar-contact-form\css\stylepublic.css"</em>. <br />
         - For further modifications the submit button is located at the end of the file <em>"sc-res-scheduler.php"</em>.<br />
         - For general CSS styles modifications to the form and samples <a href="http://wordpress.dwbooster.com/faq/booking-calendar-contact-form#q100" target="_blank">check this FAQ</a>.
         </tr>
-     </table>
-  </div>    
- </div> 
-  
- 
-
-  <div id="metabox_basic_settings" class="postbox" >
-  <h2 class='hndle' style="padding:5px;"><span>Validation Texts</span></h2>
-  <div class="inside">
+			</table>
+		</section>
+		<section>
+			<h2>Validation Texts</h2>
      <?php $option = dex_bccf_get_option('vs_use_validation', DEX_BCCF_DEFAULT_vs_use_validation); ?>
      <input type="hidden" name="vs_use_validation" value="<?php echo $option; ?>" />
      <table class="form-table">
@@ -578,15 +570,11 @@ for ($k=1;$k<100;$k++)
          <td><strong>"over minimum" text:</strong><br /><input type="text" name="vs_text_min" size="70" value="<?php echo esc_attr(dex_bccf_get_option('vs_text_min', DEX_BCCF_DEFAULT_vs_text_min)); ?>" /></td>
         </tr>
 
-     </table>
-  </div>
- </div>
-
- <div id="metabox_basic_settings" class="postbox" >
-  <h2 class='hndle' style="padding:5px;"><span>Price Configuration</span></h2>
-  <div class="inside">
-
-    <table class="form-table">
+	 </table>
+		</section>
+		<section>
+			<h2>Price Configuration</h2>
+			<table class="form-table">
 
         <tr valign="top">
         <th scope="row"><strong>Currency</strong></th>
@@ -623,25 +611,25 @@ for ($k=1;$k<100;$k++)
        <tr>
         <td valign="top" colspan="2">
          <strong>Supplement for bookings between</strong>
-         <input type="text" size="5" name="calendar_suplementminnight" size="40" value="<?php $v = dex_bccf_get_option('calendar_suplementminnight', '0'); echo esc_attr(($v==''?'0':$v)); ?>" />
+         <input type="text" name="calendar_suplementminnight" size="40" value="<?php $v = dex_bccf_get_option('calendar_suplementminnight', '0'); echo esc_attr(($v==''?'0':$v)); ?>" />
          <strong>and</strong>
-         <input type="text" size="5" name="calendar_suplementmaxnight" size="40" value="<?php $v = dex_bccf_get_option('calendar_suplementmaxnight', '0'); echo esc_attr(($v==''?'0':$v)); ?>" />
+         <input type="text" name="calendar_suplementmaxnight" size="40" value="<?php $v = dex_bccf_get_option('calendar_suplementmaxnight', '0'); echo esc_attr(($v==''?'0':$v)); ?>" />
          <strong>nights:</strong>
-         <input type="text" size="5" name="calendar_suplement" size="40" value="<?php $v = dex_bccf_get_option('calendar_suplement', '0'); echo esc_attr(($v==''?'0':$v)); ?>" /><br />
+         <input type="text" name="calendar_suplement" size="40" value="<?php $v = dex_bccf_get_option('calendar_suplement', '0'); echo esc_attr(($v==''?'0':$v)); ?>" /><br />
          <em style="font-size:11px;">Suplement will be added once for bookings between those nights.</em>
         </td>
        </tr>
-       
+
 
         <tr valign="top">
          <td colspan="4" style="padding:3px;background-color:#E2EFF8;color:#666666;font-weight:bold;text-align:left">
 			<strong>Deposit Payment (optional)</strong>
          </td>
-        </tr>        
+        </tr>
 
        <tr>
         <td valign="top" colspan="2">
-        
+
          <?php $v = dex_bccf_get_option('calendar_depositenable', '0'); if ($v=='') $v = '0'; ?>
          <strong>Enable deposit payment?:</strong>
          <select name="calendar_depositenable">
@@ -650,7 +638,7 @@ for ($k=1;$k<100;$k++)
          </select>
          &nbsp;&nbsp;
          <strong>Deposit Amount:</strong>
-         <input type="text" size="5" name="calendar_depositamount" size="40" value="<?php $v = dex_bccf_get_option('calendar_depositamount', '0'); echo esc_attr(($v==''?'0':$v)); ?>" />
+         <input type="text" name="calendar_depositamount" size="40" value="<?php $v = dex_bccf_get_option('calendar_depositamount', '0'); echo esc_attr(($v==''?'0':$v)); ?>" />
          &nbsp;&nbsp;
          <?php $v = dex_bccf_get_option('calendar_deposittype', '0'); if ($v=='') $v = '0'; ?>
          <strong>Deposit type:</strong>
@@ -660,18 +648,18 @@ for ($k=1;$k<100;$k++)
          </select>
          <br />
          <em style="font-size:11px;">If enabled, the customer will have to pay at PayPal only the deposit amount.</em>
-         <br /> 
-         
+         <br />
+
         </td>
        </tr>
-       
+
 
         <tr valign="top">
          <td colspan="4" style="padding:3px;background-color:#E2EFF8;color:#666666;font-weight:bold;text-align:left">
 			<strong>Seasons Configuration (optional)</strong>
          </td>
-        </tr> 
-        
+        </tr>
+
         <tr valign="top">
         <td scope="row" colspan="2">
            <!--<strong>Season cost (per day):</strong>-->
@@ -688,19 +676,14 @@ for ($k=1;$k<100;$k++)
              <input type="button" name="dex_dc_subcseasons" id="dex_dc_subcseasons" value="Add Season" />
              <br />
              <em>Note: Season prices override the "Default request cost" specified above.</em>
-           </div>  
+           </div>
         </td>
         </tr>
-    </table>
-
-  </div>
- </div>
-
- <div id="metabox_basic_settings" class="postbox" >
-  <h2 class='hndle' style="padding:5px;"><span>Paypal Payment Configuration</span></h2>
-  <div class="inside">
-
-    <table class="form-table">
+    		</table>
+		</section>
+		<section>
+			<h2>Paypal Payment Configuration</h2>
+			<table class="form-table">
         <tr valign="top">
         <th scope="row">Enable Paypal Payments?</th>
         <td><select name="enable_paypal" onchange="bccp_update_pp_payment_selection();">
@@ -708,13 +691,13 @@ for ($k=1;$k<100;$k++)
              <option value="1" <?php if (dex_bccf_get_option('enable_paypal',DEX_BCCF_DEFAULT_ENABLE_PAYPAL) == '1') echo 'selected'; ?> >Yes</option>
              <option value="2" <?php if (dex_bccf_get_option('enable_paypal',DEX_BCCF_DEFAULT_ENABLE_PAYPAL) == '2') echo 'selected'; ?> >Optional</option>
              <option value="3" <?php if (dex_bccf_get_option('enable_paypal',DEX_BCCF_DEFAULT_ENABLE_PAYPAL) == '3') echo 'selected'; ?> >Use BeanStream.com</option>
-            </select> 
+            </select>
             <br /><em style="font-size:11px;">Note: If "Optional" is selected, a radiobutton will appear in the form to select if the payment will be made with PayPal or not.</em>
             <div id="bccf_paypal_options_beanstream" style="display:none;margin-top:10px;background:#EEF5FB;border: 1px dotted #888888;padding:10px;width:260px;">
               BeanStream Merchant ID:<br />
               <input type="text" name="enable_beanstream_id" size="40" style="width:250px;" value="<?php echo esc_attr(dex_bccf_get_option('enable_beanstream_id','')); ?>" />
             </div>
-            
+
             <div id="bccf_paypal_options_label" style="display:none;margin-top:10px;background:#EEF5FB;border: 1px dotted #888888;padding:10px;width:260px;">
               Label for the "<strong>Pay with PayPal</strong>" option:<br />
               <input type="text" name="enable_paypal_option_yes" size="40" style="width:250px;" value="<?php echo esc_attr(dex_bccf_get_option('enable_paypal_option_yes',DEX_BCCF_DEFAULT_PAYPAL_OPTION_YES)); ?>" />
@@ -758,7 +741,7 @@ for ($k=1;$k<100;$k++)
         <th scope="row">Taxes (applied at Paypal)</th>
         <td><input type="text" name="request_taxes" value="<?php echo esc_attr(dex_bccf_get_option('request_taxes','0')); ?>" /></td>
         </tr>
-        
+
         <tr valign="top">
         <th scope="row">Discount Codes</th>
         <td>
@@ -777,25 +760,20 @@ for ($k=1;$k<100;$k++)
         </tr>
 
      </table>
-
-  </div>
- </div>
-
- <div id="metabox_basic_settings" class="postbox" >
-  <h2 class='hndle' style="padding:5px;"><span>Cabin Rates & Event Pricing</span></h2>
-  <div class="inside">
-  
-   <div id="bccf_optional_services_fields_link"> 
+		</section>
+		<section>
+			<h2 class='hndle' style="padding:5px;"><span>Cabin Rates & Event Pricing</span></h2>
+			<div id="bccf_optional_services_fields_link">
     <a href="javascript:bccf_toggle_osf()">Click to show cabin rates configuration</a>
     <script type="text/javascript">
-     function bccf_toggle_osf() 
+     function bccf_toggle_osf()
      {
         document.getElementById("bccf_optional_services_fields_link").style.display="none";
         document.getElementById("bccf_optional_services_fields").style.display="";
-     } 
+     }
     </script>
    </div>
-   <div id="bccf_optional_services_fields" style="display:none;"> 
+   <div id="bccf_optional_services_fields" style="display:none;">
    <?php for ($k=1;$k<=DEX_BCCF_DEFAULT_SERVICES_FIELDS; $k++) { ?>
     <fieldset>
      <legend style="font-size: 16px;"><strong>Field #<?php echo $k; ?></strong></legend>
@@ -836,13 +814,10 @@ for ($k=1;$k<100;$k++)
     </fieldset>
    <?php } ?>
    </div>
-  </div>
- </div>
-
- <div id="metabox_basic_settings" class="postbox" >
-  <h2 class='hndle' style="padding:5px;"><span>Notification Settings to Admin</span></h2>
-  <div class="inside">
-     <table class="form-table">
+		</section>
+		<section>
+			<h2>Notification Settings to Admin</h2>
+			<table class="form-table">
         <tr valign="top">
         <th scope="row">Notification "from" email</th>
         <td><input type="text" name="notification_from_email" size="40" value="<?php echo esc_attr(dex_bccf_get_option('notification_from_email', DEX_BCCF_DEFAULT_PAYPAL_EMAIL)); ?>" /></td>
@@ -867,20 +842,16 @@ for ($k=1;$k<100;$k++)
            <option value="html"<?php if ($option == 'html') echo ' selected'; ?>>HTML (use html in the textarea below)</option>
           </select>
         </td>
-        </tr>         
+        </tr>
         <tr valign="top">
         <th scope="row">Email notification to admin</th>
         <td><textarea cols="70" rows="5" name="email_notification_to_admin"><?php echo dex_bccf_get_option('email_notification_to_admin', DEX_BCCF_DEFAULT_NOTIFICATION_EMAIL); ?></textarea></td>
         </tr>
      </table>
-  </div>
- </div>
-
-
- <div id="metabox_basic_settings" class="postbox" >
-  <h2 class='hndle' style="padding:5px;"><span>Email Copy to User</span></h2>
-  <div class="inside">
-     <table class="form-table">
+		</section>
+		<section>
+			<h2>Email Copy to User</h2>
+			<table class="form-table">
         <tr valign="top">
         <th scope="row">Email field on the form</th>
         <td><select id="cu_user_email_field" name="cu_user_email_field" def="<?php echo esc_attr(dex_bccf_get_option('cu_user_email_field', DEX_BCCF_DEFAULT_cu_user_email_field)); ?>"></select></td>
@@ -898,27 +869,22 @@ for ($k=1;$k<100;$k++)
            <option value="html"<?php if ($option == 'html') echo ' selected'; ?>>HTML (use html in the textarea below)</option>
           </select>
         </td>
-        </tr>         
+        </tr>
         <tr valign="top">
         <th scope="row">Email confirmation to user</th>
         <td><textarea cols="70" rows="5" name="email_confirmation_to_user"><?php echo dex_bccf_get_option('email_confirmation_to_user', DEX_BCCF_DEFAULT_CONFIRMATION_EMAIL); ?></textarea></td>
         </tr>
      </table>
-  </div>
- </div>
-
-
- 
- <div id="metabox_basic_settings" class="postbox" >
-  <h2 class='hndle' style="padding:5px;"><span>Reminder Settings</span></h2>
-  <div class="inside">  
-     <table class="form-table">    
+		</section>
+		<section>
+			<h2 class='hndle' style="padding:5px;"><span>Reminder Settings</span></h2>
+			<table class="form-table">
         <tr valign="top">
         <th scope="row">Enable booking reminders?</th>
         <td><input type="checkbox" name="enable_reminder" id="enable_reminder" onclick="bccf_checkreminderstatus();" size="40" value="1" <?php if (dex_bccf_get_option('enable_reminder',0)) echo 'checked'; ?> /></td>
-        </tr>  
-     </table>          
-     <table class="form-table" id="bccf_remindertable">            
+        </tr>
+     </table>
+     <table class="form-table" id="bccf_remindertable">
         <tr><td colspan="2"><hr /></td></tr>
         <tr valign="top">
         <th scope="row">Send reminder:</th>
@@ -939,13 +905,13 @@ for ($k=1;$k<100;$k++)
            <option value="html"<?php if ($option == 'html') echo ' selected'; ?>>HTML (use html in the textarea below)</option>
           </select>
         </td>
-        </tr>          
+        </tr>
         <tr valign="top">
         <th scope="row">Reminder email message</th>
         <td><textarea cols="70" rows="5" name="reminder_content"><?php echo dex_bccf_get_option('reminder_content', DEX_BCCF_DEFAULT_REMINDER_CONTENT); ?></textarea></td>
-        </tr>                                                
-     </table>     
-     <table class="form-table" id="bccf_remindertable2">            
+        </tr>
+     </table>
+     <table class="form-table" id="bccf_remindertable2">
         <tr><td colspan="2"><hr /></td></tr>
         <tr valign="top">
         <th scope="row">Send reminder:</th>
@@ -966,35 +932,31 @@ for ($k=1;$k<100;$k++)
            <option value="html"<?php if ($option == 'html') echo ' selected'; ?>>HTML (use html in the textarea below)</option>
           </select>
         </td>
-        </tr>          
+        </tr>
         <tr valign="top">
         <th scope="row">Reminder email message</th>
         <td><textarea cols="70" rows="5" name="reminder_content2"><?php echo dex_bccf_get_option('reminder_content2', DEX_BCCF_DEFAULT_REMINDER_CONTENT_AFTER); ?></textarea></td>
-        </tr>                                                
-     </table>          
+        </tr>
+     </table>
      <script type="text/javascript">
        function bccf_checkreminderstatus() {
             if (document.getElementById("enable_reminder").checked)
             {
                 document.getElementById("bccf_remindertable").style.display = '';
                 document.getElementById("bccf_remindertable2").style.display = '';
-            }    
+            }
             else
             {
-                document.getElementById("bccf_remindertable").style.display = 'none';    
-                document.getElementById("bccf_remindertable2").style.display = 'none';    
-            }    
+                document.getElementById("bccf_remindertable").style.display = 'none';
+                document.getElementById("bccf_remindertable2").style.display = 'none';
+            }
        }
        bccf_checkreminderstatus();
      </script>
-  </div>
-</div>  
-
-
- <div id="metabox_basic_settings" class="postbox" >
-  <h2 class='hndle' style="padding:5px;"><span>Captcha Verification</span></h2>
-  <div class="inside">
-     <table class="form-table">
+		</section>
+		<section>
+			<h2>Captcha Verification</h2>
+			<table class="form-table">
         <tr valign="top">
         <th scope="row">Use Captcha Verification?</th>
         <td colspan="5">
@@ -1056,37 +1018,25 @@ for ($k=1;$k<100;$k++)
         </tr>
 
 
-     </table>
-  </div>
- </div>
- 
- <?php
-	global $dexbccf_addons_objs_list, $dexbccf_addons_active_list;
-	if( count( $dexbccf_addons_active_list ) )
-	{	
-		_e( '<h2>Add-Ons Settings:</h2><hr />', 'bccf' );
-		foreach( $dexbccf_addons_active_list as $addon_id ) if( isset( $dexbccf_addons_objs_list[ $addon_id ] ) ) print $dexbccf_addons_objs_list[ $addon_id ]->get_addon_form_settings( CP_CONTACTFORMPP_ID );
-	}
- ?>
-   
-
-  <div id="metabox_basic_settings" class="postbox" >
-    <h2 class='hndle' style="padding:5px;"><span>Note</span></h2>
-    <div class="inside">
+			</table>
+		</section>
+		<?php if ( isset( $dexbccf_addons_objs_list[$addon_id] ) ) : ?>
+		<section>
+			<?php global $dexbccf_addons_objs_list, $dexbccf_addons_active_list;
+			if ( count( $dexbccf_addons_active_list ) ) {
+				_e( '<h2>Add-Ons Settings:</h2><hr />', 'bccf' );
+				foreach( $dexbccf_addons_active_list as $addon_id ) if( isset( $dexbccf_addons_objs_list[ $addon_id ] ) ) print $dexbccf_addons_objs_list[ $addon_id ]->get_addon_form_settings( CP_CONTACTFORMPP_ID );
+			} ?>
+		</section>
+		<?php endif; ?>
+		<section>
+			<h2 class='hndle' style="padding:5px;"><span>Note</span></h2>
      To insert this form in a post/page, use the dedicated icon
      <?php print '<img hspace="5" src="'.plugins_url('/images/dex_apps.gif', __FILE__).'" alt="'.__('Insert Booking Calendar','bccf').'" />';     ?>
      which has been added to your Upload/Insert Menu, just below the title of your Post/Page.
-     <br /><br />
-    </div>
-  </div>
-
-</div>
-
-
-<p class="submit"><input type="submit" name="submit" id="submit" class="button-primary" value="Save Changes"  /></p>
-
-[<a href="http://wordpress.dwbooster.com/contact-us" target="_blank">Request Custom Modifications</a>] | [<a href="http://wordpress.dwbooster.com/calendars/booking-calendar-contact-form" target="_blank">Help</a>]
-</form>
+			<p class="submit"><input type="submit" name="submit" id="submit" class="button-primary" value="Save Changes"  /></p>
+		</section>
+	</form>
 </div>
 <script type="text/javascript">
  function generateCaptcha()
@@ -1179,39 +1129,39 @@ for ($k=1;$k<100;$k++)
               buffer += '<div id="cpabccost'+i+'" style="float:left;width:70px;font-size:10px;">'+i+' day'+(i>1?'s':'')+':<br />'+
                          '<input type="text" name="request_cost_'+i+'" style="width:40px;" value="'+default_request_cost[i]+'" /></div>';
               buffer2 += '<div id="cpabccost_season'+i+'" style="float:left;width:70px;font-size:10px;">'+i+' day'+(i>1?'s':'')+':<br />'+
-                         '<input type="text" name="request_cost_season'+i+'" id="request_cost_season'+i+'" style="width:40px;" value="" /></div>';           
-          }               
+                         '<input type="text" name="request_cost_season'+i+'" id="request_cost_season'+i+'" style="width:40px;" value="" /></div>';
+          }
           if (slots == '0')
               buffer = "<br />&lt;-<em> Select the number of days to setup if you want to use this configuration option.<br /></em>";
           else
-              buffer2 = 'Total request cost for specific # of days:<br />'+buffer2+'<div style="clear:both"></div>';  
+              buffer2 = 'Total request cost for specific # of days:<br />'+buffer2+'<div style="clear:both"></div>';
           document.getElementById("cpabcslots").innerHTML = buffer;
-          document.getElementById("cpabcslots_season").innerHTML = buffer2;          
+          document.getElementById("cpabcslots_season").innerHTML = buffer2;
       }
       catch(e)
       {
       }
   }
   dex_updatemaxslots();
-  
-  function bccp_update_pp_payment_selection() 
+
+  function bccp_update_pp_payment_selection()
   {
      var f = document.dexconfigofrm;
-     var ppoption = f.enable_paypal.options[f.enable_paypal.selectedIndex].value;     
+     var ppoption = f.enable_paypal.options[f.enable_paypal.selectedIndex].value;
      if (ppoption == '2')
-         document.getElementById("bccf_paypal_options_label").style.display = "";         
+         document.getElementById("bccf_paypal_options_label").style.display = "";
      else
-         document.getElementById("bccf_paypal_options_label").style.display = "none";  
-     if (ppoption == '3')    
-         document.getElementById("bccf_paypal_options_beanstream").style.display = "";  
+         document.getElementById("bccf_paypal_options_label").style.display = "none";
+     if (ppoption == '3')
+         document.getElementById("bccf_paypal_options_beanstream").style.display = "";
      else
-         document.getElementById("bccf_paypal_options_beanstream").style.display = "none";      
-         
-  }   
-  
+         document.getElementById("bccf_paypal_options_beanstream").style.display = "none";
+
+  }
+
   bccp_update_pp_payment_selection();
-  
-  function shcalarea() 
+
+  function shcalarea()
   {
     var cal1 = document.getElementById("metabox_basic_settings_cal1");
     var cal2 = document.getElementById("metabox_basic_settings_cal2");
@@ -1219,21 +1169,22 @@ for ($k=1;$k<100;$k++)
     if (sel.selectedIndex > 0)
     {
         cal1.style.display='none';
-        cal2.style.display='';     
-    }    
-    else 
+        cal2.style.display='';
+    }
+    else
     {
-        cal1.style.display='';     
-        cal2.style.display='none';     
+        cal1.style.display='';
+        cal2.style.display='none';
     }
   }
-  
+
   shcalarea();
-         
+
 </script>
+<?php
 
-
-<?php } else { ?>
-  <br />
-  The current user logged in doesn't have enough permissions to edit this calendar. This user can edit only his/her own calendars. Please log in as administrator to get access to all calendars.
-<?php } ?>
+// End is admin or if form owner.
+else : ?>
+	<br />
+	<p><?php __( 'The current user logged in doesn\'t have enough permissions to edit this calendar. This user can edit only his/her own calendars. Please log in as administrator to get access to all calendars.', 'sc-res' ); ?></p>
+<?php endif; ?>
