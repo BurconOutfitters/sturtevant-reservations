@@ -464,7 +464,7 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
                                         <span class="loading-calendar-data"><?php echo esc_html__( 'Loading calendar data&hellip;', 'sc-res' ); ?></span>
                                     </div>
 									<div style="margin-top:5px;margin-left:10px;">
-                                        <div style="float:left;width:20px;height:20px;margin-right:10px;background-color:#FEA69A;"></div>
+                                        <div style="float:left;width:20px;height:20px;margin-right:10px;background-color:#d00;"></div>
                                         <?php echo sprintf(
                                             '<p><strong>%1s</strong> %2s</p>',
                                             esc_html__( 'Non-available dates:', 'sc-res' ),
@@ -473,7 +473,7 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
                                     </div>
 									<div class="reservations-form-clear"></div>
 									<div id="startreslegend" style="margin-top:5px;margin-left:10px;">
-                                        <div style="float:left;width:20px;height:20px;margin-right:10px;background-color:#80BF92;"></div>
+                                        <div style="float:left;width:20px;height:20px;margin-right:10px;background-color:#76a91d;"></div>
                                         <?php echo sprintf(
                                             '<p><strong>%1s</strong> %2s</p>',
                                             esc_html__( 'Start reservation dates:', 'sc-res' ),
