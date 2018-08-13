@@ -21,6 +21,14 @@
 	font-weight: normal;
 }
 
+.reservations-form-clear {
+	clear: both;
+}
+
+input[disabled="disabled"] {
+	cursor: not-allowed;
+}
+
 /**
  * Reservations list/main page.
  */

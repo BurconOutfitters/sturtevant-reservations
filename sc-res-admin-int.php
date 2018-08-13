@@ -82,7 +82,7 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
 							$calendars = $wpdb->get_results( 'SELECT * FROM '.DEX_BCCF_CONFIG_TABLE_NAME .' WHERE (master=\'0\' Or master=\'\') AND  `id`<>'.CP_BCCF_CALENDAR_ID );
 							?>
 							<select name="master" id="masteritem" onchange="shcalarea();">
-								<option value="0" <?php if ( $value == '0' ) {  echo ' selected="selected"'; } ?>> - </option>
+								<option value="0" <?php if ( $value == '0' ) {  echo ' selected="selected"'; } ?>><?php _e( 'Select&hellip;', 'sc-res' ); ?></option>
 								<?php foreach ( $calendars as $item ) { ?>
 								<option value="<?php echo $item->id; ?>" <?php if ( intval( $value ) == $item->id ) { echo ' selected="selected"'; } ?>> <?php echo $item->uname; ?></option>
 								<?php } ?>
@@ -96,371 +96,407 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
 			</table>
 		</section>
 		<section>
+			<h2><?php echo esc_html__( 'Calendar Configuration & Administration', 'sc-res' ); ?></h2>
+			<table class="form-table">
+				<tbody>
+					<tr valign="top">
+						<th scope="row">
+							<label for="masteritem"><?php _e( 'Calendar Display', 'sc-res' ); ?></label>
+						</th>
+						<td>
+							<?php $option = dex_bccf_get_option( 'calendar_enabled', DEX_BCCF_DEFAULT_CALENDAR_ENABLED ); ?>
+							<select name="calendar_enabled">
+								<option value="true"<?php if ( $option == 'true' ) { echo ' selected'; } ?>><?php _e( 'Show in form', 'sc-res' ); ?></option>
+								<option value="false"<?php if ( $option == 'false' ) { echo ' selected'; } ?>><?php _e( 'Do not show', 'sc-res' ); ?></option>
+							</select>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div id="metabox_basic_settings_cal1" class="reservations-display-calendar">
+				<?php
+				$option_use_calendar = $option;
+				$option_overlapped   = dex_bccf_get_option( 'calendar_overlapped', DEX_BCCF_DEFAULT_CALENDAR_OVERLAPPED );
+				$calendar_language   = dex_bccf_get_option( 'calendar_language', DEX_BCCF_DEFAULT_CALENDAR_LANGUAGE );
 
-  <h2>Calendar Configuration / Administration</h2>
-     <table class="form-table">
-        <tr valign="top">
-        <td colspan="5">
-          &nbsp; <strong>Display calendar in the booking form?</strong><br />
-          <?php $option = dex_bccf_get_option('calendar_enabled', DEX_BCCF_DEFAULT_CALENDAR_ENABLED); ?>
-          &nbsp; <select name="calendar_enabled">
-           <option value="true"<?php if ($option == 'true') echo ' selected'; ?>>Yes</option>
-           <option value="false"<?php if ($option == 'false') echo ' selected'; ?>>No</option>
-          </select>
-        </td>
-        </tr>
-     </table>
-<div id="metabox_basic_settings_cal1" style="">
-<?php
-    $option_use_calendar = $option;
-    $option_overlapped = dex_bccf_get_option('calendar_overlapped', DEX_BCCF_DEFAULT_CALENDAR_OVERLAPPED);
-    $calendar_language = dex_bccf_get_option('calendar_language',DEX_BCCF_DEFAULT_CALENDAR_LANGUAGE);
+				if ( $calendar_language == '' ) {
+					$calendar_language = dex_bccf_autodetect_language();
+				}
 
-    if ($calendar_language == '') $calendar_language = dex_bccf_autodetect_language();
+				$date_format = dex_bccf_get_option( 'calendar_dateformat', DEX_BCCF_DEFAULT_CALENDAR_DATEFORMAT );
+				if ( $date_format == 0 ) {
+					$date_format = 'mm/dd/yy';
+				} else {
+					$date_format = 'dd/mm/yy';
+				}
 
-    $calendar_dateformat = dex_bccf_get_option('calendar_dateformat',DEX_BCCF_DEFAULT_CALENDAR_DATEFORMAT);
-    $dformat = ((dex_bccf_get_option('calendar_dateformat', DEX_BCCF_DEFAULT_CALENDAR_DATEFORMAT)==0)?"mm/dd/yy":"dd/mm/yy");
-    $dformat_php = ((dex_bccf_get_option('calendar_dateformat', DEX_BCCF_DEFAULT_CALENDAR_DATEFORMAT)==0)?"m/d/Y":"d/m/Y");
-    $calendar_mindate = "";
-    $value = dex_bccf_get_option('calendar_mindate',DEX_BCCF_DEFAULT_CALENDAR_MINDATE);
-    if ($value != '') $calendar_mindate = date($dformat_php, strtotime($value));
-    $calendar_maxdate = "";
-    $value = dex_bccf_get_option('calendar_maxdate',DEX_BCCF_DEFAULT_CALENDAR_MAXDATE);
-    if ($value != '') $calendar_maxdate = date($dformat_php, strtotime($value));
-    if ($option_use_calendar == 'false')
-    {
-?>
-   <div style="background-color:#bbffff;width:450px;border: 1px solid black;padding:10px;margin:10px;">
-    <strong>Note:</strong> Calendar has been disabled in the field above, so there isn't need to display and edit it.
-     <strong>To re-enable</strong> the calendar select that option in the field above and <strong>save the settings</strong> to render the calendar again.
-   </div>
-<?php
-  //  } else if ($option_overlapped == 'true') {
-?>
-   <!-- <div style="background-color:#ffff55;width:450px;border: 1px solid black;padding:10px;margin:10px;">
-    <strong>Note:</strong> Overlapped reservations are enabled below, so you cannot use the calendar to block dates and the booking should be checked in the <a href="admin.php?page=dex_bccf&cal=<?php echo CP_BCCF_CALENDAR_ID; ?>&list=1">bookings list area</a>.
-   </div>
-    -->
-<?php } else { ?>
+				$date_format_php = dex_bccf_get_option( 'calendar_dateformat', DEX_BCCF_DEFAULT_CALENDAR_DATEFORMAT );
+				if ( $date_format_php == 0 ) {
+					$date_format_php = 'm/d/y';
+				} else {
+					$date_format_php = 'd/m/y';
+				}
 
+				$calendar_mindate = '';
+				$value            = dex_bccf_get_option( 'calendar_mindate',DEX_BCCF_DEFAULT_CALENDAR_MINDATE );
 
-   <script>
-   var pathCalendar = "<?php echo cp_bccf_get_site_url(); ?>/";
-   var pathCalendar_full = pathCalendar + "wp-content/plugins/<?php echo basename(dirname(__FILE__));?>/css/images/corners";
-   </script>
+				if ( $value != '' ) {
+					$calendar_mindate = date( $date_format_php, strtotime( $value ) );
+				}
 
-   <div id="cal<?php echo CP_BCCF_CALENDAR_ID; ?>" class="rcalendar"><span class="loading-calendar-data">Loading calendar data&hellip;</span></div>
-<?php if ($calendar_language != '') { ?><script type="text/javascript" src="<?php echo plugins_url('js/languages/jquery.ui.datepicker-'.$calendar_language.'.js', __FILE__); ?>"></script><?php } ?>
+				$calendar_maxdate    = '';
+				$value               = dex_bccf_get_option( 'calendar_maxdate',DEX_BCCF_DEFAULT_CALENDAR_MAXDATE );
 
-   <script type="text/javascript">
-    jQuery(function(){
-    (function($) {
-        $calendarjQuery = jQuery.noConflict();
-        $calendarjQuery(function() {
-        $calendarjQuery("#cal<?php echo CP_BCCF_CALENDAR_ID; ?>").rcalendar({"calendarId":<?php echo CP_BCCF_CALENDAR_ID; ?>,
-                                            "partialDate":<?php echo dex_bccf_get_option('calendar_mode',DEX_BCCF_DEFAULT_CALENDAR_MODE); ?>,
-                                            "edition":true,
-                                            //"minDate":"<?php echo $calendar_mindate;?>",
-                                            //"maxDate":"<?php echo $calendar_maxdate;?>",
-                                            "dformat":"<?php echo $dformat;?>",
-                                            "language":"<?php echo $calendar_language?>",
-                                            "firstDay":<?php echo dex_bccf_get_option('calendar_weekday', DEX_BCCF_DEFAULT_CALENDAR_WEEKDAY); ?>,
-                                            "numberOfMonths":<?php echo dex_bccf_get_option('calendar_pages',DEX_BCCF_DEFAULT_CALENDAR_PAGES); ?>
-                                            });
+				if ( $value != '' ) {
+					$calendar_maxdate = date( $date_format_php, strtotime( $value ) );
+				}
 
-        });
-    })(jQuery);
-    });
-   </script>
-
-   <div style="clear:both;height:20px" ></div>
-
-<?php if ($option_overlapped == 'true') { ?>
-<div style="background-color:#ffffdd;width:450px;border: 1px solid black;padding:10px;margin:10px;">
-    <strong>Note:</strong> Overlapped reservations are enabled below and you can use the calendar for blocking dates, however only the blocked dates are shown in the calendar. The bookings should be checked in the <a href="admin.php?page=dex_bccf&cal=<?php echo CP_BCCF_CALENDAR_ID; ?>&list=1">bookings list area</a>.
-   </div>
-<?php } ?>
-
-<?php } ?>
-
-</div>
-<div id="metabox_basic_settings_cal2" style="display:none;background-color:#bbffff;width:450px;border: 1px solid black;padding:10px;margin:10px;">
-    The calendar availability is disabled in these settings because are being loaded from another "<strong>Master Calendar</strong>". See the "<strong>Master Calendar</strong>" selected above.
-</div>
-
-<?php if ($option_use_calendar != 'false') { ?>
-   <div id="demo" class="yui-navset"></div>
-   <div style="clear:both;height:0px" ></div>
-
-   <table class="form-table" style="width:870px;">
-        <tr valign="top">
-         <td colspan="4" style="padding:0px;background-color:#E2EFF8;color:#666666;font-weight:bold;text-align:center">
-           <strong>Settings for both admin and public calendars</strong>
-         </td>
-        </tr>
-        <tr valign="top">
-        <td colspan="4">
-
-          <div style="float:left;width:80px;">
-            <strong>Cal. Pages:</strong><br />
-             <?php $value = dex_bccf_get_option('calendar_pages',DEX_BCCF_DEFAULT_CALENDAR_PAGES); ?>
-             <select name="calendar_pages">
-               <option value="1" <?php if ($value == '1') echo ' selected="selected"'; ?>>1</option>
-               <option value="2" <?php if ($value == '2') echo ' selected="selected"'; ?>>2</option>
-               <option value="3" <?php if ($value == '3') echo ' selected="selected"'; ?>>3</option>
-               <option value="4" <?php if ($value == '4') echo ' selected="selected"'; ?>>4</option>
-               <option value="5" <?php if ($value == '5') echo ' selected="selected"'; ?>>5</option>
-               <option value="6" <?php if ($value == '6') echo ' selected="selected"'; ?>>6</option>
-               <option value="7" <?php if ($value == '7') echo ' selected="selected"'; ?>>7</option>
-               <option value="8" <?php if ($value == '8') echo ' selected="selected"'; ?>>8</option>
-               <option value="9" <?php if ($value == '9') echo ' selected="selected"'; ?>>9</option>
-               <option value="10" <?php if ($value == '10') echo ' selected="selected"'; ?>>10</option>
-               <option value="11" <?php if ($value == '11') echo ' selected="selected"'; ?>>11</option>
-               <option value="12" <?php if ($value == '12') echo ' selected="selected"'; ?>>12</option>
-             </select>
-          </div>
-
-          <div style="float:left;width:200px;">
-            <strong>Calendar language</strong><br />
-<?php $v = dex_bccf_get_option('calendar_language',DEX_BCCF_DEFAULT_CALENDAR_LANGUAGE); ?>
-             <select name="calendar_language" id="calendar_language">
-<option <?php if ($v == '') echo 'selected'; ?> value=""> - auto-detect - </option>
-<option <?php if ($v == 'af') echo 'selected'; ?> value="af">Afrikaans</option>
-<option <?php if ($v == 'sq') echo 'selected'; ?> value="sq">Albanian</option>
-<option <?php if ($v == 'ar') echo 'selected'; ?> value="ar">Arabic</option>
-<option <?php if ($v == 'ar-DZ') echo 'selected'; ?> value="ar-DZ">Arabic (Algeria)</option>
-<option <?php if ($v == 'hy') echo 'selected'; ?> value="hy">Armenian</option>
-<option <?php if ($v == 'az') echo 'selected'; ?> value="az">Azerbaijani</option>
-<option <?php if ($v == 'eu') echo 'selected'; ?> value="eu">Basque</option>
-<option <?php if ($v == 'bs') echo 'selected'; ?> value="bs">Bosnian</option>
-<option <?php if ($v == 'bg') echo 'selected'; ?> value="bg">Bulgarian</option>
-<option <?php if ($v == 'be') echo 'selected'; ?> value="be">Byelorussian (Belarusian)</option>
-<option <?php if ($v == 'km') echo 'selected'; ?> value="km">Cambodian</option>
-<option <?php if ($v == 'ca') echo 'selected'; ?> value="ca">Catalan</option>
-<option <?php if ($v == 'zh-HK') echo 'selected'; ?> value="zh-HK">Chinese (Hong Kong SAR)</option>
-<option <?php if ($v == 'zh-CN') echo 'selected'; ?> value="zh-CN">Chinese (PRC)</option>
-<option <?php if ($v == 'zh-TW') echo 'selected'; ?> value="zh-TW">Chinese (Taiwan)</option>
-<option <?php if ($v == 'hr') echo 'selected'; ?> value="hr">Croatian</option>
-<option <?php if ($v == 'cs') echo 'selected'; ?> value="cs">Czech</option>
-<option <?php if ($v == 'da') echo 'selected'; ?> value="da">Danish</option>
-<option <?php if ($v == 'nl') echo 'selected'; ?> value="nl_NL">Dutch</option>
-<option <?php if ($v == 'nl-BE') echo 'selected'; ?> value="nl-BE">Dutch - Belgium</option>
-<option <?php if ($v == 'en-AU') echo 'selected'; ?> value="en-AU">English (Australia)</option>
-<option <?php if ($v == 'en-NZ') echo 'selected'; ?> value="en-NZ">English (New Zealand)</option>
-<option <?php if ($v == 'en-GB') echo 'selected'; ?> value="en-GB">English (United Kingdom)</option>
-<option <?php if ($v == 'eo') echo 'selected'; ?> value="eo">Esperanto</option>
-<option <?php if ($v == 'et') echo 'selected'; ?> value="et">Estonian</option>
-<option <?php if ($v == 'fo') echo 'selected'; ?> value="fo">Faeroese</option>
-<option <?php if ($v == 'fa') echo 'selected'; ?> value="fa">Farsi</option>
-<option <?php if ($v == 'fi') echo 'selected'; ?> value="fi">Finnish</option>
-<option <?php if ($v == 'fr') echo 'selected'; ?> value="fr">French</option>
-<option <?php if ($v == 'fr-CA') echo 'selected'; ?> value="fr-CA">French (Canada)</option>
-<option <?php if ($v == 'fr-CH') echo 'selected'; ?> value="fr-CH">French (Switzerland)</option>
-<option <?php if ($v == 'gl') echo 'selected'; ?> value="gl">Galician</option>
-<option <?php if ($v == 'ka') echo 'selected'; ?> value="ka">Georgian</option>
-<option <?php if ($v == 'de') echo 'selected'; ?> value="de">German</option>
-<option <?php if ($v == 'el') echo 'selected'; ?> value="el">Greek</option>
-<option <?php if ($v == 'he') echo 'selected'; ?> value="he">Hebrew</option>
-<option <?php if ($v == 'hi') echo 'selected'; ?> value="hi">Hindi</option>
-<option <?php if ($v == 'hu') echo 'selected'; ?> value="hu">Hungarian</option>
-<option <?php if ($v == 'is') echo 'selected'; ?> value="is">Icelandic</option>
-<option <?php if ($v == 'id') echo 'selected'; ?> value="id">Indonesian</option>
-<option <?php if ($v == 'it') echo 'selected'; ?> value="it_IT">Italian</option>
-<option <?php if ($v == 'it-CH') echo 'selected'; ?> value="it-CH">Italian (Switzerland)</option>
-<option <?php if ($v == 'ja') echo 'selected'; ?> value="ja">Japanese</option>
-<option <?php if ($v == 'kk') echo 'selected'; ?> value="kk">Kazakh</option>
-<option <?php if ($v == 'ky') echo 'selected'; ?> value="ky">Kirghiz</option>
-<option <?php if ($v == 'ko') echo 'selected'; ?> value="ko">Korean</option>
-<option <?php if ($v == 'lv') echo 'selected'; ?> value="lv">Latvian (Lettish)</option>
-<option <?php if ($v == 'lt') echo 'selected'; ?> value="lt">Lithuanian</option>
-<option <?php if ($v == 'lb') echo 'selected'; ?> value="lb">Luxembourgish</option>
-<option <?php if ($v == 'mk') echo 'selected'; ?> value="mk">Macedonian</option>
-<option <?php if ($v == 'ms') echo 'selected'; ?> value="ms">Malay</option>
-<option <?php if ($v == 'ml') echo 'selected'; ?> value="ml">Malayalam</option>
-<option <?php if ($v == 'no') echo 'selected'; ?> value="no">Norwegian</option>
-<option <?php if ($v == 'nb') echo 'selected'; ?> value="nb">Norwegian (Bokm&aring;l)</option>
-<option <?php if ($v == 'nn') echo 'selected'; ?> value="nn">Norwegian Nynorsk</option>
-<option <?php if ($v == 'pl') echo 'selected'; ?> value="pl_PL">Polish</option>
-<option <?php if ($v == 'pt') echo 'selected'; ?> value="pt">Portuguese</option>
-<option <?php if ($v == 'pt-BR') echo 'selected'; ?> value="pt-BR">Portuguese (Brazil)</option>
-<option <?php if ($v == 'rm') echo 'selected'; ?> value="rm">Rhaeto-Romance</option>
-<option <?php if ($v == 'ro') echo 'selected'; ?> value="ro">Romanian</option>
-<option <?php if ($v == 'ru') echo 'selected'; ?> value="ru">Russian</option>
-<option <?php if ($v == 'sr-SR') echo 'selected'; ?> value="sr-SR">Serbian</option>
-<option <?php if ($v == 'sr') echo 'selected'; ?> value="sr">Serbian</option>
-<option <?php if ($v == 'sk') echo 'selected'; ?> value="sk">Slovak</option>
-<option <?php if ($v == 'sl') echo 'selected'; ?> value="sl">Slovenian</option>
-<option <?php if ($v == 'es') echo 'selected'; ?> value="es">Spanish</option>
-<option <?php if ($v == 'sv') echo 'selected'; ?> value="sv">Swedish</option>
-<option <?php if ($v == 'tj') echo 'selected'; ?> value="tj">Tajikistan</option>
-<option <?php if ($v == 'ta') echo 'selected'; ?> value="ta">Tamil</option>
-<option <?php if ($v == 'th') echo 'selected'; ?> value="th">Thai</option>
-<option <?php if ($v == 'tr') echo 'selected'; ?> value="tr">Turkish</option>
-<option <?php if ($v == 'uk') echo 'selected'; ?> value="uk">Ukrainian</option>
-<option <?php if ($v == 'vi') echo 'selected'; ?> value="vi">Vietnamese</option>
-<option <?php if ($v == 'cy-GB') echo 'selected'; ?> value="cy-GB">Welsh/UK</option>
-            </select>
-          </div>
-
-          <div style="float:left;width:120px;">
-             <strong>Start weekday</strong><br />
-             <?php $value = dex_bccf_get_option('calendar_weekday',DEX_BCCF_DEFAULT_CALENDAR_WEEKDAY); ?>
-             <select name="calendar_weekday">
-               <option value="0" <?php if ($value == '0') echo ' selected="selected"'; ?>>Sunday</option>
-               <option value="1" <?php if ($value == '1') echo ' selected="selected"'; ?>>Monday</option>
-               <option value="2" <?php if ($value == '2') echo ' selected="selected"'; ?>>Tuesday</option>
-               <option value="3" <?php if ($value == '3') echo ' selected="selected"'; ?>>Wednesday</option>
-               <option value="4" <?php if ($value == '4') echo ' selected="selected"'; ?>>Thursday</option>
-               <option value="5" <?php if ($value == '5') echo ' selected="selected"'; ?>>Friday</option>
-               <option value="6" <?php if ($value == '6') echo ' selected="selected"'; ?>>Saturday</option>
-             </select>
-          </div>
-
-          <div style="float:left;width:110px;padding-right:3px;">
-             <strong>Date format</strong><br />
-             <select name="calendar_dateformat">
-               <option value="0" <?php if ($calendar_dateformat == '0') echo ' selected="selected"'; ?>>mm/dd/yyyy</option>
-               <option value="1" <?php if ($calendar_dateformat == '1') echo ' selected="selected"'; ?>>dd/mm/yyyy</option>
-             </select>
-          </div>
-
-          <div style="float:left;width:225px;">
-             <strong>Accept overlapped reservations?</strong><br />
-             <?php $option = dex_bccf_get_option('calendar_overlapped', DEX_BCCF_DEFAULT_CALENDAR_OVERLAPPED); ?>
-             <select name="calendar_overlapped">
-              <option value="true"<?php if ($option == 'true') echo ' selected'; ?>>Yes</option>
-              <option value="false"<?php if ($option == 'false') echo ' selected'; ?>>No</option>
-             </select>
-          </div>
-
-        </td>
-       </tr>
-       <tr>
-        <td valign="top" colspan="4">
-           <div style="width:190px;float:left">
-          <strong>Show cost below calendar?</strong><br />
-             <?php $value = dex_bccf_get_option('calendar_showcost','1'); ?>
-             <select name="calendar_showcost">
-               <option value="1" <?php if ($value == '1') echo ' selected="selected"'; ?>>Yes</option>
-               <option value="0" <?php if ($value == '0') echo ' selected="selected"'; ?>>No</option>
-             </select>
-           </div>
-           <div style="width:140px;float:left">
-             <strong>Reservation Mode</strong><br />
-             <?php $value = dex_bccf_get_option('calendar_mode',DEX_BCCF_DEFAULT_CALENDAR_MODE); ?>
-             <select name="calendar_mode">
-               <option value="true" <?php if ($value == 'true') echo ' selected="selected"'; ?>>Partial Days</option>
-               <option value="false" <?php if ($value == 'false') echo ' selected="selected"'; ?>>Complete Days</option>
-             </select>
-           </div>
-           <div style="width:500px;float:left;padding-top:10px;">
-             <em style="font-size:11px;">Complete day means that the first and the last days booked are charged as full days;<br />Partial Day means that they are charged as half-days only.</em>
-           </div>
-        </td>
-       </tr>
-
-        <tr valign="top">
-         <td colspan="4" style="padding:0px;background-color:#E2EFF8;color:#666666;font-weight:bold;text-align:center">
-			<strong>Settings for the public calendar</strong>
-         </td>
-        </tr>
-
-       <tr>
-        <td width="1%" nowrap valign="top" colspan="2">
-         <strong>Minimum  available date:</strong><br />
-         <input type="text" name="calendar_mindate" size="40" value="<?php echo esc_attr(dex_bccf_get_option('calendar_mindate',DEX_BCCF_DEFAULT_CALENDAR_MINDATE)); ?>" /><br />
-         <em style="font-size:11px;">Examples: 2012-10-25, today, today + 3 days</em>
-        </td>
-        <td valign="top" colspan="2">
-         <strong>Maximum  available date:</strong><br />
-         <input type="text" name="calendar_maxdate" size="40" value="<?php echo esc_attr(dex_bccf_get_option('calendar_maxdate',DEX_BCCF_DEFAULT_CALENDAR_MAXDATE)); ?>" /><br />
-         <em style="font-size:11px;">Examples: 2012-10-25, today, today + 3 days</em>
-        </td>
-        </tr>
-
-       <tr>
-        <td width="1%" nowrap valign="top" colspan="2">
-         <strong>Minimum number of nights to be booked:</strong><br />
-         <input type="text" name="calendar_minnights" size="40" value="<?php $v = dex_bccf_get_option('calendar_minnights', '0'); echo esc_attr(($v==''?'0':$v)); ?>" /><br />
-         <em style="font-size:11px;">The booking form won't accept less than the above nights</em>
-        </td>
-        <td valign="top" colspan="2">
-         <strong>Maximum number of nights to be booked:</strong><br />
-         <input type="text" name="calendar_maxnights" size="40" value="<?php $v = dex_bccf_get_option('calendar_maxnights','365'); echo esc_attr(($v==''?'365':$v)); ?>" /><br />
-         <em style="font-size:11px;">The booking form won't accept more than the above nights</em>
-        </td>
-       </tr>
-
-       <tr>
-        <td width="1%" nowrap valign="top" colspan="2">
-         <strong>Working dates</strong>
-         <div id="workingdates">
-         <?php $cfmode = dex_bccf_get_option('calendar_holidaysdays', '1111111'); if ($cfmode == '') $cfmode = '1111111'; ?>
-         <input type="checkbox" class="wdCheck" value="1" name="wd1" <?php echo ($cfmode[0]=='1'?'checked="checked"':''); ?> /> Su &nbsp; &nbsp; &nbsp;
-         <input type="checkbox" class="wdCheck" value="1" name="wd2" <?php echo ($cfmode[1]=='1'?'checked="checked"':''); ?> /> Mo &nbsp; &nbsp; &nbsp;
-         <input type="checkbox" class="wdCheck" value="1" name="wd3" <?php echo ($cfmode[2]=='1'?'checked="checked"':''); ?> /> Tu &nbsp; &nbsp; &nbsp;
-         <input type="checkbox" class="wdCheck" value="1" name="wd4" <?php echo ($cfmode[3]=='1'?'checked="checked"':''); ?> /> We &nbsp; &nbsp; &nbsp;
-         <input type="checkbox" class="wdCheck" value="1" name="wd5" <?php echo ($cfmode[4]=='1'?'checked="checked"':''); ?> /> Th &nbsp; &nbsp; &nbsp;
-         <input type="checkbox" class="wdCheck" value="1" name="wd6" <?php echo ($cfmode[5]=='1'?'checked="checked"':''); ?> /> Fr &nbsp; &nbsp; &nbsp;
-         <input type="checkbox" class="wdCheck" value="1" name="wd7" <?php echo ($cfmode[6]=='1'?'checked="checked"':''); ?> /> Sa &nbsp; &nbsp; &nbsp;
-         <br />
-         <em style="font-size:11px;">Working dates are the dates that accept bookings.</em>
-         </div>
-         <br />
-         <div><strong>Start Reservation Date</strong></div>
-         <div>
-         <?php $cfmode = dex_bccf_get_option('calendar_startresdays', '1111111'); if ($cfmode == '') $cfmode = '1111111'; ?>
-         <input type="checkbox" class="srCheck" value="1" name="sd1" id="c0" <?php echo ($cfmode[0]=='1'?'checked="checked"':''); ?> /> Su &nbsp; &nbsp; &nbsp;
-         <input type="checkbox" class="srCheck" value="1" name="sd2" id="c1" <?php echo ($cfmode[1]=='1'?'checked="checked"':''); ?> /> Mo &nbsp; &nbsp; &nbsp;
-         <input type="checkbox" class="srCheck" value="1" name="sd3" id="c2" <?php echo ($cfmode[2]=='1'?'checked="checked"':''); ?> /> Tu &nbsp; &nbsp; &nbsp;
-         <input type="checkbox" class="srCheck" value="1" name="sd4" id="c3" <?php echo ($cfmode[3]=='1'?'checked="checked"':''); ?> /> We &nbsp; &nbsp; &nbsp;
-         <input type="checkbox" class="srCheck" value="1" name="sd5" id="c4" <?php echo ($cfmode[4]=='1'?'checked="checked"':''); ?> /> Th &nbsp; &nbsp; &nbsp;
-         <input type="checkbox" class="srCheck" value="1" name="sd6" id="c5" <?php echo ($cfmode[5]=='1'?'checked="checked"':''); ?> /> Fr &nbsp; &nbsp; &nbsp;
-         <input type="checkbox" class="srCheck" value="1" name="sd7" id="c6" <?php echo ($cfmode[6]=='1'?'checked="checked"':''); ?> /> Sa &nbsp; &nbsp; &nbsp;
-         <br /><em style="font-size:11px;">Use this for allowing specific weekdays as start of the reservation.</em>
-         </div>
-         <br />
-         <div style="background:#E2EFF8;border: 1px dotted #888888;padding:10px;">
-             <div><strong><input type="checkbox" value="1" name="calendar_fixedmode" <?php echo esc_attr((dex_bccf_get_option('calendar_fixedmode', '')=='1'?'checked="checked"':'')); ?> id="fixedreservation"> Enable Fixed Reservation Length?</strong>
-                 <br />&nbsp;&nbsp;&nbsp;&nbsp; <em style="font-size:11px;">Use this for allowing only bookings of a specific number of days.</em>
-             </div>
-             <div id="container_fixedreservation" <?php echo (dex_bccf_get_option('calendar_fixedmode', '')=='1'?'':'style="display:none"'); ?>>
-                 <br />
-                 <?php $v = dex_bccf_get_option('calendar_fixedreslength','1'); ?>
-                 Fixed reservation length (days):
-                 <select name="calendar_fixedreslength" id="calendar_fixedreslength">
-                  <?php for ($k=1;$k<30;$k++) echo '<option value="'.$k.'"'.($k.""==$v?' selected ':'').'>'.$k.'</option>'; ?>
-                 </select>
-                 <br /><br />
-
-
-             </div>
-         </div>
-         <input type="hidden" name="calendar_holidays" id="holidays" value="<?php echo esc_attr(dex_bccf_get_option('calendar_holidays','')); ?>" />
-         <input type="hidden" name="calendar_startres" id="startreservation" value="<?php echo esc_attr(dex_bccf_get_option('calendar_startres','')); ?>" />
-        </td>
-        <td width="1%" nowrap valign="top" colspan="2">
-          <strong>Disabled and special dates (see legend below):</strong>
-          <div id="calConfig"><em><span style="color:#009900">Loading calendar data...</span></em></div>
-
-          <div style="margin-top:5px;margin-left:10px;"><div style="float:left;width:20px;height:20px;margin-right:10px;background-color:#FEA69A;"></div> <strong>Non-available dates:</strong> Click once to mark the date as non-available.</div>
-          <div style="clear:both"></div>
-          <div id="startreslegend" style="margin-top:5px;margin-left:10px;"><div style="float:left;width:20px;height:20px;margin-right:10px;background-color:#80BF92;"></div> <strong>Start reservation dates:</strong> Click twice to mark the date as start date.</div>
-          <div style="clear:both"></div>
-          <div style="margin-left:35px;"><em style="font-size:11px;">Every time a date is cliked it status changes. Click it to mark/unmark it.</em></div>
-        </td>
-       </tr>
-
-   </table>
-<?php } else { ?>
-    <input type="hidden" name="calendar_language" value="<?php echo esc_attr(dex_bccf_get_option('calendar_language',DEX_BCCF_DEFAULT_CALENDAR_LANGUAGE)); ?>" />
-    <input type="hidden" name="calendar_weekday" value="<?php echo esc_attr(dex_bccf_get_option('calendar_weekday',DEX_BCCF_DEFAULT_CALENDAR_WEEKDAY)); ?>" />
-    <input type="hidden" name="calendar_dateformat" value="<?php echo esc_attr(dex_bccf_get_option('calendar_dateformat',DEX_BCCF_DEFAULT_CALENDAR_DATEFORMAT)); ?>" />
-    <input type="hidden" name="calendar_overlapped" value="<?php echo esc_attr(dex_bccf_get_option('calendar_overlapped', DEX_BCCF_DEFAULT_CALENDAR_OVERLAPPED)); ?>" />
-    <input type="hidden" name="calendar_mode" value="<?php echo esc_attr(dex_bccf_get_option('calendar_mode',DEX_BCCF_DEFAULT_CALENDAR_MODE)); ?>" />
-    <input type="hidden" name="calendar_mindate" value="<?php echo esc_attr(dex_bccf_get_option('calendar_mindate',DEX_BCCF_DEFAULT_CALENDAR_MINDATE)); ?>" />
-    <input type="hidden" name="calendar_maxdate" value="<?php echo esc_attr(dex_bccf_get_option('calendar_maxdate',DEX_BCCF_DEFAULT_CALENDAR_MAXDATE)); ?>" />
-<?php } ?>
+				if ( $option_use_calendar == 'false' ) : ?>
+				<div>
+					<?php echo sprintf(
+						'<p><strong><em>%1s</em></strong> %2s<br />%3s</p>',
+						esc_html__( 'Note:', 'sc-res' ),
+						esc_html__( 'Calendar has been disabled in the field above, so there isn\'t need to display and edit it.', 'sc-res' ),
+						esc_html__( 'To re-enable the calendar select that option in the field above and save the settings to render the calendar again.', 'sc-res' )
+					); ?>
+				</div>
+				<?php
+				//  elseif ( $option_overlapped == 'true' ) :
+				?>
+				<!-- <div>
+					<strong>Note:</strong> Overlapped reservations are enabled below, so you cannot use the calendar to block dates and the reservation should be checked in the <a href="admin.php?page=dex_bccf&cal=<?php // echo CP_BCCF_CALENDAR_ID; ?>&list=1">reservations list area</a>.
+				</div> -->
+				<?php else : ?>
+				<script>
+					var pathCalendar      = "<?php echo cp_bccf_get_site_url(); ?>/";
+					var pathCalendar_full = pathCalendar + "wp-content/plugins/<?php echo basename( dirname( __FILE__ ) );?>/css/images/corners";
+				</script>
+				<div id="cal<?php echo CP_BCCF_CALENDAR_ID; ?>" class="rcalendar">
+					<span class="loading-calendar-data"><?php echo esc_html__( 'Loading calendar data&hellip;', 'sc-res' ); ?></span>
+				</div>
+				<?php if ( $calendar_language != '' ) { ?><script type="text/javascript" src="<?php echo plugins_url( 'js/languages/jquery.ui.datepicker-' . $calendar_language . '.js', __FILE__ ); ?>"></script><?php } ?>
+				<script type="text/javascript">
+					jQuery( function() {
+						( function($) {
+							$calendarjQuery = jQuery.noConflict();
+							$calendarjQuery( function() {
+								$calendarjQuery( '#cal<?php echo CP_BCCF_CALENDAR_ID; ?>' ).rcalendar({
+									'calendarId'     : <?php echo CP_BCCF_CALENDAR_ID; ?>,
+									'partialDate'    : <?php echo dex_bccf_get_option( 'calendar_mode', DEX_BCCF_DEFAULT_CALENDAR_MODE ); ?>,
+									'edition'        : true,
+									// 'minDate'        : '<?php // echo $calendar_mindate;?>",
+									// 'maxDate'        : '<?php // echo $calendar_maxdate;?>",
+									'dformat'        : '<?php echo $date_format;?>',
+									'language'       : '<?php echo $calendar_language?>',
+									'firstDay'       : <?php echo dex_bccf_get_option( 'calendar_weekday', DEX_BCCF_DEFAULT_CALENDAR_WEEKDAY ); ?>,
+									'numberOfMonths' : <?php echo dex_bccf_get_option( 'calendar_pages', DEX_BCCF_DEFAULT_CALENDAR_PAGES ); ?>
+								});
+							});
+						})(jQuery);
+					});
+				</script>
+				<div class="reservations-form-clear"></div>
+				<?php if ( $option_overlapped == 'true' ) { ?>
+				<div>
+					<?php echo sprintf(
+						'<p class="description"><strong>%1s</strong> %2s <a href="%3s">%4s</a></p>',
+						esc_html__( 'Note:', 'sc-res' ),
+						esc_html__( 'Overlapped reservations are enabled below and you can use the calendar for blocking dates, however only the blocked dates are shown in the calendar. The reservations should be checked in the', 'sc-res' ),
+						esc_attr( esc_url( 'admin.php?page=dex_bccf&cal=' . CP_BCCF_CALENDAR_ID . '&list=1' ) ),
+						esc_html__( 'reservations list.', 'sc-res' )
+					); ?>
+				</div>
+				<?php } ?>
+			<?php endif; ?>
+			</div><!-- #metabox_basic_settings_cal1 -->
+			<div id="metabox_basic_settings_cal2">
+				<p class="description"><?php echo esc_html__( 'The calendar availability is disabled in these settings because are being loaded from another master calendar. See the master calendar selected above.', 'sc-res' ); ?></p>
+			</div><!-- #metabox_basic_settings_cal2 -->
+			<?php if ( $option_use_calendar != 'false' ) { ?>
+			<div id="demo" class="yui-navset"></div>
+				<div class="reservations-form-clear"></div>
+					<table class="form-table" style="width:870px;">
+						<tbody>
+							<tr valign="top">
+								<th colspan="4">
+									<strong><?php _e( 'Settings for both admin and public calendars', 'sc-res' ); ?></strong>
+								</th>
+							</tr>
+							<tr valign="top">
+								<td colspan="4">
+									<div style="float: left; width: 80px;">
+                                        <label for="calendar_pages"><?php _e( 'Months', 'sc-res' ); ?></label>
+										<br />
+										<?php $value = dex_bccf_get_option( 'calendar_pages', DEX_BCCF_DEFAULT_CALENDAR_PAGES ); ?>
+										<select name="calendar_pages" id="calendar_pages">
+											<option value="1" <?php if ( $value == '1' ) { echo ' selected="selected"'; } ?>>1</option>
+											<option value="2" <?php if ( $value == '2' ) { echo ' selected="selected"'; } ?>>2</option>
+											<option value="3" <?php if ( $value == '3' ) { echo ' selected="selected"'; } ?>>3</option>
+											<option value="4" <?php if ( $value == '4' ) { echo ' selected="selected"'; } ?>>4</option>
+											<option value="5" <?php if ( $value == '5' ) { echo ' selected="selected"'; } ?>>5</option>
+											<option value="6" <?php if ( $value == '6' ) { echo ' selected="selected"'; } ?>>6</option>
+											<option value="7" <?php if ( $value == '7' ) { echo ' selected="selected"'; } ?>>7</option>
+											<option value="8" <?php if ( $value == '8' ) { echo ' selected="selected"'; } ?>>8</option>
+											<option value="9" <?php if ( $value == '9' ) { echo ' selected="selected"'; } ?>>9</option>
+											<option value="10" <?php if ( $value == '10' ) { echo ' selected="selected"'; } ?>>10</option>
+											<option value="11" <?php if ( $value == '11' ) { echo ' selected="selected"'; } ?>>11</option>
+											<option value="12" <?php if ( $value == '12' ) { echo ' selected="selected"'; } ?>>12</option>
+										</select>
+									</div>
+									<div style="float: left; width: 200px;">
+                                        <label for="calendar_language"><?php _e( 'Language', 'sc-res' ); ?></label>
+										<br />
+										<?php $v = dex_bccf_get_option( 'calendar_language', DEX_BCCF_DEFAULT_CALENDAR_LANGUAGE ); ?>
+										<select name="calendar_language" id="calendar_language">
+											<option <?php if ( $v == '' ) { echo 'selected'; } ?> value=""> - auto-detect - </option>
+											<option <?php if ( $v == 'af' ) { echo 'selected'; } ?> value="af">Afrikaans</option>
+											<option <?php if ( $v == 'sq' ) { echo 'selected'; } ?> value="sq">Albanian</option>
+											<option <?php if ( $v == 'ar' ) { echo 'selected'; } ?> value="ar">Arabic</option>
+											<option <?php if ( $v == 'ar-DZ' ) { echo 'selected'; } ?> value="ar-DZ">Arabic (Algeria)</option>
+											<option <?php if ( $v == 'hy' ) { echo 'selected'; } ?> value="hy">Armenian</option>
+											<option <?php if ( $v == 'az' ) { echo 'selected'; } ?> value="az">Azerbaijani</option>
+											<option <?php if ( $v == 'eu' ) { echo 'selected'; } ?> value="eu">Basque</option>
+											<option <?php if ( $v == 'bs' ) { echo 'selected'; } ?> value="bs">Bosnian</option>
+											<option <?php if ( $v == 'bg' ) { echo 'selected'; } ?> value="bg">Bulgarian</option>
+											<option <?php if ( $v == 'be' ) { echo 'selected'; } ?> value="be">Byelorussian (Belarusian)</option>
+											<option <?php if ( $v == 'km' ) { echo 'selected'; } ?> value="km">Cambodian</option>
+											<option <?php if ( $v == 'ca' ) { echo 'selected'; } ?> value="ca">Catalan</option>
+											<option <?php if ( $v == 'zh-HK' ) { echo 'selected'; } ?> value="zh-HK">Chinese (Hong Kong SAR)</option>
+											<option <?php if ( $v == 'zh-CN' ) { echo 'selected'; } ?> value="zh-CN">Chinese (PRC)</option>
+											<option <?php if ( $v == 'zh-TW' ) { echo 'selected'; } ?> value="zh-TW">Chinese (Taiwan)</option>
+											<option <?php if ( $v == 'hr' ) { echo 'selected'; } ?> value="hr">Croatian</option>
+											<option <?php if ( $v == 'cs' ) { echo 'selected'; } ?> value="cs">Czech</option>
+											<option <?php if ( $v == 'da' ) { echo 'selected'; } ?> value="da">Danish</option>
+											<option <?php if ( $v == 'nl' ) { echo 'selected'; } ?> value="nl_NL">Dutch</option>
+											<option <?php if ( $v == 'nl-BE' ) { echo 'selected'; } ?> value="nl-BE">Dutch - Belgium</option>
+											<option <?php if ( $v == 'en-AU' ) { echo 'selected'; } ?> value="en-AU">English (Australia)</option>
+											<option <?php if ( $v == 'en-NZ' ) { echo 'selected'; } ?> value="en-NZ">English (New Zealand)</option>
+											<option <?php if ( $v == 'en-GB' ) { echo 'selected'; } ?> value="en-GB">English (United Kingdom)</option>
+											<option <?php if ( $v == 'eo' ) { echo 'selected'; } ?> value="eo">Esperanto</option>
+											<option <?php if ( $v == 'et' ) { echo 'selected'; } ?> value="et">Estonian</option>
+											<option <?php if ( $v == 'fo' ) { echo 'selected'; } ?> value="fo">Faeroese</option>
+											<option <?php if ( $v == 'fa' ) { echo 'selected'; } ?> value="fa">Farsi</option>
+											<option <?php if ( $v == 'fi' ) { { echo 'selected'; } ?> value="fi">Finnish</option>
+											<option <?php if ( $v == 'fr' ) echo 'selected'; } ?> value="fr">French</option>
+											<option <?php if ( $v == 'fr-CA' ) { echo 'selected'; } ?> value="fr-CA">French (Canada)</option>
+											<option <?php if ( $v == 'fr-CH' ) { echo 'selected'; } ?> value="fr-CH">French (Switzerland)</option>
+											<option <?php if ( $v == 'gl' ) { echo 'selected'; } ?> value="gl">Galician</option>
+											<option <?php if ( $v == 'ka' ) { echo 'selected'; } ?> value="ka">Georgian</option>
+											<option <?php if ( $v == 'de' ) { echo 'selected'; } ?> value="de">German</option>
+											<option <?php if ( $v == 'el' ) { echo 'selected'; } ?> value="el">Greek</option>
+											<option <?php if ( $v == 'he' ) { echo 'selected'; } ?> value="he">Hebrew</option>
+											<option <?php if ( $v == 'hi' ) { echo 'selected'; } ?> value="hi">Hindi</option>
+											<option <?php if ( $v == 'hu' ) { echo 'selected'; } ?> value="hu">Hungarian</option>
+											<option <?php if ( $v == 'is' ) { echo 'selected'; } ?> value="is">Icelandic</option>
+											<option <?php if ( $v == 'id' ) { echo 'selected'; } ?> value="id">Indonesian</option>
+											<option <?php if ( $v == 'it' ) { echo 'selected'; } ?> value="it_IT">Italian</option>
+											<option <?php if ( $v == 'it-CH' ) { echo 'selected'; } ?> value="it-CH">Italian (Switzerland)</option>
+											<option <?php if ( $v == 'ja' ) { echo 'selected'; } ?> value="ja">Japanese</option>
+											<option <?php if ( $v == 'kk' ) { echo 'selected'; } ?> value="kk">Kazakh</option>
+											<option <?php if ( $v == 'ky' ) { echo 'selected'; } ?> value="ky">Kirghiz</option>
+											<option <?php if ( $v == 'ko' ) { echo 'selected'; } ?> value="ko">Korean</option>
+											<option <?php if ( $v == 'lv' ) { echo 'selected'; } ?> value="lv">Latvian (Lettish)</option>
+											<option <?php if ( $v == 'lt' ) { echo 'selected'; } ?> value="lt">Lithuanian</option>
+											<option <?php if ( $v == 'lb' ) { echo 'selected'; } ?> value="lb">Luxembourgish</option>
+											<option <?php if ( $v == 'mk' ) { echo 'selected'; } ?> value="mk">Macedonian</option>
+											<option <?php if ( $v == 'ms' ) { echo 'selected'; } ?> value="ms">Malay</option>
+											<option <?php if ( $v == 'ml' ) { echo 'selected'; } ?> value="ml">Malayalam</option>
+											<option <?php if ( $v == 'no' ) { echo 'selected'; } ?> value="no">Norwegian</option>
+											<option <?php if ( $v == 'nb' ) { echo 'selected'; } ?> value="nb">Norwegian (Bokm&aring;l)</option>
+											<option <?php if ( $v == 'nn' ) { echo 'selected'; } ?> value="nn">Norwegian Nynorsk</option>
+											<option <?php if ( $v == 'pl' ) { echo 'selected'; } ?> value="pl_PL">Polish</option>
+											<option <?php if ( $v == 'pt' ) { echo 'selected'; } ?> value="pt">Portuguese</option>
+											<option <?php if ( $v == 'pt-BR' ) { echo 'selected'; } ?> value="pt-BR">Portuguese (Brazil)</option>
+											<option <?php if ( $v == 'rm' ) { echo 'selected'; } ?> value="rm">Rhaeto-Romance</option>
+											<option <?php if ( $v == 'ro' ) { echo 'selected'; } ?> value="ro">Romanian</option>
+											<option <?php if ( $v == 'ru' ) { echo 'selected'; } ?> value="ru">Russian</option>
+											<option <?php if ( $v == 'sr-SR' ) { echo 'selected'; } ?> value="sr-SR">Serbian</option>
+											<option <?php if ( $v == 'sr' ) { echo 'selected'; } ?> value="sr">Serbian</option>
+											<option <?php if ( $v == 'sk' ) { echo 'selected'; } ?> value="sk">Slovak</option>
+											<option <?php if ( $v == 'sl' ) { echo 'selected'; } ?> value="sl">Slovenian</option>
+											<option <?php if ( $v == 'es' ) { echo 'selected'; } ?> value="es">Spanish</option>
+											<option <?php if ( $v == 'sv' ) { echo 'selected'; } ?> value="sv">Swedish</option>
+											<option <?php if ( $v == 'tj' ) { echo 'selected'; } ?> value="tj">Tajikistan</option>
+											<option <?php if ( $v == 'ta' ) { echo 'selected'; } ?> value="ta">Tamil</option>
+											<option <?php if ( $v == 'th' ) { echo 'selected'; } ?> value="th">Thai</option>
+											<option <?php if ( $v == 'tr' ) { echo 'selected'; } ?> value="tr">Turkish</option>
+											<option <?php if ( $v == 'uk' ) { echo 'selected'; } ?> value="uk">Ukrainian</option>
+											<option <?php if ( $v == 'vi' ) { echo 'selected'; } ?> value="vi">Vietnamese</option>
+											<option <?php if ( $v == 'cy-GB' ) { echo 'selected'; } ?> value="cy-GB">Welsh/UK</option>
+										</select>
+									</div>
+									<div style="float: left; width: 120px;">
+                                        <label for="calendar_weekday"><?php _e( 'Start Day', 'sc-res' ); ?></label>
+										<br />
+										<?php $value = dex_bccf_get_option( 'calendar_weekday', DEX_BCCF_DEFAULT_CALENDAR_WEEKDAY ); ?>
+										<select name="calendar_weekday" id="calendar_weekday">
+											<option value="0" <?php if ( $value == '0' ) { echo ' selected="selected"'; } ?>><?php _e( 'Sunday', 'sc-res' ); ?></option>
+											<option value="1" <?php if ( $value == '1' ) { echo ' selected="selected"'; } ?>><?php _e( 'Monday', 'sc-res' ); ?></option>
+											<option value="2" <?php if ( $value == '2' ) { echo ' selected="selected"'; } ?>><?php _e( 'Tuesday', 'sc-res' ); ?></option>
+											<option value="3" <?php if ( $value == '3' ) { echo ' selected="selected"'; } ?>><?php _e( 'Wednesday', 'sc-res' ); ?></option>
+											<option value="4" <?php if ( $value == '4' ) { echo ' selected="selected"'; } ?>><?php _e( 'Thursday', 'sc-res' ); ?></option>
+											<option value="5" <?php if ( $value == '5' ) { echo ' selected="selected"'; } ?>><?php _e( 'Friday', 'sc-res' ); ?></option>
+											<option value="6" <?php if ( $value == '6' ) { echo ' selected="selected"'; } ?>><?php _e( 'Saturday', 'sc-res' ); ?></option>
+										</select>
+									</div>
+									<div style="float: left; width: 110px; padding-right: 5px;">
+                                        <label for="calendar_dateformat"><?php _e( 'Date Format', 'sc-res' ); ?></label>
+										<br />
+                                        <?php $option = dex_bccf_get_option( 'calendar_dateformat', DEX_BCCF_DEFAULT_CALENDAR_DATEFORMAT ); ?>
+										<select name="calendar_dateformat" id="calendar_dateformat">
+											<option value="0" <?php if ( $calendar_dateformat == '0' ) { echo ' selected="selected"'; } ?>>mm/dd/yyyy</option>
+											<option value="1" <?php if ( $calendar_dateformat == '1' ) { echo ' selected="selected"'; } ?>>dd/mm/yyyy</option>
+										</select>
+									</div>
+									<div style="float: left; width: 225px;">
+                                        <label for="calendar_overlapped"><?php _e( 'Overlapped Reservations', 'sc-res' ); ?></label>
+										<br />
+										<?php $option = dex_bccf_get_option( 'calendar_overlapped', DEX_BCCF_DEFAULT_CALENDAR_OVERLAPPED ); ?>
+										<select name="calendar_overlapped" id="calendar_overlapped">
+											<option value="true"<?php if ( $option == 'true' ) { echo ' selected'; } ?>><?php _e( 'Yes', 'sc-res' ); ?></option>
+											<option value="false"<?php if ( $option == 'false' ) { echo ' selected'; } ?>><?php _e( 'No', 'sc-res' ); ?></option>
+										</select>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td valign="top" colspan="4">
+									<div style="width: 190px; float: left">
+                                        <label for="calendar_showcost"><?php _e( 'Show cost below calendar?', 'sc-res' ); ?></label>
+										<br />
+										<?php $value = dex_bccf_get_option( 'calendar_showcost', '1' ); ?>
+										<select name="calendar_showcost" id="calendar_showcost">
+											<option value="1" <?php if ( $value == '1' ) { echo ' selected="selected"'; } ?>><?php _e( 'Yes', 'sc-res' ); ?></option>
+											<option value="0" <?php if ( $value == '0' ) { echo ' selected="selected"'; } ?>><?php _e( 'No', 'sc-res' ); ?></option>
+										</select>
+									</div>
+									<div style="width: 140px; float: left">
+                                        <label for="calendar_mode"><?php _e( 'Reservation Mode', 'sc-res' ); ?></label>
+										<br />
+										<?php $value = dex_bccf_get_option( 'calendar_mode', DEX_BCCF_DEFAULT_CALENDAR_MODE ); ?>
+										<select name="calendar_mode" id="calendar_mode">
+											<option value="true" <?php if ( $value == 'true' ) { echo ' selected="selected"'; } ?>><?php _e( 'Partial Days', 'sc-res' ); ?></option>
+											<option value="false" <?php if ( $value == 'false' ) { echo ' selected="selected"'; } ?>><?php _e( 'Complete Days', 'sc-res' ); ?></option>
+										</select>
+									</div>
+									<div style="width: 500px; float: left; padding-top: 10px;">
+										<p class="description"><?php _e( 'Complete day means that the first and the last days booked are charged as full days. Partial Day means that they are charged as half-days only.', 'sc-res' ); ?></p>
+									</div>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th>
+									<?php _e( 'Settings for the public calendar', 'sc-res' ); ?>
+								</th>
+							</tr>
+							<tr>
+								<td width="1%" nowrap valign="top" colspan="2">
+                                    <label for="calendar_mindate"><?php _e( 'Minimum  available date:', 'sc-res' ); ?></label>
+									<br /><input type="text" name="calendar_mindate" size="40" value="<?php echo esc_attr( dex_bccf_get_option( 'calendar_mindate', DEX_BCCF_DEFAULT_CALENDAR_MINDATE ) ); ?>" /><br />
+									<p class="description"><?php _e( 'Examples: 2019-10-25, today, today + 3 days', 'sc-res' ); ?></p>
+								</td>
+								<td valign="top" colspan="2">
+                                    <label for="calendar_maxdate"><?php _e( 'Maximum  available date:', 'sc-res' ); ?></label>
+									<br /><input type="text" name="calendar_maxdate" size="40" value="<?php echo esc_attr( dex_bccf_get_option( 'calendar_maxdate', DEX_BCCF_DEFAULT_CALENDAR_MAXDATE ) ); ?>" /><br />
+									<p class="description"><?php _e( 'Examples: 2019-10-25, today, today + 3 days', 'sc-res' ); ?></p>
+								</td>
+							</tr>
+							<tr>
+								<td width="1%" nowrap valign="top" colspan="2">
+                                    <label for="calendar_minnights"><?php _e( 'Minimum number of nights to be booked:', 'sc-res' ); ?></label>
+									<br /><input type="text" name="calendar_minnights" size="40" value="<?php $v = dex_bccf_get_option( 'calendar_minnights', '0' ); echo esc_attr( ( $v == '' ? '0' : $v ) ); ?>" /><br />
+									<p class="description"><?php _e( 'The reservation form won\'t accept less than the above nights', 'sc-res' ); ?></p>
+								</td>
+								<td valign="top" colspan="2">
+                                    <label for="calendar_maxnights"><?php _e( 'Maximum number of nights to be booked:', 'sc-res' ); ?></label>
+									<br /><input type="text" name="calendar_maxnights" size="40" value="<?php $v = dex_bccf_get_option( 'calendar_maxnights', '365' ); echo esc_attr( ( $v == '' ? '365' : $v ) ); ?>" /><br />
+									<p class="description"><?php _e( 'The reservation form won\'t accept more than the above nights', 'sc-res' ); ?></p>
+								</td>
+							</tr>
+							<tr>
+								<td width="1%" nowrap valign="top" colspan="2">
+                                    <p><label for="workingdates"><?php _e( 'Working Dates', 'sc-res' ); ?></label></p>
+									<div id="workingdates">
+										<?php $cfmode = dex_bccf_get_option( 'calendar_holidaysdays', '1111111' ); if ( $cfmode == '' ) { $cfmode = '1111111'; } ?>
+										<label for="wd1"><input type="checkbox" class="wdCheck" value="1" name="wd1" <?php echo ( $cfmode[0] == '1' ? 'checked="checked"' : '' ); ?> />Su</label>
+										<label for="wd2"><input type="checkbox" class="wdCheck" value="1" name="wd2" <?php echo ( $cfmode[1] == '1' ? 'checked="checked"' : '' ); ?> />Mo</label>
+										<label for="wd3"><input type="checkbox" class="wdCheck" value="1" name="wd3" <?php echo ( $cfmode[2] == '1' ? 'checked="checked"' : '' ); ?> />Tu</label>
+										<label for="wd4"><input type="checkbox" class="wdCheck" value="1" name="wd4" <?php echo ( $cfmode[3] == '1' ? 'checked="checked"' : '' ); ?> />We</label>
+										<label for="wd5"><input type="checkbox" class="wdCheck" value="1" name="wd5" <?php echo ( $cfmode[4] == '1' ? 'checked="checked"' : '' ); ?> />Th</label>
+										<label for="wd6"><input type="checkbox" class="wdCheck" value="1" name="wd6" <?php echo ( $cfmode[5] == '1' ? 'checked="checked"' : '' ); ?> />Fr</label>
+										<label for="wd7"><input type="checkbox" class="wdCheck" value="1" name="wd7" <?php echo ( $cfmode[6] == '1' ? 'checked="checked"' : '' ); ?> />Sa</label>
+										<br />
+										<p class="description"><?php _e( 'Working dates are the dates that accept reservations.', 'sc-res' ); ?></p>
+									</div>
+                                    <p><label for="startdates"><?php _e( 'Start Reservation Date', 'sc-res' ); ?></label></p>
+									<div id="startdates">
+										<?php $cfmode = dex_bccf_get_option( 'calendar_startresdays', '1111111' ); if ( $cfmode == '' ) { $cfmode = '1111111'; } ?>
+										<label for="sd1"><input type="checkbox" class="srCheck" value="1" name="sd1" id="c0" <?php echo ( $cfmode[0] == '1' ? 'checked="checked"' : '' ); ?> />Su</label>
+										<label for="sd2"><input type="checkbox" class="srCheck" value="1" name="sd2" id="c1" <?php echo ( $cfmode[1] == '1' ? 'checked="checked"' : '' ); ?> />Mo</label>
+										<label for="sd3"><input type="checkbox" class="srCheck" value="1" name="sd3" id="c2" <?php echo ( $cfmode[2] == '1' ? 'checked="checked"' : '' ); ?> />Tu</label>
+										<label for="sd4"><input type="checkbox" class="srCheck" value="1" name="sd4" id="c3" <?php echo ( $cfmode[3] == '1' ? 'checked="checked"' : '' ); ?> />We</label>
+										<label for="sd5"><input type="checkbox" class="srCheck" value="1" name="sd5" id="c4" <?php echo ( $cfmode[4] == '1' ? 'checked="checked"' : '' ); ?> />Th</label>
+										<label for="sd6"><input type="checkbox" class="srCheck" value="1" name="sd6" id="c5" <?php echo ( $cfmode[5] == '1' ? 'checked="checked"' : '' ); ?> />Fr</label>
+										<label for="sd7"><input type="checkbox" class="srCheck" value="1" name="sd7" id="c6" <?php echo ( $cfmode[6] == '1' ? 'checked="checked"' : '' ); ?> />Sa</label>
+										<p class="description"><?php _e( 'Use this for allowing specific weekdays as start of the reservation.', 'sc-res' ); ?></p>
+									</div>
+                                    <br /><br />
+									<div>
+										<div><strong>
+											<input type="checkbox" value="1" name="calendar_fixedmode" <?php echo esc_attr( ( dex_bccf_get_option( 'calendar_fixedmode', '' ) == '1' ? 'checked="checked"' : '' ) ); ?> id="fixedreservation"><?php _e( 'Enable fixed reservation length?', 'sc-res' ); ?></strong>
+											<p class="description"><?php _e( 'Use this for allowing only reservations of a specific number of days.', 'sc-res' ); ?></p>
+										</div>
+									</div>
+									<div id="container_fixedreservation" <?php echo ( dex_bccf_get_option( 'calendar_fixedmode', '' ) == '1' ? '' : 'style="display: none"' ); ?>>
+                                        <?php $v = dex_bccf_get_option( 'calendar_fixedreslength', '1' ); ?>
+                                        <label for="calendar_fixedreslength"><?php _e( 'Fixed reservation length in days', 'sc-res' ); ?></label>
+                                        <select name="calendar_fixedreslength" id="calendar_fixedreslength">
+                                            <?php for ( $k = 1; $k < 30; $k++ ) { echo '<option value="' . $k . '"' . ( $k . '' == $v ? ' selected ' : '' ) . '>' . $k . '</option>'; } ?>
+                                        </select>
+                                        <br /><br />
+									</div>
+									<input type="hidden" name="calendar_holidays" id="holidays" value="<?php echo esc_attr( dex_bccf_get_option( 'calendar_holidays', '' ) ); ?>" />
+									<input type="hidden" name="calendar_startres" id="startreservation" value="<?php echo esc_attr( dex_bccf_get_option( 'calendar_startres', '' ) ); ?>" />
+								</td>
+								<td width="1%" nowrap valign="top" colspan="2">
+									<p><?php _e( 'Disabled and special dates (see legend below)', 'sc-res' ); ?></p>
+									<div id="calConfig">
+                                        <span class="loading-calendar-data"><?php echo esc_html__( 'Loading calendar data&hellip;', 'sc-res' ); ?></span>
+                                    </div>
+									<div style="margin-top:5px;margin-left:10px;">
+                                        <div style="float:left;width:20px;height:20px;margin-right:10px;background-color:#FEA69A;"></div>
+                                        <?php echo sprintf(
+                                            '<p><strong>%1s</strong> %2s</p>',
+                                            esc_html__( 'Non-available dates:', 'sc-res' ),
+                                            esc_html__( 'Click once to mark the date as non-available.', 'sc-res' )
+                                        ); ?>
+                                    </div>
+									<div class="reservations-form-clear"></div>
+									<div id="startreslegend" style="margin-top:5px;margin-left:10px;">
+                                        <div style="float:left;width:20px;height:20px;margin-right:10px;background-color:#80BF92;"></div>
+                                        <?php echo sprintf(
+                                            '<p><strong>%1s</strong> %2s</p>',
+                                            esc_html__( 'Start reservation dates:', 'sc-res' ),
+                                            esc_html__( 'Click twice to mark the date as start date.', 'sc-res' )
+                                        ); ?>
+                                    </div>
+                                    <div class="reservations-form-clear"></div>
+									<div style="margin-left:35px;">
+                                        <p class="description"><?php _e( 'Every time a date is cliked it status changes. Click it to mark/unmark it.', 'sc-res' ); ?></p>
+                                    </div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+            <?php } else { ?>
+                <input type="hidden" name="calendar_language" value="<?php echo esc_attr(dex_bccf_get_option('calendar_language',DEX_BCCF_DEFAULT_CALENDAR_LANGUAGE)); ?>" />
+                <input type="hidden" name="calendar_weekday" value="<?php echo esc_attr(dex_bccf_get_option('calendar_weekday',DEX_BCCF_DEFAULT_CALENDAR_WEEKDAY)); ?>" />
+                <input type="hidden" name="calendar_dateformat" value="<?php echo esc_attr(dex_bccf_get_option('calendar_dateformat',DEX_BCCF_DEFAULT_CALENDAR_DATEFORMAT)); ?>" />
+                <input type="hidden" name="calendar_overlapped" value="<?php echo esc_attr(dex_bccf_get_option('calendar_overlapped', DEX_BCCF_DEFAULT_CALENDAR_OVERLAPPED)); ?>" />
+                <input type="hidden" name="calendar_mode" value="<?php echo esc_attr(dex_bccf_get_option('calendar_mode',DEX_BCCF_DEFAULT_CALENDAR_MODE)); ?>" />
+                <input type="hidden" name="calendar_mindate" value="<?php echo esc_attr(dex_bccf_get_option('calendar_mindate',DEX_BCCF_DEFAULT_CALENDAR_MINDATE)); ?>" />
+                <input type="hidden" name="calendar_maxdate" value="<?php echo esc_attr(dex_bccf_get_option('calendar_maxdate',DEX_BCCF_DEFAULT_CALENDAR_MAXDATE)); ?>" />
+            <?php } ?>
 		</section>
  		<section>
 			<h2>Form Builder</h2>
@@ -518,31 +554,36 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
              <div id="fieldlist"></div>
              <!--<div class="button" id="saveForm">Save Form</div>-->
          </div>
-         <div class="clearer"></div>
+         <div class="reservations-form-clear"></div>
 
      </div>
 		</section>
 		<section>
 			<h2>Submit Button</h2>
 			<table class="form-table">
-        <tr valign="top">
-        <th scope="row">Submit button label (text):</th>
-        <td><input type="text" name="vs_text_submitbtn" size="40" value="<?php $label = esc_attr(dex_bccf_get_option('vs_text_submitbtn', 'Continue')); echo ($label==''?'Continue':$label); ?>" /></td>
-        </tr>
-        <tr valign="top">
-        <th scope="row">Previous button label (text):</th>
-        <td><input type="text" name="vs_text_previousbtn" size="40" value="<?php $label = esc_attr(dex_bccf_get_option('vs_text_previousbtn', 'Previous')); echo ($label==''?'Previous':$label); ?>" /></td>
-        </tr>
-        <tr valign="top">
-        <th scope="row">Next button label (text):</th>
-        <td><input type="text" name="vs_text_nextbtn" size="40" value="<?php $label = esc_attr(dex_bccf_get_option('vs_text_nextbtn', 'Next')); echo ($label==''?'Next':$label); ?>" /></td>
-        </tr>
-        <tr valign="top">
-        <td colspan="2"> - The  <em>class="pbSubmit"</em> can be used to modify the button styles. <br />
-        - The styles can be applied into any of the CSS files of your theme or into the CSS file <em>"booking-calendar-contact-form\css\stylepublic.css"</em>. <br />
-        - For further modifications the submit button is located at the end of the file <em>"sc-res-scheduler.php"</em>.<br />
-        - For general CSS styles modifications to the form and samples <a href="http://wordpress.dwbooster.com/faq/booking-calendar-contact-form#q100" target="_blank">check this FAQ</a>.
-        </tr>
+                <tbody>
+                    <tr valign="top">
+                        <th scope="row">Submit button label (text):</th>
+                        <td><input type="text" name="vs_text_submitbtn" size="40" value="<?php $label = esc_attr(dex_bccf_get_option('vs_text_submitbtn', 'Continue')); echo ($label==''?'Continue':$label); ?>" /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">Previous button label (text):</th>
+                        <td><input type="text" name="vs_text_previousbtn" size="40" value="<?php $label = esc_attr(dex_bccf_get_option('vs_text_previousbtn', 'Previous')); echo ($label==''?'Previous':$label); ?>" /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">Next button label (text):</th>
+                        <td><input type="text" name="vs_text_nextbtn" size="40" value="<?php $label = esc_attr(dex_bccf_get_option('vs_text_nextbtn', 'Next')); echo ($label==''?'Next':$label); ?>" /></td>
+                    </tr>
+                    <tr valign="top">
+                        <td colspan="2">
+                            <ul>
+                                <li>The <code>pbSubmit</code> class can be used to modify the button styles.</li>
+                                <li>The styles can be applied into any of the CSS files of your theme or into the CSS file <code>css\stylepublic.css</code>.</li>
+                                <li>For further modifications the submit button is located at the end of the file <code>sc-res-scheduler.php</code>.</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
 			</table>
 		</section>
 		<section>
@@ -603,20 +644,20 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
         </th>
         <td>
            <div id="cpabcslots">Help: Select the number of days to setup if you want to use this configuration option.<br /><br /></div>
-           <div style="clear:both"></div>
-           <em style="font-size:11px;">Note: Each box should contain the  TOTAL price for a booking of that length. This will overwrite the default price if the booking length matches some of the specified booking lengths.</em>
+           <div class="reservations-form-clear"></div>
+           <em style="font-size:11px;">Note: Each box should contain the  TOTAL price for a reservation of that length. This will overwrite the default price if the reservation length matches some of the specified reservation lengths.</em>
         </td>
         </tr>
 
        <tr>
         <td valign="top" colspan="2">
-         <strong>Supplement for bookings between</strong>
+         <strong>Supplement for reservations between</strong>
          <input type="text" name="calendar_suplementminnight" size="40" value="<?php $v = dex_bccf_get_option('calendar_suplementminnight', '0'); echo esc_attr(($v==''?'0':$v)); ?>" />
          <strong>and</strong>
          <input type="text" name="calendar_suplementmaxnight" size="40" value="<?php $v = dex_bccf_get_option('calendar_suplementmaxnight', '0'); echo esc_attr(($v==''?'0':$v)); ?>" />
          <strong>nights:</strong>
          <input type="text" name="calendar_suplement" size="40" value="<?php $v = dex_bccf_get_option('calendar_suplement', '0'); echo esc_attr(($v==''?'0':$v)); ?>" /><br />
-         <em style="font-size:11px;">Suplement will be added once for bookings between those nights.</em>
+         <em style="font-size:11px;">Suplement will be added once for reservations between those nights.</em>
         </td>
        </tr>
 
@@ -880,7 +921,7 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
 			<h2 class='hndle' style="padding:5px;"><span>Reminder Settings</span></h2>
 			<table class="form-table">
         <tr valign="top">
-        <th scope="row">Enable booking reminders?</th>
+        <th scope="row">Enable reservation reminders?</th>
         <td><input type="checkbox" name="enable_reminder" id="enable_reminder" onclick="bccf_checkreminderstatus();" size="40" value="1" <?php if (dex_bccf_get_option('enable_reminder',0)) echo 'checked'; ?> /></td>
         </tr>
      </table>
@@ -888,7 +929,7 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
         <tr><td colspan="2"><hr /></td></tr>
         <tr valign="top">
         <th scope="row">Send reminder:</th>
-        <td><input type="text" name="reminder_hours" size="2" value="<?php echo esc_attr(dex_bccf_get_option('reminder_hours', 72)); ?>" /> hours <strong>BEFORE</strong> the booking
+        <td><input type="text" name="reminder_hours" size="2" value="<?php echo esc_attr(dex_bccf_get_option('reminder_hours', 72)); ?>" /> hours <strong>BEFORE</strong> the reservation
         <br /><em>Note: Hours date based in server time. Server time now is <?php echo date("Y-m-d H:i"); ?></em>
         </td>
         </tr>
@@ -915,13 +956,13 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
         <tr><td colspan="2"><hr /></td></tr>
         <tr valign="top">
         <th scope="row">Send reminder:</th>
-        <td><input type="text" name="reminder_hours2" size="2" value="<?php echo esc_attr(dex_bccf_get_option('reminder_hours2', 72)); ?>" /> hours <strong>AFTER</strong> the booking
+        <td><input type="text" name="reminder_hours2" size="2" value="<?php echo esc_attr(dex_bccf_get_option('reminder_hours2', 72)); ?>" /> hours <strong>AFTER</strong> the reservation
         <br /><em>Note: Hours date based in server time. Server time now is <?php echo date("Y-m-d H:i"); ?></em>
         </td>
         </tr>
         <tr valign="top">
         <th scope="row">Reminder email subject</th>
-        <td><input type="text" name="reminder_subject2" size="70" value="<?php echo esc_attr(dex_bccf_get_option('reminder_subject2', 'Thank you for your booking...')); ?>" /></td>
+        <td><input type="text" name="reminder_subject2" size="70" value="<?php echo esc_attr(dex_bccf_get_option('reminder_subject2', 'Thank you for your reservation...')); ?>" /></td>
         </tr>
         <tr valign="top">
         <th scope="row">Email format?</th>
@@ -1134,7 +1175,7 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
           if (slots == '0')
               buffer = "<br />&lt;-<em> Select the number of days to setup if you want to use this configuration option.<br /></em>";
           else
-              buffer2 = 'Total request cost for specific # of days:<br />'+buffer2+'<div style="clear:both"></div>';
+              buffer2 = 'Total request cost for specific # of days:<br />'+buffer2+'<div class="reservations-form-clear"></div>';
           document.getElementById("cpabcslots").innerHTML = buffer;
           document.getElementById("cpabcslots_season").innerHTML = buffer2;
       }
