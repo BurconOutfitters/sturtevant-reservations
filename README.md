@@ -9,7 +9,7 @@ WordPress plugin for the cabin reservation and payment system for Sturtevant Cam
 
 ## Overview
 
-The plugin from which this was forked, Booking Calendar Contact Form, is not ideal but the best we have found for the needs of Sturtevant Camp. This version will modify the text of the admin screens and clean up the code. From there we will make the plugin object-oriented and attempt to modernize the JavaScript.
+The plugin from which this was forked, Booking Calendar and Contact Form, is not ideal but the best we have found for the needs of Sturtevant Camp. This version will modify the text of the admin screens and clean up the code. From there we will make the plugin object-oriented and attempt to modernize the JavaScript.
 
 ### Original Plugin
 
