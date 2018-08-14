@@ -2,7 +2,8 @@
  * Calendar for managing available dates.
  */
 
-#calConfig .ui-widget-content {
+#calConfig .ui-widget-content,
+.reservations .ui-widget-content {
 	background: inherit;
 	border: 1px solid #ddd;
 	border-radius: 0px;
@@ -15,7 +16,8 @@
 	        box-shadow: none;
 }
 
-#calConfig .ui-widget {
+#calConfig .ui-widget,
+.reservations .ui-widget {
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
 	font-size: 1em;
 }

@@ -14,7 +14,7 @@
 }
 
 .rcalendar .ui-datepicker .ui-datepicker-other-month {
-	color:#CFCFCF;
+	color:#ccc;
 }
 
 .rcalendar .ui-icon,
@@ -84,10 +84,11 @@
 .rcalendar .ui-datepicker .ui-datepicker-header {
 	position: relative;
 	padding: 0px;
-	border: 1px solid #AED0EA;
-	background: #E2EFF8;
+	border: 1px solid #ccc;
+	background: #fff;
 	margin: 0px ;
 	font-weight: bold;
+	font-weight: 600;
 }
 
 .rcalendar .ui-datepicker .ui-datepicker-prev,
@@ -150,7 +151,7 @@
 	width: 100%;
 	font-size: .9em;
 	border-collapse: separate;
-	border: 1px solid #D8D8D8;
+	border: 1px solid #ddd;
 	border-top: 0px;
 	background: #fff;
 	margin: 0px;
@@ -161,6 +162,7 @@
 	padding: 3px 0px 3px 0px;
 	text-align: center;
 	font-weight: bold;
+	font-weight: 600;
 	border-bottom: 1px solid #d8d8d8;
 	text-transform: none;
 }
@@ -183,7 +185,7 @@
 }
 
 .rcalendar .ui-datepicker td.ui-state-active a {
-	color: #000;
+	color: #444;
 }
 
 .rcalendar .ui-datepicker td.specialDateStart {
@@ -217,19 +219,26 @@
 }
 
 .rcalendar .ui-datepicker td.ui-datepicker-other-month,
-.rcalendar .ui-datepicker td.ui-state-disabled{
+.rcalendar .ui-datepicker td.ui-state-disabled {
 	opacity: 0.15;
 	filter: alpha(opacity=15);
 }
 
-.rcalendar .ui-datepicker td.ui-state-disabled.specialDate{
+.rcalendar .ui-datepicker td.ui-state-disabled.specialDate {
+	background-color: #d00 !important;
 	opacity: 1;
 	filter: alpha(opacity=100);
 }
 
+.rcalendar .ui-datepicker td.ui-state-disabled.specialDate .ui-state-default {
+	font-weight: bold;
+	font-weight: 600;
+	color: #fff;
+}
+
 .rcalendar .ui-datepicker td span,
 .ui-datepicker td a {
-	color:#333;
+	color:#444;
 	display: block;
 	padding: 1px 0px 1px 0px;
 	text-align: center;
@@ -257,7 +266,7 @@
 
 .rcalendar .ui-widget-header,
 .rcalendar .fshowdatep {
-	color: #000;
+	color: #444;
 }
 
 /* With multiple calendars. */
@@ -269,7 +278,7 @@
 .rcalendar .ui-datepicker-multi .ui-datepicker-group {
 	float: left;
 	max-width: 200px;
-	border: 1px solid #D8D8D8;
+	border: 1px solid #d8d8d8;
 	margin: 1px;
 	background: #fff;
 }
@@ -282,7 +291,7 @@
 
 .rcalendar .ui-datepicker-multi .ui-datepicker-group .ui-datepicker-header{
 	border: 0px;
-	border-bottom: 1px solid #D8D8D8;
+	border-bottom: 1px solid #d8d8d8;
 }
 
 .rcalendar .ui-datepicker-multi-2 .ui-datepicker-group {
@@ -340,8 +349,8 @@
 	background: #fff;
 	padding: 5px 5px 0px 0px;
 	position: relative;
-	border: 2px solid #D8D8D8;
-	border-top: 1px solid #D8D8D8;
+	border: 2px solid #d8d8d8;
+	border-top: 1px solid #d8d8d8;
 	border-bottom: 0px;
 	margin-top: 0px;
 	z-index: 20000;
@@ -446,11 +455,11 @@
 
 .mv_dlg .dialogNMonth_event_links a,
 a.dlgNMonth_createlink {
-	border: 1px solid #AED0EA;
-	background-color: #E2EFF8;
+	border: 1px solid #ccc;
+	background-color: #fff;
 	padding: 0px 6px 0px 6px;
 	text-decoration: none;
-	color: #333;
+	color: #444;
 	margin-right: 5px;
 }
 
@@ -481,7 +490,7 @@ a.dlgNMonth_createlink:hover {
 .rcalendar .ui-widget-header .ui-state-default {
 	background: none;
 	border: 0px;
-	color: #555555;
+	color: #555;
 	font-weight: normal;
 }
 
@@ -490,7 +499,7 @@ a.dlgNMonth_createlink:hover {
 .mv_dlg .ui-widget-header .ui-state-default {
 	background: none;
 	border: 0px;
-	color: #555555;
+	color: #555;
 	font-weight: normal
 }
 

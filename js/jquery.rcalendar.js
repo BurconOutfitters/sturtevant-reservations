@@ -127,7 +127,7 @@ myjQuery(function () {
                         str += '<div>' + data[i].title + '</div>';
                         str += '<div>' + data[i].description + '</div>';
                         if (opt.edition)
-                            str += '<div ><a href="" class="bEditEvent">Edit Event</a> &nbsp;  &nbsp; <a href="" class="bDelEvent">Delete Event</a></div>';
+                            str += '<div ><a href="" class="bEditEvent">Edit Reservation</a> &nbsp;  &nbsp; <a href="" class="bDelEvent">Delete Reservation</a></div>';
                         str += '</div>';
                         str += '<div class="eWrite" style="display:none">';
                         str += '<div class="comboColor" style="background:#' + data[i].c + '" c="' + data[i].c + '"><div class="listColor ' + ((opt.partialDate) ? "partialDate" : "") + '" style="display:none">';
@@ -136,7 +136,7 @@ myjQuery(function () {
                         str += '</div></div>';
                         str += '<div><input type="text" class="eTitle" id="eTitle' + data[i].id + '" value="' + data[i].title + '"/></div>';
                         str += '<div><textarea id="eDesc' + data[i].id + '" class="eDesc" >' + data[i].description + '</textarea></div>';
-                        str += '<div ><a href="" class="bSaveEvent">Save Event</a> &nbsp;  &nbsp; <a href="" class="bCancelEvent">Cancel</a></div>';
+                        str += '<div ><a href="" class="bSaveEvent">Save Reservation</a> &nbsp;  &nbsp; <a href="" class="bCancelEvent">Cancel</a></div>';
                         str += '</div>';
                         str += '</div>';
                     }
