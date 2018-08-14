@@ -57,7 +57,7 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
 <script type="text/javascript">
 	if ( false ) {
 		document.write ("<"+"script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></"+"script>");
-		document.write ("<"+"script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.20/jquery-ui.min.js'></"+"script>");
+		document.write ("<"+"script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></"+"script>");
 	}
 </script>
 <div class="wrap reservations reservation-form-edit">
@@ -489,27 +489,21 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
 						</tbody>
 					</table>
             <?php } else { ?>
-                <input type="hidden" name="calendar_language" value="<?php echo esc_attr(dex_bccf_get_option('calendar_language',DEX_BCCF_DEFAULT_CALENDAR_LANGUAGE)); ?>" />
-                <input type="hidden" name="calendar_weekday" value="<?php echo esc_attr(dex_bccf_get_option('calendar_weekday',DEX_BCCF_DEFAULT_CALENDAR_WEEKDAY)); ?>" />
-                <input type="hidden" name="calendar_dateformat" value="<?php echo esc_attr(dex_bccf_get_option('calendar_dateformat',DEX_BCCF_DEFAULT_CALENDAR_DATEFORMAT)); ?>" />
-                <input type="hidden" name="calendar_overlapped" value="<?php echo esc_attr(dex_bccf_get_option('calendar_overlapped', DEX_BCCF_DEFAULT_CALENDAR_OVERLAPPED)); ?>" />
-                <input type="hidden" name="calendar_mode" value="<?php echo esc_attr(dex_bccf_get_option('calendar_mode',DEX_BCCF_DEFAULT_CALENDAR_MODE)); ?>" />
-                <input type="hidden" name="calendar_mindate" value="<?php echo esc_attr(dex_bccf_get_option('calendar_mindate',DEX_BCCF_DEFAULT_CALENDAR_MINDATE)); ?>" />
-                <input type="hidden" name="calendar_maxdate" value="<?php echo esc_attr(dex_bccf_get_option('calendar_maxdate',DEX_BCCF_DEFAULT_CALENDAR_MAXDATE)); ?>" />
+                <input type="hidden" name="calendar_language" value="<?php echo esc_attr( dex_bccf_get_option( 'calendar_language', DEX_BCCF_DEFAULT_CALENDAR_LANGUAGE ) ); ?>" />
+                <input type="hidden" name="calendar_weekday" value="<?php echo esc_attr( dex_bccf_get_option( 'calendar_weekday', DEX_BCCF_DEFAULT_CALENDAR_WEEKDAY ) ); ?>" />
+                <input type="hidden" name="calendar_dateformat" value="<?php echo esc_attr( dex_bccf_get_option( 'calendar_dateformat', DEX_BCCF_DEFAULT_CALENDAR_DATEFORMAT ) ); ?>" />
+                <input type="hidden" name="calendar_overlapped" value="<?php echo esc_attr( dex_bccf_get_option( 'calendar_overlapped', DEX_BCCF_DEFAULT_CALENDAR_OVERLAPPED ) ); ?>" />
+                <input type="hidden" name="calendar_mode" value="<?php echo esc_attr( dex_bccf_get_option( 'calendar_mode', DEX_BCCF_DEFAULT_CALENDAR_MODE ) ); ?>" />
+                <input type="hidden" name="calendar_mindate" value="<?php echo esc_attr( dex_bccf_get_option( 'calendar_mindate', DEX_BCCF_DEFAULT_CALENDAR_MINDATE ) ); ?>" />
+                <input type="hidden" name="calendar_maxdate" value="<?php echo esc_attr( dex_bccf_get_option( 'calendar_maxdate', DEX_BCCF_DEFAULT_CALENDAR_MAXDATE ) ); ?>" />
             <?php } ?>
 		</section>
  		<section>
-			<h2>Form Builder</h2>
-
-     <input type="hidden" name="form_structure" id="form_structure" size="180" value="<?php echo str_replace('"','&quot;',str_replace("\r","",str_replace("\n","",esc_attr(dex_bccf_cleanJSON(dex_bccf_get_option('form_structure', DEX_BCCF_DEFAULT_form_structure)))))); ?>" />
-     <input type="hidden" name="templates" id="templates" value="<?php echo esc_attr( json_encode( dex_bccf_available_templates() ) ); ?>" />
-
-
-     <link href="<?php echo plugins_url('css/cupertino/jquery-ui-1.8.20.custom.css', __FILE__); ?>" type="text/css" rel="stylesheet" />
-
-     <script>
-         $contactFormPPQuery = jQuery.noConflict();
-         $contactFormPPQuery(document).ready(function() {
+            <!-- Section scripts -->
+            <link href="<?php echo plugins_url( 'css/smoothness/jquery-ui-smoothness.min.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
+            <script>
+            $contactFormPPQuery = jQuery.noConflict();
+            $contactFormPPQuery(document).ready(function() {
             var f = $contactFormPPQuery("#fbuilder").fbuilder();
             f.fBuild.loadData("form_structure", "templates");
 
@@ -518,68 +512,94 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
             });
 
             $contactFormPPQuery(".itemForm").click(function() {
-     	       f.fBuild.addItem($contactFormPPQuery(this).attr("id"));
-     	   });
+                f.fBuild.addItem($contactFormPPQuery(this).attr("id"));
+            });
 
-           $contactFormPPQuery( ".itemForm" ).draggable({revert1: "invalid",helper: "clone",cursor: "move"});
-     	   $contactFormPPQuery( "#fbuilder" ).droppable({
-     	       accept: ".button",
-     	       drop: function( event, ui ) {
-     	           f.fBuild.addItem(ui.draggable.attr("id"));
-     	       }
-     	   });
+            $contactFormPPQuery( ".itemForm" ).draggable({revert1: "invalid",helper: "clone",cursor: "move"});
+            $contactFormPPQuery( "#fbuilder" ).droppable({
+                accept: ".button",
+                drop: function( event, ui ) {
+                    f.fBuild.addItem(ui.draggable.attr("id"));
+                }
+            });
+            });
+            </script>
+            <!-- End section scripts -->
 
-         });
-
-     </script>
-
-     <div style="background:#fafafa;width:780px;" class="form-builder">
-
-         <div class="column width50">
-             <div id="tabs">
-     			<ul>
-     				<li><a href="#tabs-1">Add a Field</a></li>
-     				<li><a href="#tabs-2">Field Settings</a></li>
-     				<li><a href="#tabs-3">Form Settings</a></li>
-     			</ul>
-     			<div id="tabs-1">
-
-     			</div>
-     			<div id="tabs-2"></div>
-     			<div id="tabs-3"></div>
-     		</div>
-         </div>
-         <div class="columnr width50 padding10" id="fbuilder">
-             <div id="formheader"></div>
-             <div id="fieldlist"></div>
-             <!--<div class="button" id="saveForm">Save Form</div>-->
-         </div>
-         <div class="reservations-form-clear"></div>
-
-     </div>
+            <h2><?php _e( 'Form Builder', 'sc-res' ); ?></h2>
+            <input type="hidden" name="form_structure" id="form_structure" size="180" value="<?php echo str_replace( '"', '&quot;', str_replace( "\r", "", str_replace( "\n", "", esc_attr( dex_bccf_cleanJSON( dex_bccf_get_option( 'form_structure', DEX_BCCF_DEFAULT_form_structure ) ) ) ) ) ); ?>" />
+            <input type="hidden" name="templates" id="templates" value="<?php echo esc_attr( json_encode( dex_bccf_available_templates() ) ); ?>" />
+            <div style="width:780px;" class="form-builder">
+                <div class="column width50">
+                    <div id="tabs">
+                        <ul>
+                            <li><a href="#tabs-1"><?php _e( 'Add a Field', 'sc-res' ); ?></a></li>
+                            <li><a href="#tabs-2"><?php _e( 'Field Settings', 'sc-res' ); ?></a></li>
+                            <li><a href="#tabs-3"><?php _e( 'Form Settings', 'sc-res' ); ?></a></li>
+                        </ul>
+                        <div id="tabs-1"></div>
+                        <div id="tabs-2"></div>
+                        <div id="tabs-3"></div>
+                    </div>
+                </div>
+                <div class="columnr width50 padding10" id="fbuilder">
+                    <div id="formheader"></div>
+                    <div id="fieldlist"></div>
+                    <!--<div class="button" id="saveForm">Save Form</div>-->
+                </div>
+                <div class="reservations-form-clear"></div>
+            </div>
 		</section>
 		<section>
-			<h2>Submit Button</h2>
+			<h2><?php _e( 'Submit Button', 'sc-res' ); ?></h2>
 			<table class="form-table">
                 <tbody>
                     <tr valign="top">
-                        <th scope="row">Submit button label (text):</th>
-                        <td><input type="text" name="vs_text_submitbtn" size="40" value="<?php $label = esc_attr(dex_bccf_get_option('vs_text_submitbtn', 'Continue')); echo ($label==''?'Continue':$label); ?>" /></td>
+                        <?php $label = dex_bccf_get_option( 'vs_text_submitbtn', 'Continue' );
+                        if ( '' == $label ) {
+                            $label = __( 'Continue', 'sc-res' );
+                        } else {
+                            $label = $label;
+                        } ?>
+                        <th scope="row"><?php _e( 'Submit button label', 'sc-res' ); ?></th>
+                        <td><input type="text" name="vs_text_submitbtn" size="40" value="<?php echo esc_attr( $label ); ?>" /></td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row">Previous button label (text):</th>
-                        <td><input type="text" name="vs_text_previousbtn" size="40" value="<?php $label = esc_attr(dex_bccf_get_option('vs_text_previousbtn', 'Previous')); echo ($label==''?'Previous':$label); ?>" /></td>
+                        <?php $label = dex_bccf_get_option( 'vs_text_previousbtn', 'Previous' );
+                        if ( '' == $label ) {
+                            $label = __( 'Previous', 'sc-res' );
+                        } else {
+                            $label = $label;
+                        } ?>
+                        <th scope="row"><?php _e( 'Previous button label', 'sc-res' ); ?></th>
+                        <td><input type="text" name="vs_text_previousbtn" size="40" value="<?php echo esc_attr( $label ); ?>" /></td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row">Next button label (text):</th>
-                        <td><input type="text" name="vs_text_nextbtn" size="40" value="<?php $label = esc_attr(dex_bccf_get_option('vs_text_nextbtn', 'Next')); echo ($label==''?'Next':$label); ?>" /></td>
+                        <?php $label = dex_bccf_get_option( 'vs_text_nextbtn', 'Next' );
+                        if ( '' == $label ) {
+                            $label = __( 'Next', 'sc-res' );
+                        } else {
+                            $label = $label;
+                        } ?>
+                        <th scope="row"><?php _e( 'Next button label', 'sc-res' ); ?></th>
+                        <td><input type="text" name="vs_text_nextbtn" size="40" value="<?php echo esc_attr( $label ); ?>" /></td>
                     </tr>
                     <tr valign="top">
                         <td colspan="2">
                             <ul>
-                                <li>The <code>pbSubmit</code> class can be used to modify the button styles.</li>
-                                <li>The styles can be applied into any of the CSS files of your theme or into the CSS file <code>css\stylepublic.css</code>.</li>
-                                <li>For further modifications the submit button is located at the end of the file <code>sc-res-scheduler.php</code>.</li>
+                                <li><?php echo sprintf(
+                                    '%1s <code>pbSubmit</code> %2s',
+                                    __( 'The', 'sc-res' ),
+                                    __( 'class can be used to modify the button styles.', 'sc-res' )
+                                ); ?></li>
+                                <li><?php echo sprintf(
+                                    '%1s <code>css\stylepublic.css</code>.',
+                                    __( 'The styles can be applied into any of the CSS files of your theme or into the CSS file', 'sc-res' )
+                                ); ?></li>
+                                <li><?php echo sprintf(
+                                    '%1s <code>sc-res-scheduler.php</code>.',
+                                    __( 'For further modifications the submit button is located at the end of the file', 'sc-res' )
+                                ); ?></li>
                             </ul>
                         </td>
                     </tr>
@@ -587,640 +607,754 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
 			</table>
 		</section>
 		<section>
-			<h2>Validation Texts</h2>
-     <?php $option = dex_bccf_get_option('vs_use_validation', DEX_BCCF_DEFAULT_vs_use_validation); ?>
-     <input type="hidden" name="vs_use_validation" value="<?php echo $option; ?>" />
-     <table class="form-table">
-        <tr valign="top">
-         <td width="1%" nowrap><strong>"is required" text:</strong><br /><input type="text" name="vs_text_is_required" size="40" value="<?php echo esc_attr(dex_bccf_get_option('vs_text_is_required', DEX_BCCF_DEFAULT_vs_text_is_required)); ?>" /></td>
-         <td><strong>"is email" text:</strong><br /><input type="text" name="vs_text_is_email" size="70" value="<?php echo esc_attr(dex_bccf_get_option('vs_text_is_email', DEX_BCCF_DEFAULT_vs_text_is_email)); ?>" /></td>
-        </tr>
-        <tr valign="top">
-         <td><strong>"is valid captcha" text:</strong><br /><input type="text" name="cv_text_enter_valid_captcha" size="70" value="<?php echo esc_attr(dex_bccf_get_option('cv_text_enter_valid_captcha', DEX_BCCF_DEFAULT_dexcv_text_enter_valid_captcha)); ?>" /></td>
-         <td><strong>"is valid date (mm/dd/yyyy)" text:</strong><br /><input type="text" name="vs_text_datemmddyyyy" size="70" value="<?php echo esc_attr(dex_bccf_get_option('vs_text_datemmddyyyy', DEX_BCCF_DEFAULT_vs_text_datemmddyyyy)); ?>" /></td>
-        </tr>
-        <tr valign="top">
-         <td><strong>"is valid date (dd/mm/yyyy)" text:</strong><br /><input type="text" name="vs_text_dateddmmyyyy" size="70" value="<?php echo esc_attr(dex_bccf_get_option('vs_text_dateddmmyyyy', DEX_BCCF_DEFAULT_vs_text_dateddmmyyyy)); ?>" /></td>
-         <td><strong>"is number" text:</strong><br /><input type="text" name="vs_text_number" size="70" value="<?php echo esc_attr(dex_bccf_get_option('vs_text_number', DEX_BCCF_DEFAULT_vs_text_number)); ?>" /></td>
-        </tr>
-        <tr valign="top">
-         <td><strong>"only digits" text:</strong><br /><input type="text" name="vs_text_digits" size="70" value="<?php echo esc_attr(dex_bccf_get_option('vs_text_digits', DEX_BCCF_DEFAULT_vs_text_digits)); ?>" /></td>
-         <td><strong>"under maximum" text:</strong><br /><input type="text" name="vs_text_max" size="70" value="<?php echo esc_attr(dex_bccf_get_option('vs_text_max', DEX_BCCF_DEFAULT_vs_text_max)); ?>" /></td>
-        </tr>
-        <tr valign="top">
-         <td><strong>"over minimum" text:</strong><br /><input type="text" name="vs_text_min" size="70" value="<?php echo esc_attr(dex_bccf_get_option('vs_text_min', DEX_BCCF_DEFAULT_vs_text_min)); ?>" /></td>
-        </tr>
+            <h2><?php _e( 'Validation Texts', 'sc-res' ); ?></h2>
+            <?php $option = dex_bccf_get_option('vs_use_validation', DEX_BCCF_DEFAULT_vs_use_validation); ?>
+            <input type="hidden" name="vs_use_validation" value="<?php echo $option; ?>" />
 
-	 </table>
+            <table class="form-table">
+                <tbody>
+                    <tr valign="top">
+                        <td width="1%" nowrap>
+                            <strong><?php _e( '"is required" text:', 'sc-res' ); ?></strong>
+                            <br /><input type="text" name="vs_text_is_required" size="40" value="<?php echo esc_attr( dex_bccf_get_option( 'vs_text_is_required', DEX_BCCF_DEFAULT_vs_text_is_required ) ); ?>" />
+                        </td>
+                        <td>
+                            <strong><?php _e( '"is email" text:', 'sc-res' ); ?></strong>
+                            <br /><input type="text" name="vs_text_is_email" size="70" value="<?php echo esc_attr( dex_bccf_get_option( 'vs_text_is_email', DEX_BCCF_DEFAULT_vs_text_is_email ) ); ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td>
+                            <strong><?php _e( '"is valid captcha" text:', 'sc-res' ); ?></strong>
+                            <br /><input type="text" name="cv_text_enter_valid_captcha" size="70" value="<?php echo esc_attr( dex_bccf_get_option( 'cv_text_enter_valid_captcha', DEX_BCCF_DEFAULT_dexcv_text_enter_valid_captcha ) ); ?>" />
+                        </td>
+                        <td>
+                            <strong><?php echo sprintf(
+                                '%1s (mm/dd/yyyy)%2s',
+                                __( '"is valid date', 'sc-res' ),
+                                __( '" text:', 'sc-res' )
+                            ); ?></strong>
+                            <br /><input type="text" name="vs_text_datemmddyyyy" size="70" value="<?php echo esc_attr( dex_bccf_get_option( 'vs_text_datemmddyyyy', DEX_BCCF_DEFAULT_vs_text_datemmddyyyy ) ); ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td>
+                            <strong><?php echo sprintf(
+                                '%1s (dd/mm/yyyy)%2s',
+                                __( '"is valid date', 'sc-res' ),
+                                __( '" text:', 'sc-res' )
+                            ); ?></strong>
+                            <br /><input type="text" name="vs_text_dateddmmyyyy" size="70" value="<?php echo esc_attr( dex_bccf_get_option( 'vs_text_dateddmmyyyy', DEX_BCCF_DEFAULT_vs_text_dateddmmyyyy ) ); ?>" />
+                        </td>
+                        <td>
+                            <strong><?php _e( '"is number" text:', 'sc-res' ); ?></strong>
+                            <br /><input type="text" name="vs_text_number" size="70" value="<?php echo esc_attr( dex_bccf_get_option( 'vs_text_number', DEX_BCCF_DEFAULT_vs_text_number ) ); ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td>
+                            <strong><?php _e( '"only digits" text:', 'sc-res' ); ?></strong>
+                            <br /><input type="text" name="vs_text_digits" size="70" value="<?php echo esc_attr( dex_bccf_get_option( 'vs_text_digits', DEX_BCCF_DEFAULT_vs_text_digits ) ); ?>" />
+                        </td>
+                        <td>
+                            <strong><?php _e( '"under maximum" text:', 'sc-res' ); ?></strong>
+                            <br /><input type="text" name="vs_text_max" size="70" value="<?php echo esc_attr( dex_bccf_get_option( 'vs_text_max', DEX_BCCF_DEFAULT_vs_text_max ) ); ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td>
+                            <strong><?php _e( '"over minimum" text:', 'sc-res' ); ?></strong>
+                            <br /><input type="text" name="vs_text_min" size="70" value="<?php echo esc_attr( dex_bccf_get_option( 'vs_text_min', DEX_BCCF_DEFAULT_vs_text_min ) ); ?>" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 		</section>
 		<section>
-			<h2>Price Configuration</h2>
+			<h2><?php _e( 'Price Configuration', 'sc-res' ); ?></h2>
 			<table class="form-table">
-
-        <tr valign="top">
-        <th scope="row"><strong>Currency</strong></th>
-        <td><div style="float:left"><input type="text" name="currency" size="3" value="<?php echo esc_attr(dex_bccf_get_option('currency',DEX_BCCF_DEFAULT_CURRENCY)); ?>" /></div>
-           <div id="currencyhelp" style="float:left"> &nbsp; [<a href="javascript:showcurrencies();">?</a>]</div>
-           <div id="currencylist" style="display:none;float:left"> &nbsp; <strong>Ex:</strong> USD, EUR, GBP, CAD, AUD, NZD, CHF, MXN, CZK, DKK, NOK, SEK, HKD, SGD, HUF, ILS, JPY, PLN</div>
-        </td>
-        </tr>
-
-
-        <tr valign="top">
-        <th scope="row"><strong>Default request cost (per day)</strong></th>
-        <td><input type="text" size="5" name="request_cost" value="<?php echo esc_attr($request_costs[0]); ?>" /></td>
-        </tr>
-
-
-        <tr valign="top">
-        <th scope="row"><nobr><strong>Total request cost for specific # of days</strong></nobr><br />
-          <nobr># of days to setup:
-          <?php $option = @intval (dex_bccf_get_option('max_slots', '0')); if ($option=='') $option = 0;  ?>
-          <select name="max_slots" onchange="dex_updatemaxslots();">
-           <?php for ($k=0; $k<=30; $k++) { ?>
-           <option value="<?php echo $k; ?>"<?php if ($option == $k) echo ' selected'; ?>><?php echo $k; ?></option>
-           <?php } ?>
-          </select></nobr>
-        </th>
-        <td>
-           <div id="cpabcslots">Help: Select the number of days to setup if you want to use this configuration option.<br /><br /></div>
-           <div class="reservations-form-clear"></div>
-           <em style="font-size:11px;">Note: Each box should contain the  TOTAL price for a reservation of that length. This will overwrite the default price if the reservation length matches some of the specified reservation lengths.</em>
-        </td>
-        </tr>
-
-       <tr>
-        <td valign="top" colspan="2">
-         <strong>Supplement for reservations between</strong>
-         <input type="text" name="calendar_suplementminnight" size="40" value="<?php $v = dex_bccf_get_option('calendar_suplementminnight', '0'); echo esc_attr(($v==''?'0':$v)); ?>" />
-         <strong>and</strong>
-         <input type="text" name="calendar_suplementmaxnight" size="40" value="<?php $v = dex_bccf_get_option('calendar_suplementmaxnight', '0'); echo esc_attr(($v==''?'0':$v)); ?>" />
-         <strong>nights:</strong>
-         <input type="text" name="calendar_suplement" size="40" value="<?php $v = dex_bccf_get_option('calendar_suplement', '0'); echo esc_attr(($v==''?'0':$v)); ?>" /><br />
-         <em style="font-size:11px;">Suplement will be added once for reservations between those nights.</em>
-        </td>
-       </tr>
-
-
-        <tr valign="top">
-         <td colspan="4" style="padding:3px;background-color:#E2EFF8;color:#666666;font-weight:bold;text-align:left">
-			<strong>Deposit Payment (optional)</strong>
-         </td>
-        </tr>
-
-       <tr>
-        <td valign="top" colspan="2">
-
-         <?php $v = dex_bccf_get_option('calendar_depositenable', '0'); if ($v=='') $v = '0'; ?>
-         <strong>Enable deposit payment?:</strong>
-         <select name="calendar_depositenable">
-          <option value="0" <?php if ($v=='0') echo ' selected'; ?>>No</option>
-          <option value="1" <?php if ($v=='1') echo ' selected'; ?>>Yes</option>
-         </select>
-         &nbsp;&nbsp;
-         <strong>Deposit Amount:</strong>
-         <input type="text" name="calendar_depositamount" size="40" value="<?php $v = dex_bccf_get_option('calendar_depositamount', '0'); echo esc_attr(($v==''?'0':$v)); ?>" />
-         &nbsp;&nbsp;
-         <?php $v = dex_bccf_get_option('calendar_deposittype', '0'); if ($v=='') $v = '0'; ?>
-         <strong>Deposit type:</strong>
-         <select name="calendar_deposittype">
-          <option value="0" <?php if ($v=='0') echo ' selected'; ?>>Percent</option>
-          <option value="1" <?php if ($v=='1') echo ' selected'; ?>>Fixed</option>
-         </select>
-         <br />
-         <em style="font-size:11px;">If enabled, the customer will have to pay at PayPal only the deposit amount.</em>
-         <br />
-
-        </td>
-       </tr>
-
-
-        <tr valign="top">
-         <td colspan="4" style="padding:3px;background-color:#E2EFF8;color:#666666;font-weight:bold;text-align:left">
-			<strong>Seasons Configuration (optional)</strong>
-         </td>
-        </tr>
-
-        <tr valign="top">
-        <td scope="row" colspan="2">
-           <!--<strong>Season cost (per day):</strong>-->
-           <div id="dex_noseasons_availmsg">Loading...</div>
-
-           <br />
-           <div style="background:#EEF5FB;border: 1px dotted #888888;padding:10px;">
-             <strong>Add new season:</strong>
-             <br />
-             Default Cost for this season: <br /> <input type="text" name="dex_dc_price" id="dex_dc_price" value="" /> <br />
-             <div id="cpabcslots_season"></div>
-             From: <br /> <input type="text"  size="10" name="dex_dc_season_dfrom" id="dex_dc_season_dfrom" value="" />&nbsp; &nbsp; &nbsp; <br />
-             To: <br /> <input type="text"  size="10" name="dex_dc_season_dto" id="dex_dc_season_dto" value="" />&nbsp; &nbsp; &nbsp;<br />
-             <input type="button" name="dex_dc_subcseasons" id="dex_dc_subcseasons" value="Add Season" />
-             <br />
-             <em>Note: Season prices override the "Default request cost" specified above.</em>
-           </div>
-        </td>
-        </tr>
+                <tbody>
+                    <tr valign="top">
+                        <th scope="row"><strong><?php _e( 'Currency', 'sc-res' ); ?></strong></th>
+                        <td>
+                            <div style="float:left">
+                                <input type="text" name="currency" size="3" value="<?php echo esc_attr( dex_bccf_get_option( 'currency', EX_BCCF_DEFAULT_CURRENCY ) ); ?>" />
+                            </div>
+                            <div id="currencyhelp" style="float: left;"> &nbsp; <a href="javascript:showcurrencies();"><span class="dashicons dashicons-editor-help"></span></a></div>
+                            <div id="currencylist" style="display: none; float: left; padding-top: 0.5em;"> &nbsp; <strong><?php _e( 'Example:', 'sc-res' ); ?></strong> USD, EUR, GBP, CAD, AUD, MXN</div>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><strong><?php _e( 'Default request cost (per day)', 'sc-res' ); ?></strong></th>
+                        <td>
+                            <input type="text" size="5" name="request_cost" value="<?php echo esc_attr( $request_costs[0] ); ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><nobr><strong><?php _e( 'Total request cost for specific number of days', 'sc-res' ); ?></strong></nobr><br />
+                            <span style="white-space: nowrap"><?php _e( 'Number of days to setup', 'sc-res' ); ?>
+                                <?php $option = @intval ( dex_bccf_get_option( 'max_slots', '0' ) ); if ( $option== '' ) { $option = 0; } ?>
+                                <select name="max_slots" onchange="dex_updatemaxslots();">
+                                    <?php for ( $k = 0; $k <= 30; $k++ ) { ?>
+                                    <option value="<?php echo $k; ?>"<?php if ( $option == $k ) { echo ' selected'; } ?>><?php echo $k; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </span>
+                        </th>
+                        <td>
+                            <div id="cpabcslots"><?php _e( 'Select the number of days to setup if you want to use this configuration option.', 'sc-res' ); ?><br /><br /></div>
+                            <div class="reservations-form-clear"></div>
+                            <p class="description"><?php _e( 'Note: Each box should contain the  TOTAL price for a reservation of that length. This will overwrite the default price if the reservation length matches some of the specified reservation lengths.', 'sc-res' ); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" colspan="2">
+                            <strong><?php _e( 'Supplement for reservations between', 'sc-res' ); ?></strong>
+                            <input type="text" name="calendar_suplementminnight" size="40" value="<?php $v = dex_bccf_get_option( 'calendar_suplementminnight', '0' ); echo esc_attr( ( $v == '' ? '0' : $v ) ); ?>" />
+                            <strong>and</strong>
+                            <input type="text" name="calendar_suplementmaxnight" size="40" value="<?php $v = dex_bccf_get_option( 'calendar_suplementmaxnight', '0' ); echo esc_attr( ( $v == '' ? '0' : $v ) ); ?>" />
+                            <strong>nights:</strong>
+                            <input type="text" name="calendar_suplement" size="40" value="<?php $v = dex_bccf_get_option( 'calendar_suplement', '0' ); echo esc_attr( ( $v == '' ? '0' : $v ) ); ?>" /><br />
+                            <p class="description"><?php _e( 'Suplement will be added once for reservations between those nights.', 'sc-res' ); ?></p>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th colspan="4">
+                            <?php _e( 'Deposit Payment (optional)', 'sc-res' ); ?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td valign="top" colspan="2">
+                            <?php $v = dex_bccf_get_option( 'calendar_depositenable', '0' ); if ( $v == '' ) $v = '0'; ?>
+                            <label for="calendar_depositenable"><?php _e( 'Enable deposit payment?', 'sc-res' ); ?></label>
+                            <select name="calendar_depositenable" id="calendar_depositenable">
+                                <option value="0" <?php if ( $v == '0' ) echo ' selected'; ?>><?php _e( 'No', 'sc-res' ); ?></option>
+                                <option value="1" <?php if ( $v == '1' ) echo ' selected'; ?>><?php _e( 'Yes', 'sc-res' ); ?></option>
+                            </select>
+                            <label for="calendar_depositamount"><?php _e( 'Deposit Amount', 'sc-res' ); ?></label>
+                            <input type="text" name="calendar_depositamount" id="calendar_depositamount" size="40" value="<?php $v = dex_bccf_get_option( 'calendar_depositamount', '0' ); echo esc_attr( ( $v == '' ? '0' : $v ) ); ?>" />
+                            <?php $v = dex_bccf_get_option( 'calendar_deposittype', '0' ); if ( $v=='' ) $v = '0'; ?>
+                            <label for="calendar_deposittype"><?php _e( 'Deposit type', 'sc-res' ); ?></label>
+                            <select name="calendar_deposittype" id="calendar_deposittype">
+                                <option value="0" <?php if ( $v == '0' ) echo ' selected'; ?>><?php _e( 'Percent', 'sc-res' ); ?></option>
+                                <option value="1" <?php if ( $v == '1' ) echo ' selected'; ?>><?php _e( 'Fixed', 'sc-res' ); ?></option>
+                            </select>
+                            <br />
+                            <p class="description"><?php _e( 'If enabled, the customer will have to pay at PayPal only the deposit amount.', 'sc-res' ); ?></p>
+                            <br />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th>
+                            <?php _e( 'Seasons Configuration (optional)', 'sc-res' ); ?>
+                        </th>
+                    </tr>
+                    <tr valign="top">
+                        <td scope="row" colspan="2">
+                            <div id="dex_noseasons_availmsg"><span><?php echo esc_html__( 'Loading calendar data&hellip;', 'sc-res' ); ?></span></div>
+                            <br />
+                            <div>
+                                <p><strong><?php _e( 'Add new season', 'sc-res' ); ?></strong><br /></p>
+                                <label for="dex_dc_price"><?php _e( 'Default Cost for this season', 'sc-res' ); ?> </label><br />
+                                <input type="text" name="dex_dc_price" id="dex_dc_price" value="" /><br />
+                                <div id="cpabcslots_season"></div>
+                                <label for="dex_dc_season_dfrom"><?php _e( 'From', 'sc-res' ); ?> </label><br />
+                                <input type="text" size="10" name="dex_dc_season_dfrom" id="dex_dc_season_dfrom" value="" /><br />
+                                <label for="dex_dc_season_dto"><?php _e( 'To', 'sc-res' ); ?> </label><br />
+                                <input type="text" size="10" name="dex_dc_season_dto" id="dex_dc_season_dto" value="" /><br /><br />
+                                <input type="button" class="button" name="dex_dc_subcseasons" id="dex_dc_subcseasons" value="Add Season" /><br /><br />
+                                <p class="description"><?php _e( 'Note: Season prices override the "Default request cost" specified above.', 'sc-res' ); ?></p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
     		</table>
 		</section>
 		<section>
-			<h2>Paypal Payment Configuration</h2>
+			<h2><?php _e( 'Paypal Payment Configuration', 'sc-res' ); ?></h2>
 			<table class="form-table">
-        <tr valign="top">
-        <th scope="row">Enable Paypal Payments?</th>
-        <td><select name="enable_paypal" onchange="bccp_update_pp_payment_selection();">
-             <option value="0" <?php if (!dex_bccf_get_option('enable_paypal',DEX_BCCF_DEFAULT_ENABLE_PAYPAL)) echo 'selected'; ?> >No</option>
-             <option value="1" <?php if (dex_bccf_get_option('enable_paypal',DEX_BCCF_DEFAULT_ENABLE_PAYPAL) == '1') echo 'selected'; ?> >Yes</option>
-             <option value="2" <?php if (dex_bccf_get_option('enable_paypal',DEX_BCCF_DEFAULT_ENABLE_PAYPAL) == '2') echo 'selected'; ?> >Optional</option>
-             <option value="3" <?php if (dex_bccf_get_option('enable_paypal',DEX_BCCF_DEFAULT_ENABLE_PAYPAL) == '3') echo 'selected'; ?> >Use BeanStream.com</option>
-            </select>
-            <br /><em style="font-size:11px;">Note: If "Optional" is selected, a radiobutton will appear in the form to select if the payment will be made with PayPal or not.</em>
-            <div id="bccf_paypal_options_beanstream" style="display:none;margin-top:10px;background:#EEF5FB;border: 1px dotted #888888;padding:10px;width:260px;">
-              BeanStream Merchant ID:<br />
-              <input type="text" name="enable_beanstream_id" size="40" style="width:250px;" value="<?php echo esc_attr(dex_bccf_get_option('enable_beanstream_id','')); ?>" />
-            </div>
-
-            <div id="bccf_paypal_options_label" style="display:none;margin-top:10px;background:#EEF5FB;border: 1px dotted #888888;padding:10px;width:260px;">
-              Label for the "<strong>Pay with PayPal</strong>" option:<br />
-              <input type="text" name="enable_paypal_option_yes" size="40" style="width:250px;" value="<?php echo esc_attr(dex_bccf_get_option('enable_paypal_option_yes',DEX_BCCF_DEFAULT_PAYPAL_OPTION_YES)); ?>" />
-              <br />
-              Label for the "<strong>Pay later</strong>" option:<br />
-              <input type="text" name="enable_paypal_option_no" size="40" style="width:250px;"  value="<?php echo esc_attr(dex_bccf_get_option('enable_paypal_option_no',DEX_BCCF_DEFAULT_PAYPAL_OPTION_NO)); ?>" />
-            </div>
-         </td>
-        </tr>
-
-        <tr valign="top">
-        <th scope="row">Paypal email</th>
-        <td><input type="text" name="paypal_email" size="40" value="<?php echo esc_attr(dex_bccf_get_option('paypal_email',DEX_BCCF_DEFAULT_PAYPAL_EMAIL)); ?>" /></td>
-        </tr>
-
-        <tr valign="top">
-        <th scope="row">Paypal product name</th>
-        <td><input type="text" name="paypal_product_name" size="50" value="<?php echo esc_attr(dex_bccf_get_option('paypal_product_name',DEX_BCCF_DEFAULT_PRODUCT_NAME)); ?>" /></td>
-        </tr>
-
-        <tr valign="top">
-        <th scope="row">URL to return after successful  payment</th>
-        <td><input type="text" name="url_ok" size="70" value="<?php echo esc_attr(dex_bccf_get_option('url_ok',DEX_BCCF_DEFAULT_OK_URL)); ?>" />
-          <br />
-          <em>Note: This field is used as the "acknowledgment / thank you message" even if the Paypal feature isn't used.</em>
-        </td>
-        </tr>
-
-        <tr valign="top">
-        <th scope="row">URL to return after an incomplete or cancelled payment</th>
-        <td><input type="text" name="url_cancel" size="70" value="<?php echo esc_attr(dex_bccf_get_option('url_cancel',DEX_BCCF_DEFAULT_CANCEL_URL)); ?>" /></td>
-        </tr>
-
-
-        <tr valign="top">
-        <th scope="row">Paypal language</th>
-        <td><input type="text" name="paypal_language" value="<?php echo esc_attr(dex_bccf_get_option('paypal_language',DEX_BCCF_DEFAULT_PAYPAL_LANGUAGE)); ?>" /></td>
-        </tr>
-
-        <tr valign="top">
-        <th scope="row">Taxes (applied at Paypal)</th>
-        <td><input type="text" name="request_taxes" value="<?php echo esc_attr(dex_bccf_get_option('request_taxes','0')); ?>" /></td>
-        </tr>
-
-        <tr valign="top">
-        <th scope="row">Discount Codes</th>
-        <td>
-           <div id="dex_nocodes_availmsg">Loading...</div>
-
-           <br />
-           <strong>Add new discount code:</strong>
-           <br />
-           Code: <input type="text" name="dex_dc_code" id="dex_dc_code" value="" /> &nbsp; &nbsp; &nbsp;
-           Discount %: <input type="text" size="3" name="dex_dc_discount" id="dex_dc_discount"  value="25" />         &nbsp; &nbsp; &nbsp;
-           Valid until: <input type="text"  size="10" name="dex_dc_expires" id="dex_dc_expires" value="" />&nbsp; &nbsp; &nbsp;
-           <input type="button" name="dex_dc_subccode" id="dex_dc_subccode" value="Add" />
-           <br />
-           <em>Note: Expiration date based in server time. Server time now is <?php echo date("Y-m-d H:i"); ?></em>
-        </td>
-        </tr>
-
-     </table>
+                <tbody>
+                    <tr valign="top">
+                        <th scope="row">
+                            <?php _e( 'Enable Paypal Payments', 'sc-res' ); ?>
+                        </th>
+                        <td>
+                            <select name="enable_paypal" onchange="bccp_update_pp_payment_selection();">
+                                <option value="0" <?php if ( ! dex_bccf_get_option( 'enable_paypal',DEX_BCCF_DEFAULT_ENABLE_PAYPAL ) ) echo 'selected'; ?> ><?php _e( 'Don\'t Enable', 'sc-res' ); ?></option>
+                                <option value="1" <?php if ( dex_bccf_get_option( 'enable_paypal',DEX_BCCF_DEFAULT_ENABLE_PAYPAL ) == '1' ) echo 'selected'; ?> ><?php _e( 'Enable', 'sc-res' ); ?></option>
+                                <option value="2" <?php if ( dex_bccf_get_option( 'enable_paypal',DEX_BCCF_DEFAULT_ENABLE_PAYPAL ) == '2' ) echo 'selected'; ?> ><?php _e( 'Optional', 'sc-res' ); ?></option>
+                                <option value="3" <?php if ( dex_bccf_get_option( 'enable_paypal',DEX_BCCF_DEFAULT_ENABLE_PAYPAL ) == '3' ) echo 'selected'; ?> ><?php _e( 'Use', 'sc-res' ); ?> BeanStream.com</option>
+                            </select>
+                            <br />
+                            <p class="description"><?php _e( 'Note: If "Optional" is selected, a radiobutton will appear in the form to select if the payment will be made with PayPal or not.', 'sc-res' ); ?></p>
+                            <div id="bccf_paypal_options_beanstream">
+                                <br />
+                                <label for="enable_beanstream_id"><?php _e( 'BeanStream Merchant ID', 'sc-res' ); ?></label>
+                                <input type="text" name="enable_beanstream_id" id="enable_beanstream_id" size="40" style="width:250px;" value="<?php echo esc_attr( dex_bccf_get_option( 'enable_beanstream_id', '' ) ); ?>" />
+                                </div>
+                                <div id="bccf_paypal_options_label">
+                                <br />
+                                <label for="enable_paypal_option_yes"><?php _e( 'Label for the "Pay with PayPal" option', 'sc-res' ); ?></label>
+                                <input type="text" name="enable_paypal_option_yes" id="enable_paypal_option_yes" size="40" style="width:250px;" value="<?php echo esc_attr( dex_bccf_get_option( 'enable_paypal_option_yes', DEX_BCCF_DEFAULT_PAYPAL_OPTION_YES ) ); ?>" />
+                                <br />
+                                <label for="enable_paypal_option_no"><?php _e( 'Label for the "Pay later" option', 'sc-res' ); ?></label>
+                                <input type="text" name="enable_paypal_option_no" id="enable_paypal_option_no" size="40" style="width:250px;"  value="<?php echo esc_attr( dex_bccf_get_option( 'enable_paypal_option_no', DEX_BCCF_DEFAULT_PAYPAL_OPTION_NO ) ); ?>" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Paypal email', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="paypal_email" size="40" value="<?php echo esc_attr( dex_bccf_get_option( 'paypal_email', DEX_BCCF_DEFAULT_PAYPAL_EMAIL ) ); ?>" /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Paypal product name', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="paypal_product_name" size="50" value="<?php echo esc_attr( dex_bccf_get_option( 'paypal_product_name', DEX_BCCF_DEFAULT_PRODUCT_NAME ) ); ?>" /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'URL to return after successful payment', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="url_ok" size="70" value="<?php echo esc_attr( dex_bccf_get_option( 'url_ok', DEX_BCCF_DEFAULT_OK_URL ) ); ?>" />
+                            <br />
+                            <p class="description"><?php _e( 'Note: This field is used as the "acknowledgment/thank you message" even if the Paypal feature isn\'t used.', 'sc-res' ); ?></p>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'URL to return after an incomplete or cancelled payment', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="url_cancel" size="70" value="<?php echo esc_attr( dex_bccf_get_option( 'url_cancel', DEX_BCCF_DEFAULT_CANCEL_URL ) ); ?>" /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Paypal language', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="paypal_language" value="<?php echo esc_attr( dex_bccf_get_option( 'paypal_language', DEX_BCCF_DEFAULT_PAYPAL_LANGUAGE ) ); ?>" /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Taxes (applied at Paypal)', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="request_taxes" value="<?php echo esc_attr( dex_bccf_get_option( 'request_taxes', '0' ) ); ?>" /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Discount Codes', 'sc-res' ); ?></th>
+                        <td>
+                            <div id="dex_nocodes_availmsg"><span><?php echo esc_html__( 'Loading calendar data&hellip;', 'sc-res' ); ?></span></div>
+                            <br />
+                            <p><strong><?php _e( 'Add new discount code:', 'sc-res' ); ?></strong></p>
+                            <br />
+                            <label for="dex_dc_code"><?php _e( 'Code', 'sc-res' ); ?> </label>
+                            <input type="text" name="dex_dc_code" id="dex_dc_code" value="" />
+                            <label for="dex_dc_discount"><?php _e( 'Discount %', 'sc-res' ); ?> </label>
+                            <input type="text" size="3" name="dex_dc_discount" id="dex_dc_discount"  value="25" />
+                            <label for="dex_dc_expires"><?php _e( 'Valid until', 'sc-res' ); ?> </label>
+                            <input type="text"  size="10" name="dex_dc_expires" id="dex_dc_expires" value="" />
+                            <br /><br />
+                            <input type="button" class="button" name="dex_dc_subccode" id="dex_dc_subccode" value="Add" />
+                            <br /><br />
+                            <p class="description"><?php echo __( 'Note: Expiration date based in server time. Server time now is', 'sc-res' ) . ' ' . date( 'Y-m-d H:i' ); ?></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 		</section>
 		<section>
-			<h2 class='hndle' style="padding:5px;"><span>Cabin Rates & Event Pricing</span></h2>
+			<h2><?php _e( 'Cabin Rates & Event Pricing', 'sc-res' ); ?></h2>
 			<div id="bccf_optional_services_fields_link">
-    <a href="javascript:bccf_toggle_osf()">Click to show cabin rates configuration</a>
-    <script type="text/javascript">
-     function bccf_toggle_osf()
-     {
-        document.getElementById("bccf_optional_services_fields_link").style.display="none";
-        document.getElementById("bccf_optional_services_fields").style.display="";
-     }
-    </script>
-   </div>
-   <div id="bccf_optional_services_fields" style="display:none;">
-   <?php for ($k=1;$k<=DEX_BCCF_DEFAULT_SERVICES_FIELDS; $k++) { ?>
-    <fieldset>
-     <legend style="font-size: 16px;"><strong>Field #<?php echo $k; ?></strong></legend>
-     <table class="form-table">
-        <tr valign="top" colspan="2">
-        <th scope="row">
-         <?php
-           $flabel = dex_bccf_get_option('cp_cal_checkboxes_label'.$k, 'Service');
-           if ($flabel == '') $flabel = 'Service';
-         ?>
-        Label: <input type="text" name="cp_cal_checkboxes_label<?php echo $k; ?>" value="<?php echo esc_attr($flabel); ?>" />
-        </th>
-        </tr>
-        <tr valign="top">
-        <td colspan="2">
-          <strong>If enabled, apply as:</strong><br />
-          <?php $option = dex_bccf_get_option('cp_cal_checkboxes_type'.$k, DEX_BCCF_DEFAULT_CP_CAL_CHECKBOXES_TYPE); ?>
-          <select name="cp_cal_checkboxes_type<?php echo $k; ?>">
-           <option value="0"<?php if ($option == '0') echo ' selected'; ?>>Additional fee. This will be added once to the default rate.</option>
-           <option value="4"<?php if ($option == '4') echo ' selected'; ?>>Additional rate per day. The rate will be added to the default rate for each day.</option>
-           <option value="1"<?php if ($option == '1') echo ' selected'; ?>>Rate per day. This will overwrite the default rate.</option>
-           <option value="2"<?php if ($option == '2') echo ' selected'; ?>>Fixed rate. This will overwrite the default rates.</option>
-          </select>
-        </td>
-        </tr>
-     </table>
-     <table class="form-table">
-        <tr valign="top">
-        <th scope="row" style="width:390px;" >Drop-down select, one "rate | title" per line<br />
-        <textarea style="width:385px;" wrap="off" rows="4" name="cp_cal_checkboxes<?php echo $k; ?>"><?php echo dex_bccf_get_option('cp_cal_checkboxes'.$k, DEX_BCCF_DEFAULT_CP_CAL_CHECKBOXES); ?></textarea>
-        </th>
-        <td>
-        <em>Appears only if an option is specified.</em>
-        <br /><u><strong>Sample Format:</strong></u><br />
-        <?php echo str_replace("\n", "<br />", DEX_BCCF_DEFAULT_EXPLAIN_CP_CAL_CHECKBOXES); ?></td>
-        </tr>
-     </table>
-    </fieldset>
-   <?php } ?>
-   </div>
+                <p><a href="javascript:bccf_toggle_osf()"><?php _e( 'Click to show cabin rates configuration', 'sc-res' ); ?></a></p>
+                <script type="text/javascript">
+                    function bccf_toggle_osf() {
+                        document.getElementById( 'bccf_optional_services_fields_link' ).style.display=  'none';
+                        document.getElementById( 'bccf_optional_services_fields' ).style.display = '';
+                    }
+                </script>
+            </div>
+            <div id="bccf_optional_services_fields" style="display:none;">
+                <?php for ( $k = 1; $k <= DEX_BCCF_DEFAULT_SERVICES_FIELDS; $k++ ) { ?>
+                <fieldset>
+                    <legend><strong><?php _e( 'Field Number', 'sc-res' ); ?> <?php echo $k; ?></strong></legend>
+                    <table class="form-table">
+                        <tbody>
+                            <tr valign="top" colspan="2">
+                                <th scope="row">
+                                <?php $flabel = dex_bccf_get_option( 'cp_cal_checkboxes_label' . $k, 'Service' );
+                                if ( $flabel == '' ) {
+                                    $flabel = __( 'Service', 'sc-res' );
+                                } ?>
+                                Label: <input type="text" name="cp_cal_checkboxes_label<?php echo $k; ?>" value="<?php echo esc_attr( $flabel ); ?>" />
+                                </th>
+                            </tr>
+                            <tr valign="top">
+                                <td colspan="2">
+                                <p><strong><?php _e( 'If enabled, apply as', 'sc-res' ); ?></strong></p>
+                                <?php $option = dex_bccf_get_option( 'cp_cal_checkboxes_type' . $k, DEX_BCCF_DEFAULT_CP_CAL_CHECKBOXES_TYPE ); ?>
+                                <select name="cp_cal_checkboxes_type<?php echo $k; ?>">
+                                    <option value="0"<?php if ( $option == '0' ) { echo ' selected'; } ?>><?php _e( 'Additional fee. This will be added once to the default rate.', 'sc-res' ); ?></option>
+                                    <option value="4"<?php if ( $option == '4' ) { echo ' selected'; } ?>><?php _e( 'Additional rate per day. The rate will be added to the default rate for each day.', 'sc-res' ); ?></option>
+                                    <option value="1"<?php if ( $option == '1' ) { echo ' selected'; } ?>><?php _e( 'Rate per day. This will overwrite the default rate.', 'sc-res' ); ?></option>
+                                    <option value="2"<?php if ( $option == '2' ) { echo ' selected'; } ?>><?php _e( 'Fixed rate. This will overwrite the default rates.', 'sc-res' ); ?></option>
+                                </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="form-table">
+                        <tbody>
+                            <tr valign="top">
+                                <th scope="row" style="width:390px;" >
+                                    <?php _e( 'Drop-down select, one "rate | title" per line', 'sc-res' ); ?>
+                                    <br />
+                                    <textarea style="width:385px;" wrap="off" rows="4" name="cp_cal_checkboxes<?php echo $k; ?>"><?php echo dex_bccf_get_option( 'cp_cal_checkboxes' . $k, DEX_BCCF_DEFAULT_CP_CAL_CHECKBOXES ); ?></textarea>
+                                </th>
+                                <td>
+                                    <em><?php _e( 'Appears only if an option is specified.', 'sc-res' ); ?></em>
+                                    <br /><u><strong><?php _e( 'Sample Format:', 'sc-res' ); ?></strong></u><br />
+                                    <?php echo str_replace( "\n", "<br />", DEX_BCCF_DEFAULT_EXPLAIN_CP_CAL_CHECKBOXES ); ?>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+                <?php } ?>
+            </div>
 		</section>
 		<section>
-			<h2>Notification Settings to Admin</h2>
-			<table class="form-table">
-        <tr valign="top">
-        <th scope="row">Notification "from" email</th>
-        <td><input type="text" name="notification_from_email" size="40" value="<?php echo esc_attr(dex_bccf_get_option('notification_from_email', DEX_BCCF_DEFAULT_PAYPAL_EMAIL)); ?>" /></td>
-        </tr>
-        <tr valign="top">
-        <th scope="row">Send notification to email</th>
-        <td><input type="text" name="notification_destination_email" size="40" value="<?php echo esc_attr(dex_bccf_get_option('notification_destination_email', DEX_BCCF_DEFAULT_PAYPAL_EMAIL)); ?>" />
-            <br />
-          <em>Note: Comma separated list for adding more than one email address<em>
-        </td>
-        </tr>
-        <tr valign="top">
-        <th scope="row">Email subject notification to admin</th>
-        <td><input type="text" name="email_subject_notification_to_admin" size="70" value="<?php echo esc_attr(dex_bccf_get_option('email_subject_notification_to_admin', DEX_BCCF_DEFAULT_SUBJECT_NOTIFICATION_EMAIL)); ?>" /></td>
-        </tr>
-        <tr valign="top">
-        <th scope="row">Email format?</th>
-        <td>
-          <?php $option = dex_bccf_get_option('notification_emailformat', 'text'); ?>
-          <select name="notification_emailformat">
-           <option value="text"<?php if ($option != 'html') echo ' selected'; ?>>Plain Text (default)</option>
-           <option value="html"<?php if ($option == 'html') echo ' selected'; ?>>HTML (use html in the textarea below)</option>
-          </select>
-        </td>
-        </tr>
-        <tr valign="top">
-        <th scope="row">Email notification to admin</th>
-        <td><textarea cols="70" rows="5" name="email_notification_to_admin"><?php echo dex_bccf_get_option('email_notification_to_admin', DEX_BCCF_DEFAULT_NOTIFICATION_EMAIL); ?></textarea></td>
-        </tr>
-     </table>
+			<h2><?php _e( 'Notification Settings to Admin', 'sc-res' ); ?></h2>
+            <table class="form-table">
+                <tbody>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Notification "from" email', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="notification_from_email" size="40" value="<?php echo esc_attr( dex_bccf_get_option( 'notification_from_email', DEX_BCCF_DEFAULT_PAYPAL_EMAIL ) ); ?>" />
+                            </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Send notification to email', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="notification_destination_email" size="40" value="<?php echo esc_attr( dex_bccf_get_option( 'notification_destination_email', DEX_BCCF_DEFAULT_PAYPAL_EMAIL ) ); ?>" />
+                            <br />
+                            <p class="description"><?php _e( 'Note: Comma separated list for adding more than one email address', 'sc-res' ); ?><p>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Email subject notification to admin', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="email_subject_notification_to_admin" size="70" value="<?php echo esc_attr( dex_bccf_get_option( 'email_subject_notification_to_admin', DEX_BCCF_DEFAULT_SUBJECT_NOTIFICATION_EMAIL ) ); ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Email format', 'sc-res' ); ?></th>
+                        <td>
+                            <?php $option = dex_bccf_get_option( 'notification_emailformat', 'text' ); ?>
+                            <select name="notification_emailformat">
+                                <option value="text"<?php if ( $option != 'html' ) { echo ' selected'; } ?>><?php _e( 'Plain Text (default)', 'sc-res' ); ?></option>
+                                <option value="html"<?php if ( $option == 'html' ) { echo ' selected'; } ?>><?php _e( 'HTML (use html in the textarea below)', 'sc-res' ); ?></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Email notification to admin', 'sc-res' ); ?></th>
+                        <td>
+                            <textarea cols="70" rows="5" name="email_notification_to_admin"><?php echo dex_bccf_get_option( 'email_notification_to_admin', DEX_BCCF_DEFAULT_NOTIFICATION_EMAIL ); ?></textarea>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 		</section>
 		<section>
-			<h2>Email Copy to User</h2>
-			<table class="form-table">
-        <tr valign="top">
-        <th scope="row">Email field on the form</th>
-        <td><select id="cu_user_email_field" name="cu_user_email_field" def="<?php echo esc_attr(dex_bccf_get_option('cu_user_email_field', DEX_BCCF_DEFAULT_cu_user_email_field)); ?>"></select></td>
-        </tr>
-        <tr valign="top">
-        <th scope="row">Email subject confirmation to user</th>
-        <td><input type="text" name="email_subject_confirmation_to_user" size="70" value="<?php echo esc_attr(dex_bccf_get_option('email_subject_confirmation_to_user', DEX_BCCF_DEFAULT_SUBJECT_CONFIRMATION_EMAIL)); ?>" /></td>
-        </tr>
-        <tr valign="top">
-        <th scope="row">Email format?</th>
-        <td>
-          <?php $option = dex_bccf_get_option('copyuser_emailformat', 'text'); ?>
-          <select name="copyuser_emailformat">
-           <option value="text"<?php if ($option != 'html') echo ' selected'; ?>>Plain Text (default)</option>
-           <option value="html"<?php if ($option == 'html') echo ' selected'; ?>>HTML (use html in the textarea below)</option>
-          </select>
-        </td>
-        </tr>
-        <tr valign="top">
-        <th scope="row">Email confirmation to user</th>
-        <td><textarea cols="70" rows="5" name="email_confirmation_to_user"><?php echo dex_bccf_get_option('email_confirmation_to_user', DEX_BCCF_DEFAULT_CONFIRMATION_EMAIL); ?></textarea></td>
-        </tr>
-     </table>
+			<h2><?php _e( 'Email Copy to User', 'sc-res' ); ?></h2>
+            <table class="form-table">
+                <tbody>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Email field on the form', 'sc-res' ); ?></th>
+                        <td>
+                            <select id="cu_user_email_field" name="cu_user_email_field" def="<?php echo esc_attr( dex_bccf_get_option( 'cu_user_email_field', DEX_BCCF_DEFAULT_cu_user_email_field ) ); ?>"></select>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Email subject confirmation to user', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="email_subject_confirmation_to_user" size="70" value="<?php echo esc_attr( dex_bccf_get_option( 'email_subject_confirmation_to_user', DEX_BCCF_DEFAULT_SUBJECT_CONFIRMATION_EMAIL ) ); ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Email format', 'sc-res' ); ?></th>
+                        <td>
+                            <?php $option = dex_bccf_get_option( 'copyuser_emailformat', 'text' ); ?>
+                            <select name="copyuser_emailformat">
+                                <option value="text"<?php if ( $option != 'html' ) { echo ' selected'; } ?>><?php _e( 'Plain Text (default)', 'sc-res' ); ?></option>
+                                <option value="html"<?php if ( $option == 'html' ) { echo ' selected'; } ?>><?php _e( 'HTML (use html in the textarea below)', 'sc-res' ); ?></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Email confirmation to user', 'sc-res' ); ?></th>
+                        <td>
+                            <textarea cols="70" rows="5" name="email_confirmation_to_user"><?php echo dex_bccf_get_option( 'email_confirmation_to_user', DEX_BCCF_DEFAULT_CONFIRMATION_EMAIL ); ?></textarea>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 		</section>
 		<section>
-			<h2 class='hndle' style="padding:5px;"><span>Reminder Settings</span></h2>
-			<table class="form-table">
-        <tr valign="top">
-        <th scope="row">Enable reservation reminders?</th>
-        <td><input type="checkbox" name="enable_reminder" id="enable_reminder" onclick="bccf_checkreminderstatus();" size="40" value="1" <?php if (dex_bccf_get_option('enable_reminder',0)) echo 'checked'; ?> /></td>
-        </tr>
-     </table>
-     <table class="form-table" id="bccf_remindertable">
-        <tr><td colspan="2"><hr /></td></tr>
-        <tr valign="top">
-        <th scope="row">Send reminder:</th>
-        <td><input type="text" name="reminder_hours" size="2" value="<?php echo esc_attr(dex_bccf_get_option('reminder_hours', 72)); ?>" /> hours <strong>BEFORE</strong> the reservation
-        <br /><em>Note: Hours date based in server time. Server time now is <?php echo date("Y-m-d H:i"); ?></em>
-        </td>
-        </tr>
-        <tr valign="top">
-        <th scope="row">Reminder email subject</th>
-        <td><input type="text" name="reminder_subject" size="70" value="<?php echo esc_attr(dex_bccf_get_option('reminder_subject', 'Booking reminder...')); ?>" /></td>
-        </tr>
-        <tr valign="top">
-        <th scope="row">Email format?</th>
-        <td>
-          <?php $option = dex_bccf_get_option('nremind_emailformat', 'text'); ?>
-          <select name="nremind_emailformat">
-           <option value="text"<?php if ($option != 'html') echo ' selected'; ?>>Plain Text (default)</option>
-           <option value="html"<?php if ($option == 'html') echo ' selected'; ?>>HTML (use html in the textarea below)</option>
-          </select>
-        </td>
-        </tr>
-        <tr valign="top">
-        <th scope="row">Reminder email message</th>
-        <td><textarea cols="70" rows="5" name="reminder_content"><?php echo dex_bccf_get_option('reminder_content', DEX_BCCF_DEFAULT_REMINDER_CONTENT); ?></textarea></td>
-        </tr>
-     </table>
-     <table class="form-table" id="bccf_remindertable2">
-        <tr><td colspan="2"><hr /></td></tr>
-        <tr valign="top">
-        <th scope="row">Send reminder:</th>
-        <td><input type="text" name="reminder_hours2" size="2" value="<?php echo esc_attr(dex_bccf_get_option('reminder_hours2', 72)); ?>" /> hours <strong>AFTER</strong> the reservation
-        <br /><em>Note: Hours date based in server time. Server time now is <?php echo date("Y-m-d H:i"); ?></em>
-        </td>
-        </tr>
-        <tr valign="top">
-        <th scope="row">Reminder email subject</th>
-        <td><input type="text" name="reminder_subject2" size="70" value="<?php echo esc_attr(dex_bccf_get_option('reminder_subject2', 'Thank you for your reservation...')); ?>" /></td>
-        </tr>
-        <tr valign="top">
-        <th scope="row">Email format?</th>
-        <td>
-          <?php $option = dex_bccf_get_option('nremind_emailformat2', 'text'); ?>
-          <select name="nremind_emailformat2">
-           <option value="text"<?php if ($option != 'html') echo ' selected'; ?>>Plain Text (default)</option>
-           <option value="html"<?php if ($option == 'html') echo ' selected'; ?>>HTML (use html in the textarea below)</option>
-          </select>
-        </td>
-        </tr>
-        <tr valign="top">
-        <th scope="row">Reminder email message</th>
-        <td><textarea cols="70" rows="5" name="reminder_content2"><?php echo dex_bccf_get_option('reminder_content2', DEX_BCCF_DEFAULT_REMINDER_CONTENT_AFTER); ?></textarea></td>
-        </tr>
-     </table>
-     <script type="text/javascript">
-       function bccf_checkreminderstatus() {
-            if (document.getElementById("enable_reminder").checked)
-            {
-                document.getElementById("bccf_remindertable").style.display = '';
-                document.getElementById("bccf_remindertable2").style.display = '';
-            }
-            else
-            {
-                document.getElementById("bccf_remindertable").style.display = 'none';
-                document.getElementById("bccf_remindertable2").style.display = 'none';
-            }
-       }
-       bccf_checkreminderstatus();
-     </script>
+			<h2><?php _e( 'Reminder Settings', 'sc-res' ); ?></h2>
+            <table class="form-table">
+                <tbody>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Enable reservation reminders', 'sc-res' ); ?></th>
+                        <td><input type="checkbox" name="enable_reminder" id="enable_reminder" onclick="bccf_checkreminderstatus();" size="40" value="1" <?php if ( dex_bccf_get_option( 'enable_reminder', 0 ) ) { echo 'checked'; } ?> /></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="form-table" id="bccf_remindertable">
+                <tbody>
+                    <tr>
+                        <td colspan="2"><hr /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Send reminder', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="reminder_hours" size="2" value="<?php echo esc_attr( dex_bccf_get_option( 'reminder_hours', 72 ) ); ?>" /> <?php _e( 'hours <strong>before</strong> the reservation', 'sc-res' ); ?>
+                            <br />
+                            <p class="description"><?php echo __( 'Note: Hours date based in server time. Server time now is ', 'sc-res' ) . date( 'Y-m-d H:i' ); ?></p>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Reminder email subject', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="reminder_subject" size="70" value="<?php echo esc_attr( dex_bccf_get_option( 'reminder_subject', 'Reservation reminder&hellip;' ) ); ?>" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Email format', 'sc-res' ); ?></th>
+                        <td>
+                            <?php $option = dex_bccf_get_option( 'nremind_emailformat', 'text' ); ?>
+                            <select name="nremind_emailformat">
+                                <option value="text"<?php if ( $option != 'html' ) { echo ' selected'; } ?>><?php _e( 'Plain Text (default)', 'sc-res' ); ?></option>
+                                <option value="html"<?php if ( $option == 'html' ) { echo ' selected'; } ?>><?php _e( 'HTML (use html in the textarea below)', 'sc-res' ); ?></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Reminder email message', 'sc-res' ); ?></th>
+                        <td>
+                            <textarea cols="70" rows="5" name="reminder_content"><?php echo dex_bccf_get_option( 'reminder_content', DEX_BCCF_DEFAULT_REMINDER_CONTENT ); ?></textarea>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="form-table" id="bccf_remindertable2">
+                <tbody>
+                    <tr>
+                        <td colspan="2"><hr /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Send reminder:', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="reminder_hours2" size="2" value="<?php echo esc_attr(dex_bccf_get_option('reminder_hours2', 72)); ?>" /> <?php _e( 'hours <strong>after</strong> the reservation', 'sc-res' ); ?>
+                            <br />
+                            <p class="description"><?php echo __( 'Note: Hours date based in server time. Server time now is ', 'sc-res' ) . date( 'Y-m-d H:i' ); ?></p>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Reminder email subject', 'sc-res' ); ?></th>
+                        <td><input type="text" name="reminder_subject2" size="70" value="<?php echo esc_attr(dex_bccf_get_option('reminder_subject2', 'Thank you for your reservation...')); ?>" /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Email format', 'sc-res' ); ?></th>
+                        <td>
+                            <?php $option = dex_bccf_get_option('nremind_emailformat2', 'text'); ?>
+                            <select name="nremind_emailformat2">
+                                <option value="text"<?php if ( $option != 'html' ) { echo ' selected'; } ?>><?php _e( 'Plain Text (default)', 'sc-res' ); ?></option>
+                                <option value="html"<?php if ( $option == 'html' ) { echo ' selected'; } ?>><?php _e( 'HTML (use html in the textarea below)', 'sc-res' ); ?></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Reminder email message', 'sc-res' ); ?></th>
+                        <td><textarea cols="70" rows="5" name="reminder_content2"><?php echo dex_bccf_get_option( 'reminder_content2',  DEX_BCCF_DEFAULT_REMINDER_CONTENT_AFTER ); ?></textarea></td>
+                    </tr>
+                </tbody>
+            </table>
+            <script type="text/javascript">
+                function bccf_checkreminderstatus() {
+                    if ( document.getElementById( 'enable_reminder' ).checked ) {
+                        document.getElementById( 'bccf_remindertable' ).style.display = '';
+                        document.getElementById( 'bccf_remindertable2' ).style.display = '';
+                    } else {
+                        document.getElementById( 'bccf_remindertable' ).style.display = 'none';
+                        document.getElementById( 'bccf_remindertable2' ).style.display = 'none';
+                    }
+                }
+                bccf_checkreminderstatus();
+            </script>
 		</section>
 		<section>
-			<h2>Captcha Verification</h2>
-			<table class="form-table">
-        <tr valign="top">
-        <th scope="row">Use Captcha Verification?</th>
-        <td colspan="5">
-          <?php $option = dex_bccf_get_option('dexcv_enable_captcha', TDE_BCCFDEFAULT_dexcv_enable_captcha); ?>
-          <select name="dexcv_enable_captcha">
-           <option value="true"<?php if ($option == 'true') echo ' selected'; ?>>Yes</option>
-           <option value="false"<?php if ($option == 'false') echo ' selected'; ?>>No</option>
-          </select>
-        </td>
-        </tr>
-
-        <tr valign="top">
-         <th scope="row">Width:</th>
-         <td><input type="text" name="dexcv_width" size="10" value="<?php echo esc_attr(dex_bccf_get_option('dexcv_width', TDE_BCCFDEFAULT_dexcv_width)); ?>"  onblur="generateCaptcha();"  /></td>
-         <th scope="row">Height:</th>
-         <td><input type="text" name="dexcv_height" size="10" value="<?php echo esc_attr(dex_bccf_get_option('dexcv_height', TDE_BCCFDEFAULT_dexcv_height)); ?>" onblur="generateCaptcha();"  /></td>
-         <th scope="row">Chars:</th>
-         <td><input type="text" name="dexcv_chars" size="10" value="<?php echo esc_attr(dex_bccf_get_option('dexcv_chars', TDE_BCCFDEFAULT_dexcv_chars)); ?>" onblur="generateCaptcha();"  /></td>
-        </tr>
-
-        <tr valign="top">
-         <th scope="row">Min font size:</th>
-         <td><input type="text" name="dexcv_min_font_size" size="10" value="<?php echo esc_attr(dex_bccf_get_option('dexcv_min_font_size', TDE_BCCFDEFAULT_dexcv_min_font_size)); ?>" onblur="generateCaptcha();"  /></td>
-         <th scope="row">Max font size:</th>
-         <td><input type="text" name="dexcv_max_font_size" size="10" value="<?php echo esc_attr(dex_bccf_get_option('dexcv_max_font_size', TDE_BCCFDEFAULT_dexcv_max_font_size)); ?>" onblur="generateCaptcha();"  /></td>
-         <td colspan="2" rowspan="">
-           Preview:<br />
-             <br />
-            <img src="<?php echo plugins_url('/captcha/captcha.php', __FILE__); ?>"  id="captchaimg" alt="security code" border="0"  />
-         </td>
-        </tr>
-
-
-        <tr valign="top">
-         <th scope="row">Noise:</th>
-         <td><input type="text" name="dexcv_noise" size="10" value="<?php echo esc_attr(dex_bccf_get_option('dexcv_noise', TDE_BCCFDEFAULT_dexcv_noise)); ?>" onblur="generateCaptcha();" /></td>
-         <th scope="row">Noise Length:</th>
-         <td><input type="text" name="dexcv_noise_length" size="10" value="<?php echo esc_attr(dex_bccf_get_option('dexcv_noise_length', TDE_BCCFDEFAULT_dexcv_noise_length)); ?>" onblur="generateCaptcha();" /></td>
-        </tr>
-
-
-        <tr valign="top">
-         <th scope="row">Background:</th>
-         <td><input type="text" name="dexcv_background" size="10" value="<?php echo esc_attr(dex_bccf_get_option('dexcv_background', TDE_BCCFDEFAULT_dexcv_background)); ?>" onblur="generateCaptcha();" /></td>
-         <th scope="row">Border:</th>
-         <td><input type="text" name="dexcv_border" size="10" value="<?php echo esc_attr(dex_bccf_get_option('dexcv_border', TDE_BCCFDEFAULT_dexcv_border)); ?>" onblur="generateCaptcha();" /></td>
-        </tr>
-
-        <tr valign="top">
-         <th scope="row">Font:</th>
-         <td>
-            <select name="dexcv_font" onchange="generateCaptcha();" >
-              <option value="font-1.ttf"<?php if ("font-1.ttf" == dex_bccf_get_option('dexcv_font', TDE_BCCFDEFAULT_dexcv_font)) echo " selected"; ?>>Font 1</option>
-              <option value="font-2.ttf"<?php if ("font-2.ttf" == dex_bccf_get_option('dexcv_font', TDE_BCCFDEFAULT_dexcv_font)) echo " selected"; ?>>Font 2</option>
-              <option value="font-3.ttf"<?php if ("font-3.ttf" == dex_bccf_get_option('dexcv_font', TDE_BCCFDEFAULT_dexcv_font)) echo " selected"; ?>>Font 3</option>
-              <option value="font-4.ttf"<?php if ("font-4.ttf" == dex_bccf_get_option('dexcv_font', TDE_BCCFDEFAULT_dexcv_font)) echo " selected"; ?>>Font 4</option>
-            </select>
-         </td>
-        </tr>
-
-
-			</table>
+			<h2><?php _e( 'Captcha Verification', 'sc-res' ); ?></h2>
+            <table class="form-table">
+                <tbody>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Use Captcha Verification', 'sc-res' ); ?></th>
+                        <td colspan="5">
+                            <?php $option = dex_bccf_get_option( 'dexcv_enable_captcha', TDE_BCCFDEFAULT_dexcv_enable_captcha ); ?>
+                            <select name="dexcv_enable_captcha">
+                                <option value="true"<?php if ( $option == 'true' ) { echo ' selected'; } ?>><?php _e( 'Yes', 'sc-res' ); ?></option>
+                                <option value="false"<?php if ( $option == 'false' ) { echo ' selected'; } ?>><?php _e( 'No', 'sc-res' ); ?></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Width', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="dexcv_width" size="10" value="<?php echo esc_attr( dex_bccf_get_option( 'dexcv_width', TDE_BCCFDEFAULT_dexcv_width ) ); ?>"  onblur="generateCaptcha();"  /></td>
+                        <th scope="row"><?php _e( 'Height', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="dexcv_height" size="10" value="<?php echo esc_attr( dex_bccf_get_option( 'dexcv_height', TDE_BCCFDEFAULT_dexcv_height ) ); ?>" onblur="generateCaptcha();"  /></td>
+                        <th scope="row"><?php _e( 'Chars', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="dexcv_chars" size="10" value="<?php echo esc_attr( dex_bccf_get_option( 'dexcv_chars', TDE_BCCFDEFAULT_dexcv_chars ) ); ?>" onblur="generateCaptcha();"  /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Min font size', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="dexcv_min_font_size" size="10" value="<?php echo esc_attr( dex_bccf_get_option( 'dexcv_min_font_size', TDE_BCCFDEFAULT_dexcv_min_font_size ) ); ?>" onblur="generateCaptcha();"  /></td>
+                        <th scope="row"><?php _e( 'Max font size', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="dexcv_max_font_size" size="10" value="<?php echo esc_attr( dex_bccf_get_option( 'dexcv_max_font_size', TDE_BCCFDEFAULT_dexcv_max_font_size ) ); ?>" onblur="generateCaptcha();"  /></td>
+                        <td colspan="2" rowspan="">
+                            <?php _e( 'Preview', 'sc-res' ); ?>
+                            <br />
+                            <br />
+                            <img src="<?php echo plugins_url('/captcha/captcha.php', __FILE__); ?>"  id="captchaimg" alt="security code" border="0"  />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Noise', 'sc-res' ); ?></th>
+                        <td><input type="text" name="dexcv_noise" size="10" value="<?php echo esc_attr( dex_bccf_get_option( 'dexcv_noise',  TDE_BCCFDEFAULT_dexcv_noise ) ); ?>" onblur="generateCaptcha();" /></td>
+                        <th scope="row"><?php _e( 'Noise Length', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="dexcv_noise_length" size="10" value="<?php echo esc_attr( dex_bccf_get_option( 'dexcv_noise_length', TDE_BCCFDEFAULT_dexcv_noise_length ) ); ?>" onblur="generateCaptcha();" /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Background', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="dexcv_background" size="10" value="<?php echo esc_attr( dex_bccf_get_option( 'dexcv_background',  TDE_BCCFDEFAULT_dexcv_background ) ); ?>" onblur="generateCaptcha();" /></td>
+                        <th scope="row"><?php _e( 'Border', 'sc-res' ); ?></th>
+                        <td>
+                            <input type="text" name="dexcv_border" size="10" value="<?php echo esc_attr( dex_bccf_get_option( 'dexcv_border',  TDE_BCCFDEFAULT_dexcv_border ) ); ?>" onblur="generateCaptcha();" /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Font', 'sc-res' ); ?></th>
+                        <td>
+                            <select name="dexcv_font" onchange="generateCaptcha();" >
+                                <option value="font-1.ttf"<?php if ("font-1.ttf" == dex_bccf_get_option( 'dexcv_font', TDE_BCCFDEFAULT_dexcv_font ) ) { echo ' selected'; } ?>><?php _e( 'Font 1', 'sc-res' ); ?></option>
+                                <option value="font-2.ttf"<?php if ("font-2.ttf" == dex_bccf_get_option( 'dexcv_font', TDE_BCCFDEFAULT_dexcv_font ) ) { echo ' selected'; } ?>><?php _e( 'Font 2', 'sc-res' ); ?></option>
+                                <option value="font-3.ttf"<?php if ("font-3.ttf" == dex_bccf_get_option( 'dexcv_font', TDE_BCCFDEFAULT_dexcv_font ) ) { echo ' selected'; } ?>><?php _e( 'Font 3', 'sc-res' ); ?></option>
+                                <option value="font-4.ttf"<?php if ("font-4.ttf" == dex_bccf_get_option( 'dexcv_font', TDE_BCCFDEFAULT_dexcv_font ) ) { echo ' selected'; } ?>><?php _e( 'Font 4', 'sc-res' ); ?></option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 		</section>
 		<?php if ( isset( $dexbccf_addons_objs_list[$addon_id] ) ) : ?>
 		<section>
 			<?php global $dexbccf_addons_objs_list, $dexbccf_addons_active_list;
 			if ( count( $dexbccf_addons_active_list ) ) {
 				_e( '<h2>Add-Ons Settings:</h2><hr />', 'bccf' );
-				foreach( $dexbccf_addons_active_list as $addon_id ) if( isset( $dexbccf_addons_objs_list[ $addon_id ] ) ) print $dexbccf_addons_objs_list[ $addon_id ]->get_addon_form_settings( CP_CONTACTFORMPP_ID );
+				foreach( $dexbccf_addons_active_list as $addon_id ) {
+                    if ( isset( $dexbccf_addons_objs_list[ $addon_id ] ) ) {
+                        print $dexbccf_addons_objs_list[ $addon_id ]->get_addon_form_settings( CP_CONTACTFORMPP_ID );
+                    }
+                }
 			} ?>
 		</section>
 		<?php endif; ?>
 		<section>
-			<h2 class='hndle' style="padding:5px;"><span>Note</span></h2>
-     To insert this form in a post/page, use the dedicated icon
-     <?php print '<img hspace="5" src="'.plugins_url('/images/dex_apps.gif', __FILE__).'" alt="'.__('Insert Booking Calendar','bccf').'" />';     ?>
-     which has been added to your Upload/Insert Menu, just below the title of your Post/Page.
-			<p class="submit"><input type="submit" name="submit" id="submit" class="button-primary" value="Save Changes"  /></p>
+			<h2><?php _e( 'Note', 'sc-res' ); ?></h2>
+            </p>
+            <?php echo sprintf(
+                '<p>%1s <img hspace="5" src="%2s" alt="%3s" /> %4s</p>',
+                __( 'To insert this form in a post/page, use the dedicated icon', 'sc-res' ),
+                plugins_url( '/images/dex_apps.gif', __FILE__ ),
+                __( 'Insert Booking Calendar', 'sc-res' ),
+                __( 'which has been added to your Upload/Insert Menu, just below the title of your post or page.', 'sc-res' )
+            ); ?>
+			<p class="submit"><input type="submit" name="submit" id="submit" class="button-primary" value="<?php _e( 'Save Changes', 'sc-res' ); ?>"  /></p>
 		</section>
 	</form>
 </div>
 <script type="text/javascript">
- function generateCaptcha()
- {
-    var d=new Date();
-    var f = document.dexconfigofrm;
-    var qs = "?width="+f.dexcv_width.value;
-    qs += "&height="+f.dexcv_height.value;
-    qs += "&letter_count="+f.dexcv_chars.value;
-    qs += "&min_size="+f.dexcv_min_font_size.value;
-    qs += "&max_size="+f.dexcv_max_font_size.value;
-    qs += "&noise="+f.dexcv_noise.value;
-    qs += "&noiselength="+f.dexcv_noise_length.value;
-    qs += "&bcolor="+f.dexcv_background.value;
-    qs += "&border="+f.dexcv_border.value;
-    qs += "&font="+f.dexcv_font.options[f.dexcv_font.selectedIndex].value;
-    qs += "&rand="+d;
-    document.getElementById("captchaimg").src= "<?php echo plugins_url('/captcha/captcha.php', __FILE__); ?>"+qs+"&inAdmin=1";
- }
- generateCaptcha();
- var $j = jQuery.noConflict();
- $j(function() {
- 	$j("#dex_dc_expires").datepicker({
-                    dateFormat: 'yy-mm-dd'
-                 });
-    //$j("#calendar_language").val("<?php echo $calendar_language;?>");
+    function generateCaptcha() {
+        var d  = new Date();
+        var f  = document.dexconfigofrm;
+        var qs = '?width=' + f.dexcv_width.value;
+        qs += '&height=' + f.dexcv_height.value;
+        qs += '&letter_count=' + f.dexcv_chars.value;
+        qs += '&min_size=' + f.dexcv_min_font_size.value;
+        qs += '&max_size=' + f.dexcv_max_font_size.value;
+        qs += '&noise=' + f.dexcv_noise.value;
+        qs += '&noiselength=' + f.dexcv_noise_length.value;
+        qs += '&bcolor=' + f.dexcv_background.value;
+        qs += '&border=' + f.dexcv_border.value;
+        qs += '&font=' + f.dexcv_font.options[f.dexcv_font.selectedIndex].value;
+        qs += '&rand=' + d;
 
- });
- $j('#dex_nocodes_availmsg').load('<?php echo cp_bccf_get_site_url(true); ?>/?dex_bccf=loadcoupons&inAdmin=1&dex_item=<?php echo CP_BCCF_CALENDAR_ID; ?>');
- $j('#dex_dc_subccode').click (function() {
-                               var code = $j('#dex_dc_code').val();
-                               var discount = $j('#dex_dc_discount').val();
-                               var expires = $j('#dex_dc_expires').val();
-                               if (code == '') { alert('Please enter a code'); return; }
-                               if (parseFloat(discount)+"" != discount) { alert('Please numeric discount percent'); return; }
-                               if (expires == '') { alert('Please enter an expiration date for the code'); return; }
-                               var params = '&add=1&expires='+encodeURI(expires)+'&discount='+encodeURI(discount)+'&code='+encodeURI(code);
-                               $j('#dex_nocodes_availmsg').load('<?php echo cp_bccf_get_site_url(true); ?>/?dex_bccf=loadcoupons&inAdmin=1&dex_item=<?php echo CP_BCCF_CALENDAR_ID; ?>'+params);
-                               $j('#dex_dc_code').val();
-                             });
-  function dex_delete_coupon(id)
-  {
-     $j('#dex_nocodes_availmsg').load('<?php echo cp_bccf_get_site_url(true); ?>/?dex_bccf=loadcoupons&inAdmin=1&dex_item=<?php echo CP_BCCF_CALENDAR_ID; ?>&delete=1&code='+id);
-  }
-  $j(function() {
- 	$j("#dex_dc_season_dfrom").datepicker({
-                    dateFormat: 'yy-mm-dd'
-                 });
-    $j("#dex_dc_season_dto").datepicker({
-                    dateFormat: 'yy-mm-dd'
-                 });
-  });
-  $j('#dex_noseasons_availmsg').load('<?php echo cp_bccf_get_site_url(true); ?>/?dex_bccf=loadseasonprices&inAdmin=1&dex_item=<?php echo CP_BCCF_CALENDAR_ID; ?>');
-  $j('#dex_dc_subcseasons').click (function() {
-                               var code = $j('#dex_dc_price').val();
-                               var dfrom = $j('#dex_dc_season_dfrom').val();
-                               var dto = $j('#dex_dc_season_dto').val();
-                               if (parseFloat(code)+"" != code && parseFloat(code)+"0" != code && parseFloat(code)+"00" != code) { alert('Please enter a price (valid number).'); return; }
-                               var f = document.dexconfigofrm;
-                               var slots = f.max_slots.options[f.max_slots.selectedIndex].value;
-                               for(var i=1; i<=slots; i++)
-                                   code += ";"+ $j('#request_cost_season'+i).val();
-                               if (dfrom == '') { alert('Please enter an expiration date for the code'); return; }
-                               if (dto == '') { alert('Please enter an expiration date for the code'); return; }
-                               var params = '&add=1&dto='+encodeURI(dto)+'&dfrom='+encodeURI(dfrom)+'&price='+encodeURI(code);
-                               $j('#dex_noseasons_availmsg').load('<?php echo cp_bccf_get_site_url(true); ?>/?dex_bccf=loadseasonprices&inAdmin=1&dex_item=<?php echo CP_BCCF_CALENDAR_ID; ?>'+params);
-                               $j('#dex_dc_price').val();
-                             });
-  function dex_delete_season_price(id)
-  {
-     $j('#dex_noseasons_availmsg').load('<?php echo cp_bccf_get_site_url(true); ?>/?dex_bccf=loadseasonprices&inAdmin=1&dex_item=<?php echo CP_BCCF_CALENDAR_ID; ?>&delete=1&code='+id);
-  }
-
-  function showcurrencies()
-  {
-      document.getElementById("currencyhelp").style.display = "none";
-      document.getElementById("currencylist").style.display = "";
-  }
-  function dex_updatemaxslots()
-  {
-      try
-      {
-          var default_request_cost = new Array(<?php echo $request_costs_exploded; ?>);
-          var f = document.dexconfigofrm;
-          var slots = f.max_slots.options[f.max_slots.selectedIndex].value;
-          var buffer = "";
-          var buffer2 = "";
-          for(var i=1; i<=slots; i++)
-          {
-              buffer += '<div id="cpabccost'+i+'" style="float:left;width:70px;font-size:10px;">'+i+' day'+(i>1?'s':'')+':<br />'+
-                         '<input type="text" name="request_cost_'+i+'" style="width:40px;" value="'+default_request_cost[i]+'" /></div>';
-              buffer2 += '<div id="cpabccost_season'+i+'" style="float:left;width:70px;font-size:10px;">'+i+' day'+(i>1?'s':'')+':<br />'+
-                         '<input type="text" name="request_cost_season'+i+'" id="request_cost_season'+i+'" style="width:40px;" value="" /></div>';
-          }
-          if (slots == '0')
-              buffer = "<br />&lt;-<em> Select the number of days to setup if you want to use this configuration option.<br /></em>";
-          else
-              buffer2 = 'Total request cost for specific # of days:<br />'+buffer2+'<div class="reservations-form-clear"></div>';
-          document.getElementById("cpabcslots").innerHTML = buffer;
-          document.getElementById("cpabcslots_season").innerHTML = buffer2;
-      }
-      catch(e)
-      {
-      }
-  }
-  dex_updatemaxslots();
-
-  function bccp_update_pp_payment_selection()
-  {
-     var f = document.dexconfigofrm;
-     var ppoption = f.enable_paypal.options[f.enable_paypal.selectedIndex].value;
-     if (ppoption == '2')
-         document.getElementById("bccf_paypal_options_label").style.display = "";
-     else
-         document.getElementById("bccf_paypal_options_label").style.display = "none";
-     if (ppoption == '3')
-         document.getElementById("bccf_paypal_options_beanstream").style.display = "";
-     else
-         document.getElementById("bccf_paypal_options_beanstream").style.display = "none";
-
-  }
-
-  bccp_update_pp_payment_selection();
-
-  function shcalarea()
-  {
-    var cal1 = document.getElementById("metabox_basic_settings_cal1");
-    var cal2 = document.getElementById("metabox_basic_settings_cal2");
-    var sel = document.getElementById("masteritem");
-    if (sel.selectedIndex > 0)
-    {
-        cal1.style.display='none';
-        cal2.style.display='';
+        document.getElementById( 'captchaimg' ).src="<?php echo plugins_url( '/captcha/captcha.php', __FILE__ ); ?>" + qs + "&inAdmin=1";
     }
-    else
-    {
-        cal1.style.display='';
-        cal2.style.display='none';
+
+    generateCaptcha();
+    var $j = jQuery.noConflict();
+
+    $j( function() {
+        $j( '#dex_dc_expires' ).datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+        //$j( '#calendar_language' ).val( '<?php echo $calendar_language;?>' );
+    });
+
+    $j( '#dex_nocodes_availmsg' ).load( '<?php echo cp_bccf_get_site_url( true ); ?>/?dex_bccf=loadcoupons&inAdmin=1&dex_item=<?php echo CP_BCCF_CALENDAR_ID; ?>' );
+
+    $j( '#dex_dc_subccode' ).click ( function() {
+        var code     = $j( '#dex_dc_code' ).val();
+        var discount = $j( '#dex_dc_discount' ).val();
+        var expires  = $j( '#dex_dc_expires' ).val();
+
+        if ( code == '' ) {
+            alert( '<?php _e( 'Please enter a code', 'sc-res' ); ?>' );
+            return;
+        }
+
+        if ( parseFloat( discount ) + '' != discount ) {
+            alert( '<?php _e( 'Please numeric discount percent', 'sc-res' ); ?>' );
+            return;
+        }
+
+        if ( expires == '' ) {
+            alert( '<?php _e( 'Please enter an expiration date for the ', 'sc-res' ); ?>' );
+            return;
+        }
+
+        var params = '&add=1&expires=' + encodeURI( expires ) + '&discount=' + encodeURI( discount ) + '&code=' + encodeURI( code );
+        $j( '#dex_nocodes_availmsg' ).load( '<?php echo cp_bccf_get_site_url( true ); ?>/?dex_bccf=loadcoupons&inAdmin=1&dex_item=<?php echo CP_BCCF_CALENDAR_ID; ?>' + params );
+        $j( '#dex_dc_code' ).val();
+    });
+
+    function dex_delete_coupon( id ) {
+        $j( '#dex_nocodes_availmsg' ).load( '<?php echo cp_bccf_get_site_url( true ); ?>/?dex_bccf=loadcoupons&inAdmin=1&dex_item=<?php echo CP_BCCF_CALENDAR_ID; ?>&delete=1&code=' + id );
     }
-  }
 
-  shcalarea();
+    $j( function() {
+        $j( '#dex_dc_season_dfrom' ).datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+        $j( '#dex_dc_season_dto' ).datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+    });
 
+    $j( '#dex_noseasons_availmsg' ).load( '<?php echo cp_bccf_get_site_url( true ); ?>/?dex_bccf=loadseasonprices&inAdmin=1&dex_item=<?php echo CP_BCCF_CALENDAR_ID; ?>' );
+
+    $j( '#dex_dc_subcseasons' ).click ( function() {
+        var code  = $j( '#dex_dc_price' ).val();
+        var dfrom = $j( '#dex_dc_season_dfrom' ).val();
+        var dto   = $j( '#dex_dc_season_dto' ).val();
+
+        if ( parseFloat( code ) + '' != code && parseFloat( code ) + '0' != code && parseFloat( code ) + '00' != code ) {
+            alert( '<?php _e( 'Please enter a price (valid number).', 'sc-res' ); ?>' );
+            return;
+        }
+
+        var f     = document.dexconfigofrm;
+        var slots = f.max_slots.options[f.max_slots.selectedIndex].value;
+
+        for ( var i=1; i<=slots; i++ ) {
+            code += ";"+ $j('#request_cost_season'+i).val();
+        }
+
+        if ( dfrom == '' ) {
+            alert( '<?php _e( 'Please enter an expiration date for the code', 'sc-res' ); ?>' );
+            return;
+        }
+
+        if ( dto == '' ) {
+            alert( '<?php _e( 'Please enter an expiration date for the code', 'sc-res' ); ?>' );
+            return;
+        }
+
+        var params = '&add=1&dto=' + encodeURI( dto ) + '&dfrom=' + encodeURI( dfrom ) + '&price=' + encodeURI( code );
+        $j( '#dex_noseasons_availmsg' ).load( '<?php echo cp_bccf_get_site_url( true ); ?>/?dex_bccf=loadseasonprices&inAdmin=1&dex_item=<?php echo CP_BCCF_CALENDAR_ID; ?>' + params );
+        $j( '#dex_dc_price' ).val();
+    });
+
+    function dex_delete_season_price( id ) {
+        $j( '#dex_noseasons_availmsg' ).load( '<?php echo cp_bccf_get_site_url( true ); ?>/?dex_bccf=loadseasonprices&inAdmin=1&dex_item=<?php echo CP_BCCF_CALENDAR_ID; ?>&delete=1&code=' + id );
+    }
+
+    function showcurrencies() {
+        document.getElementById( 'currencyhelp' ).style.display = 'none';
+        document.getElementById( 'currencylist' ).style.display = '';
+    }
+
+    function dex_updatemaxslots() {
+        try {
+            var default_request_cost = new Array(<?php echo $request_costs_exploded; ?>);
+            var f                    = document.dexconfigofrm;
+            var slots                = f.max_slots.options[f.max_slots.selectedIndex].value;
+            var buffer               = '';
+            var buffer2              = '';
+
+            for ( var i=1; i <= slots; i++ ) {
+                buffer += '<div id="cpabccost' + i + '" style="float:left;width:70px;font-size:10px;">' + i + ' day' + ( i > 1 ? 's' : '' ) + ':<br />' + '<input type="text" name="request_cost_' + i + '" style="width:40px;" value="' + default_request_cost[i] + '" /></div>';
+                buffer2 += '<div id="cpabccost_season' + i + '" style="float:left;width:70px;font-size:10px;">' + i + ' day' + ( i > 1 ? 's' : '' ) + ':<br />' + '<input type="text" name="request_cost_season' + i + '" id="request_cost_season' + i + '" style="width:40px;" value="" /></div>';
+            }
+
+            if ( slots == '0' ) {
+                buffer = '<br /><em><?php _e( 'Select the number of days to setup if you want to use this configuration option.', 'sc-res' ); ?><br /></em>';
+            } else {
+                buffer2 = '<?php _e( 'Total request cost for specific # of days:', 'sc-res' ); ?><br />' + buffer2 + '<div class="reservations-form-clear"></div>';
+                document.getElementById( 'cpabcslots' ) . innerHTML        = buffer;
+                document.getElementById( 'cpabcslots_season' ) . innerHTML = buffer2;
+            }
+        }
+        catch(e) { }
+    }
+
+    dex_updatemaxslots();
+
+    function bccp_update_pp_payment_selection() {
+        var f        = document.dexconfigofrm;
+        var ppoption = f.enable_paypal.options[f.enable_paypal.selectedIndex].value;
+
+        if ( ppoption == '2' ) {
+            document.getElementById( 'bccf_paypal_options_label' ).style.display = '';
+        } else {
+            document.getElementById( 'bccf_paypal_options_label' ).style.display = 'none';
+        }
+
+        if ( ppoption == '3' ) {
+            document.getElementById( 'bccf_paypal_options_beanstream' ).style.display = '';
+        } else {
+            document.getElementById( 'bccf_paypal_options_beanstream' ).style.display = 'none';
+        }
+    }
+
+    bccp_update_pp_payment_selection();
+
+    function shcalarea() {
+        var cal1 = document.getElementById( 'metabox_basic_settings_cal1' );
+        var cal2 = document.getElementById( 'metabox_basic_settings_cal2' );
+        var sel  = document.getElementById( 'masteritem' );
+
+        if ( sel.selectedIndex > 0 ) {
+            cal1.style.display ='none';
+            cal2.style.display ='';
+        } else {
+            cal1.style.display ='';
+            cal2.style.display ='none';
+        }
+    }
+
+    shcalarea();
 </script>
 <?php
 
@@ -1228,4 +1362,4 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
 else : ?>
 	<br />
 	<p><?php __( 'The current user logged in doesn\'t have enough permissions to edit this calendar. This user can edit only his/her own calendars. Please log in as administrator to get access to all calendars.', 'sc-res' ); ?></p>
-<?php endif; ?>
+<?php endif;

@@ -1,47 +1,94 @@
 <?php
-/*
-....
-*/
+/**
+ * Base addon file.
+ *
+ * @package    Sturtevant_Reservations
+ * @subpackage Addons
+ *
+ * @since      1.0.0
+ * @author     Greg Sweet <greg@ccdzine.com>
+ */
 
-if( !class_exists( 'DEXBCCF_BaseAddon' ) )
-{
-    class DEXBCCF_BaseAddon 
-    {
-        /************* ADDON SYSTEM - ATTRIBUTES AND METHODS *************/
+// If this file is called directly, abort.
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
+
+/**
+ * Addon system attributes and methods.
+ *
+ * @since  1.0.0
+ * @access public
+ */
+if ( ! class_exists( 'DEXBCCF_BaseAddon' ) ) {
+    class DEXBCCF_BaseAddon {
+
+		/**
+		 * Class variables
+		 */
 		protected $addonID;
 		protected $name;
 		protected $description;
-		
-		public function get_addon_id()
-		{
+
+		/**
+		 * Addon ID.
+		 *
+		 * @return int Returns the ID of the addon.
+		 */
+		public function get_addon_id() {
 			return $this->addonID;
 		}
-		
-		public function get_addon_name()
-		{
+
+		/**
+		 * Addon name.
+		 *
+		 * @return string Returns the name of the addon.
+		 */
+		public function get_addon_name() {
 			return $this->name;
 		}
-		
-		public function get_addon_description()
-		{
+
+		/**
+		 * Addon description.
+		 *
+		 * @return string Return sthe description of the addon.
+		 */
+		public function get_addon_description() {
 			return $this->description;
 		}
-		
-		public function get_addon_form_settings( $form_id )
-		{
+
+		/**
+		 * Addon form settings
+		 *
+		 * @param  int $form_id The ID of the addon.
+		 * @return void
+		 */
+		public function get_addon_form_settings( $form_id ) {
 			return '';
 		}
-		
-		public function get_addon_settings()
-		{
+
+		/**
+		 * Addon settings
+		 *
+		 * @return void
+		 */
+		public function get_addon_settings() {
 			return '';
 		}
-		
-		public function addon_is_active()
-		{
+
+		/**
+		 * Check if an addon is active.
+		 *
+		 * @return array Returns an array of active addons.
+		 */
+		public function addon_is_active() {
+
 			global $dexbccf_addons_active_list;
+
 			return in_array( $this->get_addon_id(), $dexbccf_addons_active_list );
+
 		}
-	} // End Class
+
+	}
+
 }
-?>

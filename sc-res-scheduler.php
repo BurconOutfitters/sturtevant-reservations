@@ -84,7 +84,7 @@ if ( ! is_null( $form_data ) ) {
 $raw_form_str = str_replace( '"', '&quot;', esc_attr( $raw_form_str ) );
 ?>
 <link href="<?php echo plugins_url( 'css/stylepublic.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
-<link href="<?php echo plugins_url( 'css/cupertino/jquery-ui-1.8.20.custom.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
+<link href="<?php echo plugins_url( 'css/smoothness/jquery-ui-smoothness.min.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
 <link href="<?php echo plugins_url( 'css/calendar.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
 
 <form class="cpp_form" name="dex_bccf_pform" id="dex_bccf_pform" action="<?php get_site_url(); ?>" method="post" enctype="multipart/form-data" onsubmit="return doValidate(this);">

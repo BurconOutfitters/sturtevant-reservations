@@ -50,8 +50,8 @@ define('DEX_BCCF_DEFAULT_PAYPAL_OPTION_NO', 'Pay later.');
 define('DEX_BCCF_DEFAULT_vs_text_is_required', 'This field is required.');
 define('DEX_BCCF_DEFAULT_vs_text_is_email', 'Please enter a valid email address.');
 
-define('DEX_BCCF_DEFAULT_vs_text_datemmddyyyy', 'Please enter a valid date with this format(mm/dd/yyyy)');
-define('DEX_BCCF_DEFAULT_vs_text_dateddmmyyyy', 'Please enter a valid date with this format(dd/mm/yyyy)');
+define('DEX_BCCF_DEFAULT_vs_text_datemmddyyyy', 'Please enter a valid date with this format ( mm/dd/yyyy )');
+define('DEX_BCCF_DEFAULT_vs_text_dateddmmyyyy', 'Please enter a valid date with this format ( dd/mm/yyyy )');
 define('DEX_BCCF_DEFAULT_vs_text_number', 'Please enter a valid number.');
 define('DEX_BCCF_DEFAULT_vs_text_digits', 'Please enter only digits.');
 define('DEX_BCCF_DEFAULT_vs_text_max', 'Please enter a value less than or equal to {0}.');

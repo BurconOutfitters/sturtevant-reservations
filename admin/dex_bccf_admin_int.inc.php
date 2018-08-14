@@ -54,7 +54,7 @@ if ( cp_sc_res_is_administrator() || $mycalendarrows[0]->conwer == $current_user
 <script type="text/javascript">
 	if ( false ) {
 		document.write ("<"+"script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></"+"script>");
-		document.write ("<"+"script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.20/jquery-ui.min.js'></"+"script>");
+		document.write ("<"+"script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></"+"script>");
 	}
 </script>
 <div class="wrap reservations reservation-manage">

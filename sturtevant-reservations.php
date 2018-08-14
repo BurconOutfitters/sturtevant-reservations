@@ -571,13 +571,13 @@ function dex_bccf_get_public_form( $pages = '' ) {
     if ( DEX_BCCF_DEFAULT_DEFER_SCRIPTS_LOADING ) {
 
         wp_deregister_script( 'query-stringify' );
-        wp_register_script( 'query-stringify', plugins_url( '/js/jQuery.stringify.js', __FILE__ ) );
+        wp_register_script( 'query-stringify', plugins_url( '/js/jquery.stringify.min.js', __FILE__ ) );
 
         wp_deregister_script( 'cp_contactformpp_validate_script' );
-        wp_register_script( 'cp_contactformpp_validate_script', plugins_url( '/js/jquery.validate.js', __FILE__) );
+        wp_register_script( 'cp_contactformpp_validate_script', plugins_url( '/js/jquery.validate.min.js', __FILE__) );
 
         wp_deregister_script('cp_contactformpp_rcalendar');
-        wp_register_script( 'cp_contactformpp_rcalendar', plugins_url( '/js/jquery.rcalendar.js', __FILE__) );
+        wp_register_script( 'cp_contactformpp_rcalendar', plugins_url( '/js/jquery.rcalendar.min.js', __FILE__) );
 
         $dependencies = [
             'jquery',
@@ -697,10 +697,10 @@ function dex_bccf_get_public_form( $pages = '' ) {
             var myjQuery = jQuery.noConflict( );
             if ( typeof jQueryBK != 'undefined' ) { jQuery = jQueryBK; };
     </script>
-    <script type='text/javascript' src='<?php echo plugins_url( 'js/jQuery.stringify.js', __FILE__ ); ?>'></script>
-    <script type='text/javascript' src='<?php echo plugins_url( 'js/jquery.validate.js', __FILE__ ); ?>'></script>
+    <script type='text/javascript' src='<?php echo plugins_url( 'js/jquery.stringify.min.js', __FILE__ ); ?>'></script>
+    <script type='text/javascript' src='<?php echo plugins_url( 'js/jquery.validate.min.js', __FILE__ ); ?>'></script>
     <?php if ( $calendar_language != '' ) { ?><script type="text/javascript" src="<?php echo plugins_url( '/js/languages/jquery.ui.datepicker-' . $calendar_language . '.js', __FILE__ ); ?>"></script><?php } ?>
-    <script type='text/javascript' src='<?php echo plugins_url( 'js/jquery.rcalendar.js', __FILE__ ); ?>'></script>
+    <script type='text/javascript' src='<?php echo plugins_url( 'js/jquery.rcalendar.min.js', __FILE__ ); ?>'></script>
     <script type='text/javascript'>
     /* <![CDATA[ */
     var dex_bccf_fbuilder_config = {"obj":"{\"pub\":true,\"messages\": {\n    \t                \t\"required\": \"This field is required.\",\n    \t                \t\"email\": \"Please enter a valid email address.\",\n    \t                \t\"datemmddyyyy\": \"Please enter a valid date with this format(mm\/dd\/yyyy)\",\n    \t                \t\"dateddmmyyyy\": \"Please enter a valid date with this format(dd\/mm\/yyyy)\",\n    \t                \t\"number\": \"Please enter a valid number.\",\n    \t                \t\"digits\": \"Please enter only digits.\",\n    \t                \t\"max\": \"Please enter a value less than or equal to {0}.\",\n    \t                \t\"min\": \"Please enter a value greater than or equal to {0}.\"\n    \t                }}"};
@@ -761,11 +761,11 @@ function set_dex_bccf_insert_adminScripts( $hook ) {
     if ( isset( $_GET['page'] ) && $_GET['page'] == 'dex_bccf' ) {
 
         wp_deregister_script( 'query-stringify' );
-        wp_register_script( 'query-stringify', plugins_url('/js/jQuery.stringify.js', __FILE__ ) );
+        wp_register_script( 'query-stringify', plugins_url('/js/jquery.stringify.min.js', __FILE__ ) );
         wp_deregister_script( 'cp_contactformpp_rcalendar' );
-        wp_register_script( 'cp_contactformpp_rcalendar', plugins_url( '/js/jquery.rcalendar.js', __FILE__ ) );
+        wp_register_script( 'cp_contactformpp_rcalendar', plugins_url( '/js/jquery.rcalendar.min.js', __FILE__ ) );
         wp_deregister_script( 'cp_contactformpp_rcalendaradmin' );
-        wp_register_script( 'cp_contactformpp_rcalendaradmin', plugins_url( '/js/jquery.rcalendaradmin.js', __FILE__ ) );
+        wp_register_script( 'cp_contactformpp_rcalendaradmin', plugins_url( '/js/jquery.rcalendaradmin.min.js', __FILE__ ) );
         wp_enqueue_script(
             'dex_bccf_builder_script',
             get_site_url( get_current_blog_id() ) . '?bccf_resources=admin',
@@ -784,7 +784,7 @@ function set_dex_bccf_insert_adminScripts( $hook ) {
             ]
         );
 
-        wp_enqueue_style( 'jquery-style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css' );
+        wp_enqueue_style( 'jquery-style', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css' );
     }
 
     if ( 'post.php' != $hook  && 'post-new.php' != $hook ) {
