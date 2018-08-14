@@ -3,7 +3,7 @@
  * The forms and template for the Google reCaptcha addon.
  *
  * @package    Sturtevant_Reservations
- * @subpackage Admin
+ * @subpackage Addons
  *
  * @since      1.0.0
  * @author     Greg Sweet <greg@ccdzine.com>

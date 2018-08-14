@@ -1857,10 +1857,11 @@ function dex_bccf_save_options() {
     dex_bccf_add_field_verify( DEX_BCCF_CONFIG_TABLE_NAME, "enable_beanstream_id", "varchar(250) DEFAULT '' NOT NULL" );
     dex_bccf_add_field_verify( TDE_BCCFCALENDAR_DATA_TABLE, "reference", "varchar(20) DEFAULT '' NOT NULL" );
     dex_bccf_add_field_verify( TDE_BCCFCALENDAR_DATA_TABLE, "reminder", "VARCHAR(1) DEFAULT '' NOT NULL" );
-    dex_bccf_add_field_verify( DEX_BCCF_CONFIG_TABLE_NAME,'request_taxes'," varchar(20) NOT NULL default ''" );
+    dex_bccf_add_field_verify( DEX_BCCF_CONFIG_TABLE_NAME, 'request_taxes'," varchar(20) NOT NULL default ''" );
 
-    $calendar_holidaysdays = (@$_POST["wd1"]?"1":"0").(@$_POST["wd2"]?"1":"0").(@$_POST["wd3"]?"1":"0").(@$_POST["wd4"]?"1":"0").(@$_POST["wd5"]?"1":"0").(@$_POST["wd6"]?"1":"0").(@$_POST["wd7"]?"1":"0");
-    $calendar_startresdays = (@$_POST["sd1"]?"1":"0").(@$_POST["sd2"]?"1":"0").(@$_POST["sd3"]?"1":"0").(@$_POST["sd4"]?"1":"0").(@$_POST["sd5"]?"1":"0").(@$_POST["sd6"]?"1":"0").(@$_POST["sd7"]?"1":"0");
+    $calendar_holidaysdays = ( @$_POST['wd1'] ? '1' : '0' ) . ( @$_POST['wd2'] ? '1' : '0' ) . ( @$_POST['wd3'] ? '1' : '0' ) . ( @$_POST['wd4'] ? '1' : '0' ) . ( @$_POST['wd5'] ? '1' : '0' ) . ( @$_POST['wd6'] ? '1' : '0' ) . ( @$_POST['wd7'] ? '1' : '0' );
+
+    $calendar_startresdays = ( @$_POST['sd1'] ? '1' : '0' ) . ( @$_POST['sd2'] ? '1' : '0' ) . ( @$_POST['sd3'] ? '1' : '0' ) . ( @$_POST['sd4'] ? '1' : '0' ) . ( @$_POST['sd5'] ? '1' : '0' ) . ( @$_POST['sd6'] ? '1' : '0' ) . ( @$_POST['sd7'] ? '1' : '0' );
 
     for ( $k = 1; $k <= DEX_BCCF_DEFAULT_SERVICES_FIELDS; $k++ ) {
         dex_bccf_add_field_verify( DEX_BCCF_CONFIG_TABLE_NAME, 'cp_cal_checkboxes_label' . $k );

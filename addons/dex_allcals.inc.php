@@ -100,34 +100,35 @@ if ( $calendar_language != '' ) { ?>
 <script type="text/javascript">
     var dex_current_calendar_item_allcals;
     function dex_do_init<?php echo $uniqid; ?>(id) {
-        id = "<?php echo $uniqid; ?>"+id;
-        myjQuery = (typeof myjQuery != 'undefined' ) ? myjQuery : jQuery;
-        myjQuery( function(){
-            (function($) {
-            dex_current_calendar_item_allcals = id;
-            document.getElementById("kcalarea"+dex_current_calendar_item_allcals).style.display = "";
-            $calendarjQuery = myjQuery;
-            $calendarjQuery(function() {
-                $calendarjQuery("#kcalarea"+id).rcalendar({
-                    "calendarId":<?php if ( $calendar == '' ) { echo "-1"; } else { echo $calendar; } ?>,
-                    "partialDate":<?php echo dex_bccf_get_option( 'calendar_mode',DEX_BCCF_DEFAULT_CALENDAR_MODE ); ?>,
-                    "edition":false,
-                    "minDate":"<?php echo $calendar_mindate;?>",
-                    "maxDate":"<?php echo $calendar_maxdate;?>",
-                    "dformat":"<?php echo $dformat;?>",
-                    "readonly":true,
-                    "workingDates":<?php echo $workingdates;?>,
-                    "holidayDates":<?php echo $holidayDates;?>,
-                    "startReservationWeekly":<?php echo $startReservationWeekly;?>,
-                    "startReservationDates":<?php echo $startReservationDates;?>,
-                    "fixedReservationDates":<?php echo ( ( dex_bccf_get_option( 'calendar_fixedmode', '' ) == '1' ? 'true' : 'false' ) );?>,
-                    "fixedReservationDates_length":<?php echo dex_bccf_get_option( 'calendar_fixedreslength', '1' );?>,
-                    "language":"<?php echo $calendar_language?>",
-                    "firstDay":<?php echo dex_bccf_get_option( 'calendar_weekday', DEX_BCCF_DEFAULT_CALENDAR_WEEKDAY ); ?>,
-                    "numberOfMonths":<?php echo ( $pages != '' ? $pages : dex_bccf_get_option( 'calendar_pages', 3 ) ); ?>
+        id       = '<?php echo $uniqid; ?>' + id;
+        myjQuery = ( typeof myjQuery != 'undefined' ) ? myjQuery : jQuery;
+        myjQuery( function() {
+            ( function($) {
+                dex_current_calendar_item_allcals = id;
+                document.getElementById( 'kcalarea' + dex_current_calendar_item_allcals ).style.display = '';
+                $calendarjQuery = myjQuery;
+
+                $calendarjQuery( function() {
+                    $calendarjQuery( '#kcalarea' + id ).rcalendar({
+                        'calendarId' : <?php if ( $calendar == '' ) { echo '-1'; } else { echo $calendar; } ?>,
+                        'partialDate' : <?php echo dex_bccf_get_option( 'calendar_mode',DEX_BCCF_DEFAULT_CALENDAR_MODE ); ?>,
+                        'edition' : false,
+                        'minDate'  'php echo $calendar_mindate;?>',
+                        'maxDate' : '<?php echo $calendar_maxdate;?>',
+                        'dformat' : '<?php echo $dformat;?>',
+                        'readonly' : true,
+                        'workingDates' : <?php echo $workingdates;?>,
+                        'holidayDates' : <?php echo $holidayDates;?>,
+                        'startReservationWeekly' : <?php echo $startReservationWeekly;?>,
+                        'startReservationDates' : <?php echo $startReservationDates;?>,
+                        'fixedReservationDates' : <?php echo ( ( dex_bccf_get_option( 'calendar_fixedmode', '' ) == '1' ? 'true' : 'false' ) );?>,
+                        'fixedReservationDates_length' : <?php echo dex_bccf_get_option( 'calendar_fixedreslength', '1' );?>,
+                        'language' : '<?php echo $calendar_language?>',
+                        'firstDay' : <?php echo dex_bccf_get_option( 'calendar_weekday', DEX_BCCF_DEFAULT_CALENDAR_WEEKDAY ); ?>,
+                        'numberOfMonths' : <?php echo ( $pages != '' ? $pages : dex_bccf_get_option( 'calendar_pages', 3 ) ); ?>
+                    });
                 });
-            });
-        })(myjQuery);
+            })(myjQuery);
     });
  }
  dex_do_init<?php echo $uniqid; ?>(<?php echo $myrows[0]->id; ?>);

@@ -15,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
- * Addon system attributes and methods.
+ * Addon attributes and methods.
  *
  * @since  1.0.0
  * @access public
