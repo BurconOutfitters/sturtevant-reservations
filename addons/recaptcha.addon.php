@@ -14,7 +14,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-require_once dirname( __FILE__ ).'/base.addon.php';
+require_once dirname( __FILE__ ).'/sc-res-base-addon.php';
 class DEXBCCF_reCAPTCHA extends DEXBCCF_BaseAddon {
 
 	protected $addonID = "addon-recaptcha-20151106";

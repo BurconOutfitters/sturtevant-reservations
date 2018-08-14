@@ -422,7 +422,7 @@ function dexbccf_loading_add_ons() {
             $addons = dir( $path );
 
 			while ( false !== ( $entry = $addons->read() ) ) {
-				if ( strlen( $entry ) > 3 && strtolower( pathinfo( $entry, PATHINFO_EXTENSION ) ) == 'php'  && $entry != 'dex_allcals.inc.php' ) {
+				if ( strlen( $entry ) > 3 && strtolower( pathinfo( $entry, PATHINFO_EXTENSION ) ) == 'php'  && $entry != 'sc-res-all-calendars.php' ) {
 					require_once $addons->path . '/' . $entry;
 				}
 			}
@@ -518,10 +518,11 @@ function dex_bccf_filter_content_allcalendars( $atts ) {
         define( 'DEX_AUTH_INCLUDE', true );
     }
 
-    @include dirname( __FILE__ ) . '/addons/dex_allcals.inc.php';
+    @include dirname( __FILE__ ) . '/addons/sc-res-all-calendars.php';
 
     $buffered_contents = ob_get_contents();
     ob_end_clean();
+
     return $buffered_contents;
 
 }

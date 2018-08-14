@@ -84,7 +84,7 @@ class Load_Addons {
 
 				while ( false !== ( $entry = $addons->read() ) ) {
 
-					if ( strlen( $entry ) > 3 && strtolower( pathinfo( $entry, PATHINFO_EXTENSION ) ) == 'php'  && $entry != 'dex_allcals.inc.php' ) {
+					if ( strlen( $entry ) > 3 && strtolower( pathinfo( $entry, PATHINFO_EXTENSION ) ) == 'php'  && $entry != 'sc-res-all-calendars.php' ) {
 						require_once $addons->path . '/' . $entry;
 					}
 				}
