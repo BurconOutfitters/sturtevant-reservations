@@ -50,9 +50,9 @@ if ( cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $current_user->
 		}
 	}
 ?>
-<link href="<?php echo plugins_url( 'css/style.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
-<link href="<?php echo plugins_url( 'css/calendar.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
-<link href="<?php echo plugins_url( 'css/admin.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
+<link href="<?php echo plugins_url( 'css/style.min.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
+<link href="<?php echo plugins_url( 'css/calendar.min.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
+<link href="<?php echo plugins_url( 'css/admin.min.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
 
 <script type="text/javascript">
 	if ( false ) {

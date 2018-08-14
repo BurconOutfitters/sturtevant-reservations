@@ -18,9 +18,9 @@ if ( ! defined( 'DEX_AUTH_INCLUDE' ) ) {
     echo __( 'Direct access not allowed.', 'sc-res' );
     exit;
 } ?>
-<link href="<?php echo plugins_url( '../css/stylepublic.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
+<link href="<?php echo plugins_url( '../css/stylepublic.min.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
 <link href="<?php echo plugins_url( '../css/smoothness/jquery-ui-smoothness.min.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
-<link href="<?php echo plugins_url( '../css/calendar.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
+<link href="<?php echo plugins_url( '../css/calendar.min.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
 <form class="cpp_form" name="dex_bccf_pform_allcals" id="dex_bccf_pform_allcals" action="" method="post">
 <script>
 var pathCalendar      = "<?php echo cp_bccf_get_site_url(); ?>/";

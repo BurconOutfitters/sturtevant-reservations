@@ -11,7 +11,8 @@
 
 #calConfig .ui-widget-content a:hover,
 #calConfig .ui-widget-content a:focus {
-	box-shadow: none;
+	-webkit-box-shadow: none;
+	        box-shadow: none;
 }
 
 #calConfig .ui-widget {
@@ -93,7 +94,8 @@
 
 #calConfig .ui-datepicker-prev:focus,
 #calConfig .ui-datepicker-next:focus {
-	box-shadow: none;
+	-webkit-box-shadow: none;
+	        box-shadow: none;
 }
 
 #calConfig .ui-datepicker .ui-datepicker-prev:before,
