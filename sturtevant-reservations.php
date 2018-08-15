@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sturtevant Resrvations
  * Plugin URI:  https://github.com/BurconOutfitters/sturtevant-reservations
- * Description: Cabin reservation and payment system.
+ * Description: Cabin reservation, events calendar, and payment system.
  * Version:     1.0.0
  * Author:      Controlled Chaos Design
  * Author URI:  http://ccdzine.com/
