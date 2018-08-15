@@ -86,7 +86,16 @@ $raw_form_str = str_replace( '"', '&quot;', esc_attr( $raw_form_str ) );
 <link href="<?php echo plugins_url( 'css/stylepublic.min.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
 <link href="<?php echo plugins_url( 'css/smoothness/jquery-ui-smoothness.min.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
 <link href="<?php echo plugins_url( 'css/calendar.min.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
+<?php
+$custom_styles = base64_decode( get_option( 'CP_BCCF_CSS', '' ) );
+if ( $custom_styles != '' ) {
+    echo '<style type="text/css">'.$custom_styles.'</style>';
+}
 
+$custom_scripts = base64_decode( get_option( 'CP_BCCF_JS', '' ) );
+if ( $custom_scripts != '' ) {
+    echo '<script type="text/javascript">'.$custom_scripts.'</script>';
+} ?>
 <form class="cpp_form" name="dex_bccf_pform" id="dex_bccf_pform" action="<?php get_site_url(); ?>" method="post" enctype="multipart/form-data" onsubmit="return doValidate(this);">
     <input name="dex_bccf_post" type="hidden" value="1" />
     <?php if ( $option_calendar_enabled != 'false' ) { ?>
@@ -352,6 +361,8 @@ $raw_form_str = str_replace( '"', '&quot;', esc_attr( $raw_form_str ) );
         }
         setInterval( 'updatedate()', 200 );
     <?php } ?>
+        function updatedate() {}
+
         function doValidate( form ) {
 
             $dexQuery = ( typeof myjQuery != 'undefined' ) ? myjQuery : jQuery;

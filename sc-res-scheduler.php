@@ -86,7 +86,16 @@ $raw_form_str = str_replace( '"', '&quot;', esc_attr( $raw_form_str ) );
 <link href="<?php echo plugins_url( 'css/stylepublic.min.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
 <link href="<?php echo plugins_url( 'css/smoothness/jquery-ui-smoothness.min.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
 <link href="<?php echo plugins_url( 'css/calendar.min.css', __FILE__ ); ?>" type="text/css" rel="stylesheet" />
+<?php
+$custom_styles = base64_decode( get_option( 'CP_BCCF_CSS', '' ) );
+if ( $custom_styles != '' ) {
+    echo '<style type="text/css">'.$custom_styles.'</style>';
+}
 
+$custom_scripts = base64_decode( get_option( 'CP_BCCF_JS', '' ) );
+if ( $custom_scripts != '' ) {
+    echo '<script type="text/javascript">'.$custom_scripts.'</script>';
+} ?>
 <form class="cpp_form" name="dex_bccf_pform" id="dex_bccf_pform" action="<?php get_site_url(); ?>" method="post" enctype="multipart/form-data" onsubmit="return doValidate(this);">
     <input name="dex_bccf_post" type="hidden" value="1" />
     <?php if ( $option_calendar_enabled != 'false' ) { ?>
@@ -352,6 +361,8 @@ $raw_form_str = str_replace( '"', '&quot;', esc_attr( $raw_form_str ) );
         }
         setInterval( 'updatedate()', 200 );
     <?php } ?>
+        function updatedate() {}
+
         function doValidate( form ) {
 
             $dexQuery = ( typeof myjQuery != 'undefined' ) ? myjQuery : jQuery;
@@ -375,8 +386,8 @@ $raw_form_str = str_replace( '"', '&quot;', esc_attr( $raw_form_str ) );
             document.dex_bccf_pform.dex_bccf_ref_page.value = document.location;
             <?php if ( $option_calendar_enabled != 'false' ) { ?>
 
-            if (document.getElementById( 'selDay_startcalarea' + dex_current_calendar_item ).value == '' || document.getElementById( "selDay_endcalarea" + dex_current_calendar_item ).value == '' ) {
-                alert( '<?php echo $l_p_select; ?>.' );
+            if (document.getElementById( 'selDay_startcalarea' + dex_current_calendar_item ).value == '' || document.getElementById( 'selDay_endcalarea' + dex_current_calendar_item ).value == '' ) {
+                alert( '<?php echo str_replace( "'","\'", $l_p_select ); ?>.' );
                 return false;
             }
 
@@ -390,7 +401,7 @@ $raw_form_str = str_replace( '"', '&quot;', esc_attr( $raw_form_str ) );
                 return false;
             }<?php }
             if ( dex_bccf_get_option( 'dexcv_enable_captcha', TDE_BCCFDEFAULT_dexcv_enable_captcha ) != 'false' ) { ?> if ( $dexQuery( '#hdcaptcha_dex_bccf_post' ).val() == '' ) {
-                alert( '<?php echo dex_bccf_get_option( 'cv_text_enter_valid_captcha', DEX_BCCF_DEFAULT_dexcv_text_enter_valid_captcha ); ?>' );
+                setTimeout( 'cpbccf_cerror()', 100 );
                 return false;
             }
             var result = $dexQuery.ajax({
@@ -413,6 +424,8 @@ $raw_form_str = str_replace( '"', '&quot;', esc_attr( $raw_form_str ) );
                      */
                     do_action( 'dexbccf_script_after_validation', '', CP_BCCF_CALENDAR_ID );
                     ?>
+                    cp_bccf_ready_to_go = true;
+                    cpbccf_blink(".pbSubmit");   
                     $dexQuery( '#dex_bccf_pform' ).find( 'select' ).children().each( function() {
                         if ( $dexQuery(this).attr( 'vt' ) ) $dexQuery(this).val( $dexQuery(this).attr( 'vt' ) );
                     });
@@ -430,12 +443,34 @@ $raw_form_str = str_replace( '"', '&quot;', esc_attr( $raw_form_str ) );
             }
 
         }
+        function cpbccf_cerror(){
+            $dexQuery = jQuery.noConflict();
+            $dexQuery( '#hdcaptcha_error' ).css( 'top', $dexQuery( '#hdcaptcha_dex_bccf_post' ).outerHeight() );
+            $dexQuery( '#hdcaptcha_error' ).css( 'display', 'inline' );
+        }
+
+        function cpbccf_blink(selector) {
+            $dexQuery = jQuery.noConflict();
+            $dexQuery(selector).fadeOut( 1000, function() {
+                $dexQuery(this).fadeIn( 1000, function() {
+                    try {
+                        if ( cp_bccf_ready_to_go )
+                            cpbccf_blink(this);
+                    } catch (e) {}
+                });
+            });
+        }
     </script>
     <input type="hidden" name="dex_bccf_pform_process" value="1" />
     <input type="hidden" name="dex_bccf_id" value="<?php echo CP_BCCF_CALENDAR_ID; ?>" />
     <input type="hidden" name="dex_bccf_ref_page" value="<?php esc_attr( cp_bccf_get_FULL_site_url ); ?>" />
     <input type="hidden" name="form_structure" id="form_structure" size="180" value="<?php echo $raw_form_str; ?>" />
     <input type="hidden" name="form_structure_hidden" id="form_structure_hidden"  value="" />
+    <?php if ( DEX_BCCF_DEFAULT_SERVICES_FIELDS_ON_TOP ) {
+        echo '<div id="servcontbccf">';
+            dex_bccf_echo_services( $dex_buffer );
+        echo '</div>';
+    } ?>
     <div id="fbuilder">
         <div id="formheader"></div>
         <div id="fieldlist"></div>
@@ -464,12 +499,9 @@ $raw_form_str = str_replace( '"', '&quot;', esc_attr( $raw_form_str ) );
         <div class="clearer"></div>
     </div>
     <?php }
-    if ( dex_bccf_get_option( 'dexcv_enable_captcha', TDE_BCCFDEFAULT_dexcv_enable_captcha ) != 'false' ) {
-
-        echo $l_sec_code; ?>:
-        <br />
-        <img src="<?php echo plugins_url( '/captcha/captcha.php?width=' . dex_bccf_get_option( 'dexcv_width', TDE_BCCFDEFAULT_dexcv_width ) . '&inAdmin=1&height=' . dex_bccf_get_option( 'dexcv_height', TDE_BCCFDEFAULT_dexcv_height ) . '&letter_count=' . dex_bccf_get_option( 'dexcv_chars', TDE_BCCFDEFAULT_dexcv_chars ) . '&min_size=' . dex_bccf_get_option( 'dexcv_min_font_size', TDE_BCCFDEFAULT_dexcv_min_font_size ) . '&max_size=' . dex_bccf_get_option( 'dexcv_max_font_size', TDE_BCCFDEFAULT_dexcv_max_font_size ) . '&noise=' . dex_bccf_get_option( 'dexcv_noise', TDE_BCCFDEFAULT_dexcv_noise ) . '&noiselength=' . dex_bccf_get_option( 'dexcv_noise_length', TDE_BCCFDEFAULT_dexcv_noise_length ) . '&bcolor=' . dex_bccf_get_option( 'dexcv_background', TDE_BCCFDEFAULT_dexcv_background ) . '&border=' . dex_bccf_get_option( 'dexcv_border', TDE_BCCFDEFAULT_dexcv_border ) . '&font=' . dex_bccf_get_option( 'dexcv_font', TDE_BCCFDEFAULT_dexcv_font ), __FILE__ ); ?>" id="dex_bccf_captchaimg" alt="security code" border="0"  />
-        <br />
+    if ( dex_bccf_get_option( 'dexcv_enable_captcha', TDE_BCCFDEFAULT_dexcv_enable_captcha ) != 'false' ) { ?>
+        <div class="fields" id="field-ck2"><label></label><div class="dfield"><?php echo $l_sec_code; ?>:<br /><img src="<?php echo plugins_url( '/captcha/captcha.php?width=' . dex_bccf_get_option( 'dexcv_width', TDE_BCCFDEFAULT_dexcv_width ) . '&inAdmin=1&height=' . dex_bccf_get_option( 'dexcv_height', TDE_BCCFDEFAULT_dexcv_height ) . '&letter_count=' . dex_bccf_get_option( 'dexcv_chars', TDE_BCCFDEFAULT_dexcv_chars ) . '&min_size=' . dex_bccf_get_option( 'dexcv_min_font_size', TDE_BCCFDEFAULT_dexcv_min_font_size ) . '&max_size=' . dex_bccf_get_option( 'dexcv_max_font_size', TDE_BCCFDEFAULT_dexcv_max_font_size ) . '&noise=' . dex_bccf_get_option( 'dexcv_noise', TDE_BCCFDEFAULT_dexcv_noise ) . '&noiselength=' . dex_bccf_get_option( 'dexcv_noise_length', TDE_BCCFDEFAULT_dexcv_noise_length ) . '&bcolor=' . dex_bccf_get_option( 'dexcv_background', TDE_BCCFDEFAULT_dexcv_background ) . '&border=' . dex_bccf_get_option( 'dexcv_border', TDE_BCCFDEFAULT_dexcv_border ) . '&font=' . dex_bccf_get_option( 'dexcv_font', TDE_BCCFDEFAULT_dexcv_font ), __FILE__ ); ?>" id="dex_bccf_captchaimg" alt="security code" border="0" />
+        <div class="clearer"></div></div></div>
         <div class="fields" id="field-c2">
             <label><?php echo $l_sec_code_low; ?>:</label>
             <div class="dfield">

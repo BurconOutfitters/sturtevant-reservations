@@ -609,53 +609,53 @@ function dex_bccf_get_public_form( $pages = '' ) {
             [
                 'obj' => '{ "pub" : true, "messages" : {
                     "required": "' . str_replace(
-                        array( '"' ),
-                        array( '\\"' ),
+                        [ '"' ],
+                        [ '\\"' ],
                         __( dex_bccf_get_option( 'vs_text_is_required', DEX_BCCF_DEFAULT_vs_text_is_required ), 'sc-res' )
                     ) . '",
                     "email": "' . str_replace(
-                        array( '"' ),
-                        array( '\\"' ),
+                        [ '"' ],
+                        [ '\\"' ],
                         __( dex_bccf_get_option('vs_text_is_email', DEX_BCCF_DEFAULT_vs_text_is_email ), 'sc-res' )
                     ) . '",
                     "datemmddyyyy": "' . str_replace(
-                        array( '"' ),
-                        array( '\\"' ),
+                        [ '"' ],
+                        [ '\\"' ],
                         __( dex_bccf_get_option( 'vs_text_datemmddyyyy', DEX_BCCF_DEFAULT_vs_text_datemmddyyyy ), 'sc-res' )
                     ) . '",
                     "dateddmmyyyy": "' . str_replace(
-                        array( '"' )
-                        ,array( '\\"' ),
+                        [ '"' ],
+                        [ '\\"' ],
                         __( dex_bccf_get_option( 'vs_text_dateddmmyyyy', DEX_BCCF_DEFAULT_vs_text_dateddmmyyyy ), 'sc-res')
                     ) . '",
                     "number": "' . str_replace(
-                        array( '"' ),
-                        array( '\\"' ),
+                        [ '"' ],
+                        [ '\\"' ],
                         __( dex_bccf_get_option( 'vs_text_number', DEX_BCCF_DEFAULT_vs_text_number ), 'sc-res' )
                     ) . '",
                     "digits": "' . str_replace(
-                        array( '"' ),
-                        array( '\\"' ),
+                        [ '"' ],
+                        [ '\\"' ],
                         __( dex_bccf_get_option( 'vs_text_digits', DEX_BCCF_DEFAULT_vs_text_digits ), 'sc-res' )
                     ) . '",
                     "max": "' . str_replace(
-                        array( '"' ),
-                        array( '\\"' ),
+                        [ '"' ],
+                        [ '\\"' ],
                         __( dex_bccf_get_option( 'vs_text_max', DEX_BCCF_DEFAULT_vs_text_max ), 'sc-res' )
                     ) . '",
                     "min": "' . str_replace(
-                        array( '"' ),
-                        array( '\\"' ),
+                        [ '"' ],
+                        [ '\\"' ],
                         __( dex_bccf_get_option( 'vs_text_min', DEX_BCCF_DEFAULT_vs_text_min ), 'sc-res' )
                     ) . '",
                     "previous": "' . str_replace(
-                        array( '"' ),
-                        array( '\\"' ),
+                        [ '"' ],
+                        [ '\\"' ],
                         $previous_label
                     ) . '",
                     "next": "' . str_replace(
-                        array( '"' ),
-                        array( '\\"' ),
+                        [ '"' ],
+                        [ '\\"' ],
                         $next_label
                     ) . '"
                 } }'
