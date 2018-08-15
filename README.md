@@ -1,6 +1,6 @@
 # Sturtevant Reservations
 
-WordPress plugin for the cabin reservation and payment system for Sturtevant Camp.
+WordPress plugin for the cabin reservation, events calendar, and payment system for Sturtevant Camp.
 
 [sturtevantcamp.com](http://sturtevantcamp.com/)
 
