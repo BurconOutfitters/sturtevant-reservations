@@ -9,11 +9,6 @@
  * @author     Greg Sweet <greg@ccdzine.com>
  */
 
-// If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
-	die;
-}
-
 error_reporting(7);
 
 if ( ! ini_get( 'zlib.output_compression' ) ) {
@@ -35,7 +30,7 @@ if ( $_GET['hdwtest'] == 'sessiontest' ) {
         }
 	}
 
-	header( __( 'Location: ', 'sc-res' ) . $PHP_SELF . '?hdwtest=sessiontest&autocall=1' );
+	header("Location: ".$PHP_SELF."?hdwtest=sessiontest&autocall=1" );
 
 	exit;
 
@@ -92,8 +87,8 @@ $tcolor             = cpcff_decodeColor( '666666' );
 $random_text_color  = true;
 
 
-header( 'Cache-Control: no-store, no-cache, must-revalidate' );
-header( 'Pragma: no-cache' );
+header("Cache-Control: no-store, no-cache, must-revalidate");
+header("Pragma: no-cache");
 
 function cpcff_decodeColor( $hexcolor ) {
 
@@ -184,11 +179,11 @@ if ( $_GET['font'] ) {
 }
 
 if ( ! file_exists( $font ) ) {
-	$font = $_SERVER['DOCUMENT_ROOT'] . "/HDWFormCaptcha/" . $font;
+	$font = $_SERVER["DOCUMENT_ROOT"] . "/HDWFormCaptcha/" . $font;
 }
 
 if ( ! file_exists( $font ) ) {
-	$font = dirname(__FILE__) . '/' . $font;
+	$font = dirname( __FILE__ ) . '/' . $font;
 }
 
 $font_size = rand( $min_size, $max_size );
