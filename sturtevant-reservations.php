@@ -230,17 +230,17 @@ final class Sturtevant_Reservations {
 
         if ( isset( $_GET['cal'] ) && $_GET['cal'] != '' ) {
             if ( isset( $_GET['list'] ) && $_GET['list'] == '1' ) {
-                @include_once dirname( __FILE__ ) . '/sc-res-admin-int-bookings-list.php';
+                @include_once dirname( __FILE__ ) . '/admin/sc-res-admin-int-bookings-list.php';
             } elseif ( isset( $_GET['edit'] ) && $_GET['edit'] != '' ) {
-                @include_once dirname( __FILE__ ) . '/sc-res-admin-int-edit-booking.php';
+                @include_once dirname( __FILE__ ) . '/admin/sc-res-admin-int-edit-booking.php';
             }
             elseif ( isset( $_GET['list2'] ) && $_GET['list2'] == '1' ) {
-                @include_once dirname( __FILE__ ) . '/sc-res-admin-int-non-completed-bookings-list.php';
+                @include_once dirname( __FILE__ ) . '/admin/sc-res-admin-int-non-completed-bookings-list.php';
             } else {
-                @include_once dirname( __FILE__ ) . '/sc-res-admin-int.php';
+                @include_once dirname( __FILE__ ) . '/admin/sc-res-admin-int.php';
             }
         } else {
-            @include_once dirname( __FILE__ ) . '/sc-res-admin-int-calendar-list.php';
+            @include_once dirname( __FILE__ ) . '/admin/sc-res-admin-int-calendar-list.php';
         }
 
     }
