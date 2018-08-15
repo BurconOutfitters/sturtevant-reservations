@@ -13,6 +13,6 @@ The plugin from which this was forked, Booking Calendar and Contact Form, is not
 
 ### Original Plugin
 
-This started as the "pro" version of the following plugin.
+This started as the "Platinum" version of the following plugin.
 
 [wordpress.dwbooster.com/calendars/booking-calendar-contact-form](http://wordpress.dwbooster.com/calendars/booking-calendar-contact-form)
