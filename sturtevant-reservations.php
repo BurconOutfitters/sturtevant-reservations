@@ -24,13 +24,13 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
- * Get database table constants.
+ * Get defined constants.
  *
  * @since  1.0.0
  * @access public
  * @return void
  */
-require_once plugin_dir_path( __FILE__ ) . 'includes/constants-table.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/constants.php';
 
 /**
  * The core plugin class.
@@ -158,16 +158,6 @@ final class Sturtevant_Reservations {
 		if ( ! defined( 'SC_RES_URL' ) ) {
 			define( 'SC_RES_URL', plugin_dir_url( __FILE__ ) );
         }
-
-        /**
-		 * Form and calendar constants.
-         *
-         * Excludes database table constants.
-		 *
-		 * @since  1.0.0
-		 * @return void Gets the file which contains the form and calendar constants.
-		 */
-        require_once plugin_dir_path( __FILE__ ) . 'includes/constants-form.php';
 
     }
 
@@ -322,6 +312,15 @@ function sc_res_plugin() {
 
 // Begin plugin functionality.
 sc_res_plugin();
+
+/**
+ * Create database tables.
+ *
+ * @since  1.0.0
+ * @access public
+ * @return void
+ */
+require_once plugin_dir_path( __FILE__ ) . 'includes/database.php';
 
 /**
  * Register the activaction & deactivation hooks.

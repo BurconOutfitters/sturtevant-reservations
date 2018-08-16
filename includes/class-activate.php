@@ -40,7 +40,7 @@ final class SC_Res_Activate {
 			$instance = new self;
 
 			// Activation function
-			$instance->activate( $networkwide );
+			$instance->activate();
 
 		}
 
@@ -65,32 +65,7 @@ final class SC_Res_Activate {
 	 * @access public
 	 * @return void
 	 */
-	public function activate( $networkwide ) {
-
-		global $wpdb;
-
-        // Check if it is a network activation. If so, run the activation function for each blog ID.
-        if ( function_exists( 'is_multisite' ) && is_multisite() ) {
-
-            if ( $networkwide ) {
-
-                $old_blog = $wpdb->blogid;
-                $blogids  = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
-
-                foreach ( $blogids as $blog_id ) {
-                    switch_to_blog( $blog_id );
-                    _sc_res_install();
-                }
-
-                switch_to_blog( $old_blog );
-
-                return;
-            }
-        }
-
-        $this::install();
-
-	}
+	public function activate() {}
 
     /**
      * Create database tables on install.
@@ -105,7 +80,7 @@ final class SC_Res_Activate {
 
         $charset_collate = $wpdb->get_charset_collate();
 
-        $sql = "CREATE TABLE " . $wpdb->prefix .DEX_BCCF_DISCOUNT_CODES_TABLE_NAME_NO_PREFIX." (
+        $sql = "CREATE TABLE IF NOT EXISTS " . $wpdb->prefix .DEX_BCCF_DISCOUNT_CODES_TABLE_NAME_NO_PREFIX." (
             id mediumint(9) NOT NULL AUTO_INCREMENT,
             cal_id mediumint(9) NOT NULL DEFAULT 1,
             code VARCHAR(250) DEFAULT '' NOT NULL,
@@ -117,7 +92,7 @@ final class SC_Res_Activate {
             )" . $charset_collate . ";";
         $wpdb->query( $sql );
 
-        $sql = "CREATE TABLE " . $wpdb->prefix .DEX_BCCF_SEASON_PRICES_TABLE_NAME_NO_PREFIX." (
+        $sql = "CREATE TABLE IF NOT EXISTS " . $wpdb->prefix .DEX_BCCF_SEASON_PRICES_TABLE_NAME_NO_PREFIX." (
             id mediumint(9) NOT NULL AUTO_INCREMENT,
             cal_id mediumint(9) NOT NULL DEFAULT 1,
             price VARCHAR(250) DEFAULT '' NOT NULL,
@@ -128,7 +103,7 @@ final class SC_Res_Activate {
         $wpdb->query( $sql );
 
 
-        $sql = "CREATE TABLE " . $wpdb->prefix .DEX_BCCF_TABLE_NAME_NO_PREFIX." (
+        $sql = "CREATE TABLE IF NOT EXISTS " . $wpdb->prefix .DEX_BCCF_TABLE_NAME_NO_PREFIX." (
             id mediumint(9) NOT NULL AUTO_INCREMENT,
             calendar INT NOT NULL,
             time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
@@ -147,7 +122,7 @@ final class SC_Res_Activate {
         $wpdb->query( $sql );
 
 
-        $sql = "CREATE TABLE `".$wpdb->prefix.DEX_BCCF_CONFIG_TABLE_NAME."` (".
+        $sql = "CREATE TABLE IF NOT EXISTS `".$wpdb->prefix.DEX_BCCF_CONFIG_TABLE_NAME."` (".
             "`".TDE_BCCFCONFIG_ID."` int(10) unsigned NOT NULL auto_increment,".
             "`".TDE_BCCFCONFIG_TITLE."` varchar(255) NOT NULL default '',".
             "`".TDE_BCCFCONFIG_USER."` varchar(100) default NULL,".
@@ -255,7 +230,7 @@ final class SC_Res_Activate {
         $sql = 'INSERT INTO `'.$wpdb->prefix.DEX_BCCF_CONFIG_TABLE_NAME.'` (`'.TDE_BCCFCONFIG_ID.'`,`form_structure`,`'.TDE_BCCFCONFIG_TITLE.'`,`'.TDE_BCCFCONFIG_USER.'`,`'.TDE_BCCFCONFIG_PASS.'`,`'.TDE_BCCFCONFIG_LANG.'`,`'.TDE_BCCFCONFIG_CPAGES.'`,`'.TDE_BCCFCONFIG_MSG.'`,`'.TDE_BCCFCALDELETED_FIELD.'`,calendar_mode) VALUES("1","'.esc_sql(DEX_BCCF_DEFAULT_form_structure).'","cal1","Calendar Item 1","","ENG","1","Please, select your reservation.","0","true");';
         $$wpdb->query( $sql );
 
-        $sql = "CREATE TABLE `".$wpdb->prefix.DEX_BCCF_CALENDARS_TABLE_NAME."` (".
+        $sql = "CREATE TABLE IF NOT EXISTS `".$wpdb->prefix.DEX_BCCF_CALENDARS_TABLE_NAME."` (".
             "`".TDE_BCCFDATA_ID."` int(10) unsigned NOT NULL auto_increment,".
             "`".TDE_BCCFDATA_IDCALENDAR."` int(10) unsigned default NULL,".
             "`".TDE_BCCFDATA_DATETIME_S."`datetime NOT NULL default '0000-00-00 00:00:00',".
