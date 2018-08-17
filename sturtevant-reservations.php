@@ -30,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
  * @access public
  * @return void
  */
-// require_once plugin_dir_path( __FILE__ ) . 'includes/constants.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/constants.php';
 
 /**
  * The core plugin class.
@@ -83,7 +83,11 @@ final class Sturtevant_Reservations {
 	private function __construct() {
 
         // Add admin pages.
-		add_action( 'admin_menu', [ $this, 'admin_pages' ] );
+        add_action( 'admin_menu', [ $this, 'admin_pages' ] );
+
+        if ( is_admin() ) {
+            add_action( 'admin_enqueue_scripts', [ $this, 'admin_scripts' ], 1 );
+        }
 
     }
 
@@ -171,16 +175,38 @@ final class Sturtevant_Reservations {
 	private function dependencies() {
 
 		// The hub of all other dependency files.
-		// require_once SC_RES_PATH . 'includes/class-init.php';
+		require_once SC_RES_PATH . 'includes/class-init.php';
 
 		// Include the activation class.
-		// require_once SC_RES_PATH . 'includes/class-activate.php';
+		require_once SC_RES_PATH . 'includes/class-activate.php';
 
 		// Include the deactivation class.
-        // require_once SC_RES_PATH . 'includes/class-deactivate.php';
+        require_once SC_RES_PATH . 'includes/class-deactivate.php';
 
         // Reguire data source file.
-        // require_once SC_RES_PATH . 'sc-res-source.php';
+        require_once SC_RES_PATH . 'sc-res-source.php';
+
+    }
+
+    function admin_scripts($hook) {
+
+        if (isset($_GET["page"]) && $_GET["page"] == "reservations") {
+
+            wp_deregister_script('query-stringify');
+            wp_register_script('query-stringify', plugins_url('/js/jQuery.stringify.js', __FILE__));
+            wp_deregister_script('cp_contactformpp_rcalendar');
+            wp_register_script('cp_contactformpp_rcalendar', plugins_url('/js/jquery.rcalendar.js', __FILE__));
+            wp_deregister_script('cp_contactformpp_rcalendaradmin');
+            wp_register_script('cp_contactformpp_rcalendaradmin', plugins_url('/js/jquery.rcalendaradmin.js', __FILE__));
+            wp_enqueue_script( 'dex_bccf_builder_script', get_site_url( get_current_blog_id() ).'?bccf_resources=admin',array("jquery","jquery-ui-core","jquery-ui-sortable","jquery-ui-tabs","jquery-ui-dialog","jquery-ui-droppable","jquery-ui-button","jquery-ui-datepicker","query-stringify","cp_contactformpp_rcalendar","cp_contactformpp_rcalendaradmin") );
+
+            wp_enqueue_style('jquery-style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
+
+        }
+
+        if ( 'post.php' != $hook  && 'post-new.php' != $hook ) {
+            return;
+        }
 
     }
 
@@ -198,7 +224,7 @@ final class Sturtevant_Reservations {
 			__( 'Reservations', 'sc-res' ),
 			__( 'Reservations', 'sc-res' ),
 			'edit_pages',
-			'dex_bccf',
+			'reservations',
 			[ $this, 'admin_page_output' ],
 			'dashicons-book',
 			3
@@ -264,7 +290,12 @@ final class Sturtevant_Reservations {
 			'title'    => __( 'Calendar Updates', 'sc-res' ),
 			'content'  => null,
 			'callback' => [ $this, 'help_reservations_updates' ]
-		] );
+        ] );
+
+        // Add a help sidebar.
+		$screen->set_help_sidebar(
+			$this->help_about_page_sidebar()
+		);
 
     }
 
@@ -294,6 +325,33 @@ final class Sturtevant_Reservations {
 
     }
 
+    /**
+     * Contextual tab sidebar content.
+	 *
+	 * @since      1.0.0
+     */
+    public function help_about_page_sidebar() {
+
+        $html  = sprintf( '<h4>%1s</h4>', __( 'Plugin Sources', 'sc-res' ) );
+        $html .= sprintf(
+            '<p>%1s %2s. %3s <a href="%4s" target="_blank">%5s</a></p>',
+            __( 'This plugin was originally written by', 'sc-res' ),
+            'Code People',
+            __( 'Find the original', 'sc-res' ),
+            esc_url( 'https://bccf.dwbooster.com/download?page=download#q275' ),
+            __( 'here.', 'sc-res' )
+        );
+        $html .= sprintf(
+            '<p>%1s <a href="%2s" target="_blank">%3s</a></p>',
+            __( 'This rewritten version is archived', 'sc-res' ),
+            esc_url( 'https://github.com/BurconOutfitters/sturtevant-reservations' ),
+            __( 'here.', 'sc-res' )
+        );
+
+		return $html;
+
+	}
+
 }
 // End core plugin class.
 
@@ -313,14 +371,8 @@ function sc_res_plugin() {
 // Begin plugin functionality.
 sc_res_plugin();
 
-/**
- * Create database tables.
- *
- * @since  1.0.0
- * @access public
- * @return void
- */
-// require_once plugin_dir_path( __FILE__ ) . 'includes/database.php';
+// Find Me
+// return;
 
 /**
  * Register the activaction & deactivation hooks.
@@ -329,36 +381,8 @@ sc_res_plugin();
  * @access public
  * @return void
  */
-// register_activation_hook( __FILE__, '\sc_res_activate_plugin' );
-// register_deactivation_hook( __FILE__, '\sc_res_deactivate_plugin' );
-
-/**
- * The code that runs during plugin activation.
- *
- * @since  1.0.0
- * @access public
- * @return void
- */
-function sc_res_activate_plugin() {
-
-	// Run the activation class.
-	// sc_res_activate();
-
-}
-
-/**
- * The code that runs during plugin deactivation.
- *
- * @since  1.0.0
- * @access public
- * @return void
- */
-function sc_res_deactivate_plugin() {
-
-	// Run the deactivation class.
-	// sc_res_deactivate();
-
-}
+register_activation_hook( __FILE__, '\sc_res_activate_plugin' );
+register_deactivation_hook( __FILE__, '\sc_res_deactivate_plugin' );
 
 /**
  * Add link to the plugin settings pages on the plugins page.
@@ -377,7 +401,7 @@ function sc_res_settings_link( $links ) {
         $settings = [
             sprintf(
                 '<a href="%1s">%2s</a>',
-                esc_url( admin_url( 'admin.php?page=reservations' ) ),
+                esc_url( admin_url( 'admin.php?page=dex_bccf' ) ),
                 esc_attr( __( 'Manage', 'sc-res' ) )
             )
         ];
@@ -390,389 +414,285 @@ function sc_res_settings_link( $links ) {
 }
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'sc_res_settings_link' );
 
-
-/* initialization / install / uninstall functions */
-
-define('DEX_BCCF_DEFAULT_form_structure', '[[{"name":"email","index":0,"title":"Email","ftype":"femail","userhelp":"","csslayout":"","required":true,"predefined":"","size":"medium"},{"name":"subject","index":1,"title":"Subject","required":true,"ftype":"ftext","userhelp":"","csslayout":"","predefined":"","size":"medium"},{"name":"message","index":2,"size":"large","required":true,"title":"Message","ftype":"ftextarea","userhelp":"","csslayout":"","predefined":""}],[{"title":"","description":"","formlayout":"top_aligned"}]]');
-
-define('DEX_BCCF_DEFAULT_DEFER_SCRIPTS_LOADING', (get_option('CP_BCCF_LOAD_SCRIPTS',"1") == "1"?true:false));
-
-define('DEX_BCCF_DEFAULT_SERVICES_FIELDS', 3);
-
-define('DEX_BCCF_DEFAULT_COLOR_STARTRES', '#CAFFCA');
-define('DEX_BCCF_DEFAULT_COLOR_HOLIDAY', '#FF8080');
-
-define('DEX_BCCF_DEFAULT_SERVICES_FIELDS_ON_TOP', false);
-
-define('DEX_BCCF_DEFAULT_CALENDAR_LANGUAGE', '');
-define('DEX_BCCF_DEFAULT_CALENDAR_DATEFORMAT', 'false');
-define('DEX_BCCF_DEFAULT_CALENDAR_WEEKDAY', '0');
-define('DEX_BCCF_DEFAULT_CALENDAR_MINDATE', 'today');
-define('DEX_BCCF_DEFAULT_CALENDAR_MAXDATE', '');
-define('DEX_BCCF_DEFAULT_CALENDAR_PAGES', 2);
-define('DEX_BCCF_DEFAULT_CALENDAR_OVERLAPPED', 'false');
-define('DEX_BCCF_DEFAULT_CALENDAR_ENABLED', 'true');
-
-define('DEX_BCCF_DEFAULT_cu_user_email_field', 'email');
-define('TDE_BCCFCALENDAR_DEFAULT_COLOR', '6FF');
-
-define('DEX_BCCF_DEFAULT_ENABLE_PAYPAL', 1);
-define('DEX_BCCF_DEFAULT_PAYPAL_EMAIL','your@email.here.com');
-define('DEX_BCCF_DEFAULT_PRODUCT_NAME','Reservation');
-define('DEX_BCCF_DEFAULT_COST','25');
-define('DEX_BCCF_DEFAULT_OK_URL',get_site_url());
-define('DEX_BCCF_DEFAULT_CANCEL_URL',get_site_url());
-define('DEX_BCCF_DEFAULT_CURRENCY','USD');
-define('DEX_BCCF_DEFAULT_PAYPAL_LANGUAGE','EN');
-
-define('DEX_BCCF_DEFAULT_PAYPAL_OPTION_YES', 'Pay with PayPal.');
-define('DEX_BCCF_DEFAULT_PAYPAL_OPTION_NO', 'Pay later.');
-
-define('DEX_BCCF_DEFAULT_vs_text_is_required', 'This field is required.');
-define('DEX_BCCF_DEFAULT_vs_text_is_email', 'Please enter a valid email address.');
-
-define('DEX_BCCF_DEFAULT_vs_text_datemmddyyyy', 'Please enter a valid date with this format(mm/dd/yyyy)');
-define('DEX_BCCF_DEFAULT_vs_text_dateddmmyyyy', 'Please enter a valid date with this format(dd/mm/yyyy)');
-define('DEX_BCCF_DEFAULT_vs_text_number', 'Please enter a valid number.');
-define('DEX_BCCF_DEFAULT_vs_text_digits', 'Please enter only digits.');
-define('DEX_BCCF_DEFAULT_vs_text_max', 'Please enter a value less than or equal to {0}.');
-define('DEX_BCCF_DEFAULT_vs_text_min', 'Please enter a value greater than or equal to {0}.');
-
-
-define('DEX_BCCF_DEFAULT_SUBJECT_CONFIRMATION_EMAIL', 'Thank you for your request...');
-define('DEX_BCCF_DEFAULT_CONFIRMATION_EMAIL', "We have received your request with the following information:\n\n%INFORMATION%\n\nThank you.\n\nBest regards.");
-define('DEX_BCCF_DEFAULT_SUBJECT_NOTIFICATION_EMAIL','New reservation requested...');
-define('DEX_BCCF_DEFAULT_NOTIFICATION_EMAIL', "New reservation made with the following information:\n\n%INFORMATION%\n\nBest regards.");
-
-define('DEX_BCCF_DEFAULT_REMINDER_CONTENT', "This is a reminder for your booking with the following information:\n\n%INFORMATION%\n\nThank you.\n\nBest regards.");
-define('DEX_BCCF_DEFAULT_REMINDER_CONTENT_AFTER', "Thank you for your booking. here is the booking information for future reference:\n\n%INFORMATION%\n\nThank you.\n\nBest regards.");
-
-define('DEX_BCCF_DEFAULT_CP_CAL_CHECKBOXES',"");
-define('DEX_BCCF_DEFAULT_CP_CAL_CHECKBOXES_TYPE',"0");
-define('DEX_BCCF_DEFAULT_EXPLAIN_CP_CAL_CHECKBOXES',"1.00 | Service 1 for us$1.00\n5.00 | Service 2 for us$5.00\n10.00 | Service 3 for us$10.00");
-
-
-// tables
-
-define('DEX_BCCF_TABLE_NAME_NO_PREFIX', "bccf_dex_bccf_submissions");
-define('DEX_BCCF_TABLE_NAME', @$wpdb->prefix . DEX_BCCF_TABLE_NAME_NO_PREFIX);
-
-define('DEX_BCCF_CALENDARS_TABLE_NAME_NO_PREFIX', "bccf_reservation_calendars_data");
-define('DEX_BCCF_CALENDARS_TABLE_NAME', @$wpdb->prefix ."bccf_reservation_calendars_data");
-
-define('DEX_BCCF_CONFIG_TABLE_NAME_NO_PREFIX', "bccf_reservation_calendars");
-define('DEX_BCCF_CONFIG_TABLE_NAME', @$wpdb->prefix ."bccf_reservation_calendars");
-
-define('DEX_BCCF_DISCOUNT_CODES_TABLE_NAME_NO_PREFIX', "bccf_dex_discount_codes");
-define('DEX_BCCF_SEASON_PRICES_TABLE_NAME_NO_PREFIX', "bccf_dex_season_prices");
-define('DEX_BCCF_DISCOUNT_CODES_TABLE_NAME', @$wpdb->prefix ."bccf_dex_discount_codes");
-
-// calendar constants
-
-define("TDE_BCCFDEFAULT_CALENDAR_ID","1");
-define("TDE_BCCFDEFAULT_CALENDAR_LANGUAGE","EN");
-define("DEX_BCCF_DEFAULT_CALENDAR_MODE","true");
-
-define("TDE_BCCFCAL_PREFIX", "RCalendar");
-define("TDE_BCCFCONFIG",DEX_BCCF_CONFIG_TABLE_NAME);
-define("TDE_BCCFCONFIG_ID","id");
-define("TDE_BCCFCONFIG_TITLE","title");
-define("TDE_BCCFCONFIG_USER","uname");
-define("TDE_BCCFCONFIG_PASS","passwd");
-define("TDE_BCCFCONFIG_LANG","lang");
-define("TDE_BCCFCONFIG_CPAGES","cpages");
-define("TDE_BCCFCONFIG_MSG","msg");
-define("TDE_BCCFCALDELETED_FIELD","caldeleted");
-
-define("TDE_BCCFCALENDAR_DATA_TABLE",DEX_BCCF_CALENDARS_TABLE_NAME);
-define("TDE_BCCFDATA_ID","id");
-define("TDE_BCCFDATA_IDCALENDAR","reservation_calendar_id");
-define("TDE_BCCFDATA_DATETIME_S","datatime_s");
-define("TDE_BCCFDATA_DATETIME_E","datatime_e");
-define("TDE_BCCFDATA_TITLE","title");
-define("TDE_BCCFDATA_DESCRIPTION","description");
-// end calendar constants
-
-define('TDE_BCCFDEFAULT_dexcv_enable_captcha', 'true');
-define('TDE_BCCFDEFAULT_dexcv_width', '180');
-define('TDE_BCCFDEFAULT_dexcv_height', '60');
-define('TDE_BCCFDEFAULT_dexcv_chars', '5');
-define('TDE_BCCFDEFAULT_dexcv_font', 'font-1.ttf');
-define('TDE_BCCFDEFAULT_dexcv_min_font_size', '25');
-define('TDE_BCCFDEFAULT_dexcv_max_font_size', '35');
-define('TDE_BCCFDEFAULT_dexcv_noise', '200');
-define('TDE_BCCFDEFAULT_dexcv_noise_length', '4');
-define('TDE_BCCFDEFAULT_dexcv_background', 'ffffff');
-define('TDE_BCCFDEFAULT_dexcv_border', '000000');
-define('DEX_BCCF_DEFAULT_dexcv_text_enter_valid_captcha', 'Please enter a valid captcha code.');
-
-
-// loading add-ons
-// -----------------------------------------
 global $dexbccf_addons_active_list, // List of addon IDs
 	   $dexbccf_addons_objs_list; // List of addon objects
-	   
-$dexbccf_addons_active_list = array();
-$dexbccf_addons_objs_list	 = array();
-	
-function dexbccf_loading_add_ons()
-{
-	global $dexbccf_addons_active_list, // List of addon IDs
-		   $dexbccf_addons_objs_list; // List of addon objects
-	
-    // Get the list of active addons
-	$dexbccf_addons_active_list = get_option( 'dexbccf_addons_active_list', array() );
-	if( !empty( $dexbccf_addons_active_list ) || ( isset( $_GET["page"] ) && $_GET["page"] == "dex_bccf" )  )
-	{	
-		$path = dirname( __FILE__ ).'/addons';
-		if( file_exists( $path ) )
-		{
-			$addons = dir( $path );
-			while( false !== ( $entry = $addons->read() ) ) 
-			{    
-				if( strlen( $entry ) > 3 && strtolower( pathinfo( $entry, PATHINFO_EXTENSION) ) == 'php'  && $entry != 'dex_allcals.inc.php')
-				{
-					require_once $addons->path.'/'.$entry;
-				}			
+
+$dexbccf_addons_active_list  = [];
+$dexbccf_addons_objs_list	 = [];
+
+/**
+ * Load the pro version addons.
+ *
+ * @since  1.0.0
+ * @access public
+ * @return void
+ */
+function dexbccf_loading_add_ons() {
+
+	global $dexbccf_addons_active_list, // List of addon IDs.
+		   $dexbccf_addons_objs_list; // List of addon objects.
+
+    // Get the list of active addons.
+    $dexbccf_addons_active_list = get_option( 'dexbccf_addons_active_list', [] );
+
+	if ( ! empty( $dexbccf_addons_active_list ) || ( isset( $_GET['page'] ) && $_GET['page'] == 'reservations' )  ) {
+
+        $path = dirname( __FILE__ ) . '/addons';
+
+		if ( file_exists( $path ) ) {
+            $addons = dir( $path );
+
+			while ( false !== ( $entry = $addons->read() ) ) {
+				if ( strlen( $entry ) > 3 && strtolower( pathinfo( $entry, PATHINFO_EXTENSION ) ) == 'php'  && $entry != 'sc-res-all-calendars.php' ) {
+					require_once $addons->path . '/' . $entry;
+				}
 			}
-		} 
-	}	
+		}
+	}
 }
 dexbccf_loading_add_ons();
-
 
 // code initialization, hooks
 // -----------------------------------------
 
-require_once 'dex_data-source.inc.php';
+function sc_res_activate_plugin( $networkwide )  {
 
+    global $wpdb;
 
-register_activation_hook(__FILE__,'dex_bccf_install');
-register_deactivation_hook( __FILE__, 'dex_bccf_remove' );
+	// Check if it is a network activation. If so, run the activation function for each blog ID.
+	if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 
-function dex_bccf_plugin_init() {
-  load_plugin_textdomain( 'bccf', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-  $ao_options = get_option('autoptimize_js_exclude',"seal.js, js/jquery/jquery.js");
-  if (!strpos($ao_options,'stringify.js'))
-     update_option('autoptimize_js_exclude',"jQuery.stringify.js,jquery.validate.js,".$ao_options);
-}
-add_action('plugins_loaded', 'dex_bccf_plugin_init');
+		if ( $networkwide ) {
 
-function dex_bccf_install($networkwide)  {
-	global $wpdb;
+			$old_blog = $wpdb->blogid;
+			$blogids  = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
 
-	if (function_exists('is_multisite') && is_multisite()) {
-		// check if it is a network activation - if so, run the activation function for each blog id
-		if ($networkwide) {
-	                $old_blog = $wpdb->blogid;
-			// Get all blog ids
-			$blogids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
-			foreach ($blogids as $blog_id) {
-				switch_to_blog($blog_id);
-				_dex_bccf_install();
+			foreach ( $blogids as $blog_id ) {
+				switch_to_blog( $blog_id );
+				sc_res_install();
 			}
-			switch_to_blog($old_blog);
+
+			switch_to_blog( $old_blog );
+
 			return;
 		}
 	}
-	_dex_bccf_install();
-}
 
-function _dex_bccf_install() {
-    global $wpdb;
+	sc_res_install();
 
-    $sql = "CREATE TABLE ".$wpdb->prefix.DEX_BCCF_DISCOUNT_CODES_TABLE_NAME_NO_PREFIX." (
-         id mediumint(9) NOT NULL AUTO_INCREMENT,
-         cal_id mediumint(9) NOT NULL DEFAULT 1,
-         code VARCHAR(250) DEFAULT '' NOT NULL,
-         discount VARCHAR(250) DEFAULT '' NOT NULL,
-         expires datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-         availability int(10) unsigned NOT NULL DEFAULT 0,
-         used int(10) unsigned NOT NULL DEFAULT 0,
-         UNIQUE KEY id (id)
-         );";
-    $wpdb->query($sql);
-
-    $sql = "CREATE TABLE ".$wpdb->prefix.DEX_BCCF_SEASON_PRICES_TABLE_NAME_NO_PREFIX." (
-         id mediumint(9) NOT NULL AUTO_INCREMENT,
-         cal_id mediumint(9) NOT NULL DEFAULT 1,
-         price VARCHAR(250) DEFAULT '' NOT NULL,
-         date_from datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-         date_to datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-         UNIQUE KEY id (id)
-         );";
-    $wpdb->query($sql);
-
-
-    $sql = "CREATE TABLE ".$wpdb->prefix.DEX_BCCF_TABLE_NAME_NO_PREFIX." (
-         id mediumint(9) NOT NULL AUTO_INCREMENT,
-         calendar INT NOT NULL,
-         time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-         booked_time_s VARCHAR(250) DEFAULT '' NOT NULL,
-         booked_time_e VARCHAR(250) DEFAULT '' NOT NULL,
-         booked_time_unformatted_s VARCHAR(250) DEFAULT '' NOT NULL,
-         booked_time_unformatted_e VARCHAR(250) DEFAULT '' NOT NULL,
-         name VARCHAR(250) DEFAULT '' NOT NULL,
-         email VARCHAR(250) DEFAULT '' NOT NULL,
-         phone VARCHAR(250) DEFAULT '' NOT NULL,
-         notifyto VARCHAR(250) DEFAULT '' NOT NULL,
-         question mediumtext,
-         buffered_date mediumtext,
-         UNIQUE KEY id (id)
-         );";
-    $wpdb->query($sql);
-
-
-    $sql = "CREATE TABLE `".$wpdb->prefix.DEX_BCCF_CONFIG_TABLE_NAME."` (".
-                   "`".TDE_BCCFCONFIG_ID."` int(10) unsigned NOT NULL auto_increment,".
-                   "`".TDE_BCCFCONFIG_TITLE."` varchar(255) NOT NULL default '',".
-                   "`".TDE_BCCFCONFIG_USER."` varchar(100) default NULL,".
-                   "`".TDE_BCCFCONFIG_PASS."` varchar(100) default NULL,".
-                   "`".TDE_BCCFCONFIG_LANG."` varchar(5) default NULL,".
-                   "`".TDE_BCCFCONFIG_CPAGES."` tinyint(3) unsigned default NULL,".
-                   "`".TDE_BCCFCONFIG_MSG."` varchar(255) NOT NULL default '',".
-                   "`".TDE_BCCFCALDELETED_FIELD."` tinyint(3) unsigned default NULL,".
-                   "`conwer` INT NOT NULL,".
-                   "`form_structure` mediumtext,".
-                   "`master` varchar(50) DEFAULT '' NOT NULL,".
-                   "`calendar_language` varchar(10) DEFAULT '' NOT NULL,".
-                   "`calendar_mode` varchar(10) DEFAULT '' NOT NULL,".
-                   "`calendar_dateformat` varchar(10) DEFAULT '',".
-                   "`calendar_overlapped` varchar(10) DEFAULT '',".
-                   "`calendar_enabled` varchar(10) DEFAULT '',".
-                   "`calendar_pages` varchar(10) DEFAULT '' NOT NULL,".
-                   "`calendar_weekday` varchar(10) DEFAULT '' NOT NULL,".
-                   "`calendar_mindate` varchar(255) DEFAULT '' NOT NULL,".
-                   "`calendar_maxdate` varchar(255) DEFAULT '' NOT NULL,".
-                   "`calendar_minnights` varchar(255) DEFAULT '0' NOT NULL,".
-                   "`calendar_maxnights` varchar(255) DEFAULT '365' NOT NULL,".
-                   "`calendar_suplement` varchar(255) DEFAULT '0' NOT NULL,".
-                   "`calendar_suplementminnight` varchar(255) DEFAULT '0' NOT NULL,".
-                   "`calendar_suplementmaxnight` varchar(255) DEFAULT '0' NOT NULL,".
-                   "`calendar_startres` text,".
-                   "`calendar_holidays` text,".
-                   "`calendar_fixedmode` varchar(10) DEFAULT '0' NOT NULL,".
-                   "`calendar_holidaysdays` varchar(20) DEFAULT '1111111' NOT NULL,".
-                   "`calendar_startresdays` varchar(20) DEFAULT '1111111' NOT NULL,".
-                   "`calendar_fixedreslength` varchar(20) DEFAULT '1' NOT NULL,".
-                   "`calendar_showcost` varchar(1) DEFAULT '1' NOT NULL,".
-                   // paypal
-                   "`enable_paypal` varchar(10) DEFAULT '' NOT NULL,".
-                   "`paypal_email` varchar(255) DEFAULT '' NOT NULL ,".
-                   "`request_cost` varchar(255) DEFAULT '' NOT NULL ,".
-                   "`max_slots` varchar(20) DEFAULT '0' NOT NULL ,".
-                   "`paypal_product_name` varchar(255) DEFAULT '' NOT NULL,".
-                   "`currency` varchar(10) DEFAULT '' NOT NULL,".
-                   "`request_taxes` varchar(20) DEFAULT '' NOT NULL ,".
-                   "`url_ok` text,".
-                   "`url_cancel` text,".
-                   "`paypal_language` varchar(10) DEFAULT '' NOT NULL,".
-                   // copy to user
-                   "`cu_user_email_field` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`notification_from_email` text,".
-                   "`notification_destination_email` text,".
-                   "`email_subject_confirmation_to_user` text,".
-                   "`email_confirmation_to_user` text,".
-                   "`email_subject_notification_to_admin` text,".
-                   "`email_notification_to_admin` text,".
-                   // validation
-                   "`enable_paypal_option_yes` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`enable_paypal_option_no` VARCHAR(250) DEFAULT '' NOT NULL,".                  
-                   "`vs_use_validation` VARCHAR(10) DEFAULT '' NOT NULL,".
-                   "`vs_text_is_required` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_text_is_email` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_text_datemmddyyyy` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_text_dateddmmyyyy` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_text_number` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_text_digits` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_text_max` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_text_min` VARCHAR(250) DEFAULT '' NOT NULL,".
-
-                   "`vs_text_submitbtn` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_text_previousbtn` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   "`vs_text_nextbtn` VARCHAR(250) DEFAULT '' NOT NULL,  ".                 
-
-                   "`calendar_depositenable` VARCHAR(20) DEFAULT '' NOT NULL,  ".
-                   "`calendar_depositamount` VARCHAR(20) DEFAULT '' NOT NULL,  ".
-                   "`calendar_deposittype` VARCHAR(20) DEFAULT '' NOT NULL,  ".                   
-                   "`enable_beanstream_id` VARCHAR(250) DEFAULT '' NOT NULL,  ".          
-                   
-                   "`enable_reminder` VARCHAR(20) DEFAULT '' NOT NULL, ".
-                   "`enable_reminder2` VARCHAR(20) DEFAULT '' NOT NULL, ".
-                   
-                   "`reminder_hours` VARCHAR(20) DEFAULT '' NOT NULL, ".
-                   "`reminder_subject` VARCHAR(250) DEFAULT '' NOT NULL, ".
-                   "`reminder_content` text ,".
-                   "`nremind_emailformat` VARCHAR(20) DEFAULT '' NOT NULL, ".
-                   
-                   "`reminder_hours2` VARCHAR(20) DEFAULT '' NOT NULL, ".
-                   "`reminder_subject2` VARCHAR(250) DEFAULT '' NOT NULL, ".
-                   "`reminder_content2` text ,".
-                   "`nremind_emailformat2` VARCHAR(20) DEFAULT '' NOT NULL, ".                   
-                   
-                   // captcha
-                   "`dexcv_enable_captcha` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_width` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_height` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_chars` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_min_font_size` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_max_font_size` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_noise` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_noise_length` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_background` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_border` varchar(10) DEFAULT '' NOT NULL,".
-                   "`dexcv_font` varchar(100) DEFAULT '' NOT NULL,".
-                   "`cv_text_enter_valid_captcha` VARCHAR(250) DEFAULT '' NOT NULL,".
-                   // services field
-                   "`cp_cal_checkboxes` text,".
-                   "`cp_cal_checkboxes_type` varchar(10) DEFAULT '' NOT NULL,".
-                   "`cp_cal_checkboxes_ftype` varchar(10) DEFAULT '' NOT NULL,".
-                   "PRIMARY KEY (`".TDE_BCCFCONFIG_ID."`)); ";
-    $wpdb->query($sql);
-
-    $sql = 'INSERT INTO `'.$wpdb->prefix.DEX_BCCF_CONFIG_TABLE_NAME.'` (`'.TDE_BCCFCONFIG_ID.'`,`form_structure`,`'.TDE_BCCFCONFIG_TITLE.'`,`'.TDE_BCCFCONFIG_USER.'`,`'.TDE_BCCFCONFIG_PASS.'`,`'.TDE_BCCFCONFIG_LANG.'`,`'.TDE_BCCFCONFIG_CPAGES.'`,`'.TDE_BCCFCONFIG_MSG.'`,`'.TDE_BCCFCALDELETED_FIELD.'`,calendar_mode) VALUES("1","'.esc_sql(DEX_BCCF_DEFAULT_form_structure).'","cal1","Calendar Item 1","","ENG","1","Please, select your reservation.","0","true");';
-    $wpdb->query($sql);
-
-    $sql = "CREATE TABLE `".$wpdb->prefix.DEX_BCCF_CALENDARS_TABLE_NAME."` (".
-                   "`".TDE_BCCFDATA_ID."` int(10) unsigned NOT NULL auto_increment,".
-                   "`".TDE_BCCFDATA_IDCALENDAR."` int(10) unsigned default NULL,".
-                   "`".TDE_BCCFDATA_DATETIME_S."`datetime NOT NULL default '0000-00-00 00:00:00',".
-                   "`".TDE_BCCFDATA_DATETIME_E."`datetime NOT NULL default '0000-00-00 00:00:00',".
-                   "`".TDE_BCCFDATA_TITLE."` varchar(250) default NULL,".
-                   "`".TDE_BCCFDATA_DESCRIPTION."` mediumtext,".
-                   "`viadmin` varchar(10) DEFAULT '0' NOT NULL,".
-                   "`reference` varchar(20) DEFAULT '' NOT NULL,".
-                   "`reminder` varchar(1) DEFAULT '' NOT NULL,".
-                   "`color` varchar(10),".
-                   "PRIMARY KEY (`".TDE_BCCFDATA_ID."`)) ;";
-    $wpdb->query($sql);
-
-
-
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-}
-
-function dex_bccf_remove() {
+    // Run the deactivation class.
+    sc_res_deactivate();
 
 }
 
+function sc_res_install() {
+
+	global $wpdb;
+
+	$charset_collate = $wpdb->get_charset_collate();
+
+	$sql = "CREATE TABLE IF NOT EXISTS " . $wpdb->prefix . DEX_BCCF_DISCOUNT_CODES_TABLE_NAME_NO_PREFIX . " (
+		id mediumint(9) NOT NULL AUTO_INCREMENT,
+		cal_id mediumint(9) NOT NULL DEFAULT 1,
+		code VARCHAR(250) DEFAULT '' NOT NULL,
+		discount VARCHAR(250) DEFAULT '' NOT NULL,
+		expires datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		availability int(10) unsigned NOT NULL DEFAULT 0,
+		used int(10) unsigned NOT NULL DEFAULT 0,
+		UNIQUE KEY id (id)
+		)" . $charset_collate . ";";
+	$wpdb->query( $sql );
+
+	$sql = "CREATE TABLE IF NOT EXISTS " . $wpdb->prefix . DEX_BCCF_SEASON_PRICES_TABLE_NAME_NO_PREFIX . " (
+		id mediumint(9) NOT NULL AUTO_INCREMENT,
+		cal_id mediumint(9) NOT NULL DEFAULT 1,
+		price VARCHAR(250) DEFAULT '' NOT NULL,
+		date_from datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		date_to datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		UNIQUE KEY id (id)
+		)" . $charset_collate . ";";
+	$wpdb->query( $sql );
+
+	$sql = "CREATE TABLE IF NOT EXISTS " . $wpdb->prefix . DEX_BCCF_TABLE_NAME_NO_PREFIX . " (
+		id mediumint(9) NOT NULL AUTO_INCREMENT,
+		calendar INT NOT NULL,
+		time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		booked_time_s VARCHAR(250) DEFAULT '' NOT NULL,
+		booked_time_e VARCHAR(250) DEFAULT '' NOT NULL,
+		booked_time_unformatted_s VARCHAR(250) DEFAULT '' NOT NULL,
+		booked_time_unformatted_e VARCHAR(250) DEFAULT '' NOT NULL,
+		name VARCHAR(250) DEFAULT '' NOT NULL,
+		email VARCHAR(250) DEFAULT '' NOT NULL,
+		phone VARCHAR(250) DEFAULT '' NOT NULL,
+		notifyto VARCHAR(250) DEFAULT '' NOT NULL,
+		question mediumtext,
+		buffered_date mediumtext,
+		UNIQUE KEY id (id)
+		)" . $charset_collate . ";";
+	$wpdb->query( $sql );
+
+	$sql = "CREATE TABLE IF NOT EXISTS `".$wpdb->prefix.DEX_BCCF_CONFIG_TABLE_NAME."` (".
+		"`" . TDE_BCCFCONFIG_ID . "` int(10) unsigned NOT NULL auto_increment,".
+		"`".TDE_BCCFCONFIG_TITLE . "` varchar(255) NOT NULL default '',".
+		"`".TDE_BCCFCONFIG_USER . "` varchar(100) default NULL,".
+		"`".TDE_BCCFCONFIG_PASS . "` varchar(100) default NULL,".
+		"`".TDE_BCCFCONFIG_LANG . "` varchar(5) default NULL,".
+		"`".TDE_BCCFCONFIG_CPAGES . "` tinyint(3) unsigned default NULL,".
+		"`".TDE_BCCFCONFIG_MSG . "` varchar(255) NOT NULL default '',".
+		"`".TDE_BCCFCALDELETED_FIELD . "` tinyint(3) unsigned default NULL,".
+		"`conwer` INT NOT NULL," .
+		"`form_structure` mediumtext," .
+		"`master` varchar(50) DEFAULT '' NOT NULL," .
+		"`calendar_language` varchar(10) DEFAULT '' NOT NULL," .
+		"`calendar_mode` varchar(10) DEFAULT '' NOT NULL," .
+		"`calendar_dateformat` varchar(10) DEFAULT ''," .
+		"`calendar_overlapped` varchar(10) DEFAULT ''," .
+		"`calendar_enabled` varchar(10) DEFAULT ''," .
+		"`calendar_pages` varchar(10) DEFAULT '' NOT NULL," .
+		"`calendar_weekday` varchar(10) DEFAULT '' NOT NULL," .
+		"`calendar_mindate` varchar(255) DEFAULT '' NOT NULL," .
+		"`calendar_maxdate` varchar(255) DEFAULT '' NOT NULL," .
+		"`calendar_minnights` varchar(255) DEFAULT '0' NOT NULL," .
+		"`calendar_maxnights` varchar(255) DEFAULT '365' NOT NULL," .
+		"`calendar_suplement` varchar(255) DEFAULT '0' NOT NULL," .
+		"`calendar_suplementminnight` varchar(255) DEFAULT '0' NOT NULL," .
+		"`calendar_suplementmaxnight` varchar(255) DEFAULT '0' NOT NULL," .
+		"`calendar_startres` text," .
+		"`calendar_holidays` text," .
+		"`calendar_fixedmode` varchar(10) DEFAULT '0' NOT NULL," .
+		"`calendar_holidaysdays` varchar(20) DEFAULT '1111111' NOT NULL," .
+		"`calendar_startresdays` varchar(20) DEFAULT '1111111' NOT NULL," .
+		"`calendar_fixedreslength` varchar(20) DEFAULT '1' NOT NULL," .
+        "`calendar_showcost` varchar(1) DEFAULT '1' NOT NULL," .
+
+		// paypal
+		"`enable_paypal` varchar(10) DEFAULT '' NOT NULL," .
+		"`paypal_email` varchar(255) DEFAULT '' NOT NULL ," .
+		"`request_cost` varchar(255) DEFAULT '' NOT NULL ," .
+		"`max_slots` varchar(20) DEFAULT '0' NOT NULL ," .
+		"`paypal_product_name` varchar(255) DEFAULT '' NOT NULL," .
+		"`currency` varchar(10) DEFAULT '' NOT NULL," .
+		"`request_taxes` varchar(20) DEFAULT '' NOT NULL ," .
+		"`url_ok` text," .
+		"`url_cancel` text," .
+        "`paypal_language` varchar(10) DEFAULT '' NOT NULL," .
+
+		// copy to user
+		"`cu_user_email_field` VARCHAR(250) DEFAULT '' NOT NULL," .
+		"`notification_from_email` text," .
+		"`notification_destination_email` text," .
+		"`email_subject_confirmation_to_user` text," .
+		"`email_confirmation_to_user` text," .
+		"`email_subject_notification_to_admin` text," .
+        "`email_notification_to_admin` text," .
+
+		// validation
+		"`enable_paypal_option_yes` VARCHAR(250) DEFAULT '' NOT NULL," .
+		"`enable_paypal_option_no` VARCHAR(250) DEFAULT '' NOT NULL," .
+		"`vs_use_validation` VARCHAR(10) DEFAULT '' NOT NULL," .
+		"`vs_text_is_required` VARCHAR(250) DEFAULT '' NOT NULL," .
+		"`vs_text_is_email` VARCHAR(250) DEFAULT '' NOT NULL," .
+		"`vs_text_datemmddyyyy` VARCHAR(250) DEFAULT '' NOT NULL," .
+		"`vs_text_dateddmmyyyy` VARCHAR(250) DEFAULT '' NOT NULL," .
+		"`vs_text_number` VARCHAR(250) DEFAULT '' NOT NULL," .
+		"`vs_text_digits` VARCHAR(250) DEFAULT '' NOT NULL," .
+		"`vs_text_max` VARCHAR(250) DEFAULT '' NOT NULL," .
+		"`vs_text_min` VARCHAR(250) DEFAULT '' NOT NULL," .
+
+		"`vs_text_submitbtn` VARCHAR(250) DEFAULT '' NOT NULL," .
+		"`vs_text_previousbtn` VARCHAR(250) DEFAULT '' NOT NULL," .
+		"`vs_text_nextbtn` VARCHAR(250) DEFAULT '' NOT NULL," .
+
+		"`calendar_depositenable` VARCHAR(20) DEFAULT '' NOT NULL," .
+		"`calendar_depositamount` VARCHAR(20) DEFAULT '' NOT NULL," .
+		"`calendar_deposittype` VARCHAR(20) DEFAULT '' NOT NULL," .
+		"`enable_beanstream_id` VARCHAR(250) DEFAULT '' NOT NULL," .
+
+		"`enable_reminder` VARCHAR(20) DEFAULT '' NOT NULL," .
+
+		"`reminder_hours` VARCHAR(20) DEFAULT '' NOT NULL," .
+		"`reminder_subject` VARCHAR(250) DEFAULT '' NOT NULL," .
+		"`reminder_content` text ,".
+		"`nremind_emailformat` VARCHAR(20) DEFAULT '' NOT NULL," .
+
+		"`reminder_hours2` VARCHAR(20) DEFAULT '' NOT NULL," .
+		"`reminder_subject2` VARCHAR(250) DEFAULT '' NOT NULL," .
+		"`reminder_content2` text ,".
+		"`nremind_emailformat2` VARCHAR(20) DEFAULT '' NOT NULL," .
+
+		// captcha
+		"`dexcv_enable_captcha` varchar(10) DEFAULT '' NOT NULL," .
+		"`dexcv_width` varchar(10) DEFAULT '' NOT NULL," .
+		"`dexcv_height` varchar(10) DEFAULT '' NOT NULL," .
+		"`dexcv_chars` varchar(10) DEFAULT '' NOT NULL," .
+		"`dexcv_min_font_size` varchar(10) DEFAULT '' NOT NULL," .
+		"`dexcv_max_font_size` varchar(10) DEFAULT '' NOT NULL," .
+		"`dexcv_noise` varchar(10) DEFAULT '' NOT NULL,".
+		"`dexcv_noise_length` varchar(10) DEFAULT '' NOT NULL," .
+		"`dexcv_background` varchar(10) DEFAULT '' NOT NULL," .
+		"`dexcv_border` varchar(10) DEFAULT '' NOT NULL," .
+		"`dexcv_font` varchar(100) DEFAULT '' NOT NULL," .
+        "`cv_text_enter_valid_captcha` VARCHAR(250) DEFAULT '' NOT NULL," .
+
+		// services field
+		"`cp_cal_checkboxes` text," .
+		"`cp_cal_checkboxes_type` varchar(10) DEFAULT '' NOT NULL," .
+        "PRIMARY KEY (`" . TDE_BCCFCONFIG_ID . "`))" . $charset_collate . ";";
+	$wpdb->query( $sql );
+
+	$sql = 'INSERT INTO `'.$wpdb->prefix.DEX_BCCF_CONFIG_TABLE_NAME.'` (`'.TDE_BCCFCONFIG_ID.'`,`form_structure`,`'.TDE_BCCFCONFIG_TITLE.'`,`'.TDE_BCCFCONFIG_USER.'`,`'.TDE_BCCFCONFIG_PASS.'`,`'.TDE_BCCFCONFIG_LANG.'`,`'.TDE_BCCFCONFIG_CPAGES.'`,`'.TDE_BCCFCONFIG_MSG.'`,`'.TDE_BCCFCALDELETED_FIELD.'`,calendar_mode) VALUES( "1","' . esc_sql( DEX_BCCF_DEFAULT_form_structure ) . '","cal1","Calendar Item 1","","ENG","1","Please, select your reservation.","0","true");';
+	$$wpdb->query( $sql );
+
+	$sql = "CREATE TABLE IF NOT EXISTS `".$wpdb->prefix.DEX_BCCF_CALENDARS_TABLE_NAME."` (" .
+		"`" . TDE_BCCFDATA_ID . "` int(10) unsigned NOT NULL auto_increment," .
+		"`" . TDE_BCCFDATA_IDCALENDAR . "` int(10) unsigned default NULL," .
+		"`" . TDE_BCCFDATA_DATETIME_S . "`datetime NOT NULL default '0000-00-00 00:00:00'," .
+		"`" . TDE_BCCFDATA_DATETIME_E . "`datetime NOT NULL default '0000-00-00 00:00:00'," .
+		"`" . TDE_BCCFDATA_TITLE . "` varchar(250) default NULL," .
+		"`" . TDE_BCCFDATA_DESCRIPTION . "` mediumtext," .
+		"`viadmin` varchar(10) DEFAULT '0' NOT NULL," .
+		"`reference` varchar(20) DEFAULT '' NOT NULL," .
+		"`reminder` varchar(1) DEFAULT '' NOT NULL," .
+		"`color` varchar(10)," .
+        "PRIMARY KEY (`" . TDE_BCCFDATA_ID . "`))" . $charset_collate . ";";
+	$wpdb->query( $sql );
+
+    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+}
+
+/**
+ * The code that runs during plugin deactivation.
+ *
+ * @since  1.0.0
+ * @access public
+ * @return void
+ */
+function sc_res_deactivate_plugin() {
+
+	// Run the deactivation class.
+	sc_res_deactivate();
+
+}
 
 /* Filter for placing the maps into the contents */
 
 function dex_bccf_filter_content($atts) {
+
     global $wpdb;
+
     extract( shortcode_atts( array(
 		'calendar' => '',
 		'user' => '',
-		'pages' => '',		
+		'pages' => '',
 	), $atts ) );
-	
-	/** 
-	 * Filters applied before generate the form, 
+
+	/**
+	 * Filters applied before generate the form,
 	 * is passed as parameter an array with the forms attributes, and return the list of attributes
 	 */
 	$atts = apply_filters( 'dexbccf_pre_form',  $atts );
-		
+
     if ($calendar != '')
         define ('DEX_BCCF_CALENDAR_FIXED_ID',$calendar);
     else if ($user != '')
@@ -789,25 +709,27 @@ function dex_bccf_filter_content($atts) {
     dex_bccf_get_public_form($pages);
     $buffered_contents = ob_get_contents();
     ob_end_clean();
-    
-	/** 
-	 * Filters applied after generate the form, 
-	 * is passed as parameter the HTML code of the form with the corresponding <LINK> and <SCRIPT> tags, 
+
+	/**
+	 * Filters applied after generate the form,
+	 * is passed as parameter the HTML code of the form with the corresponding <LINK> and <SCRIPT> tags,
 	 * and returns the HTML code to includes in the webpage
 	 */
 	$buffered_contents = apply_filters( 'dexbccf_the_form', $buffered_contents,  $atts[ 'id' ] );
-	    
+
     return $buffered_contents;
 }
-
+if ( ! is_admin() ) {
+    add_shortcode( 'CP_BCCF_FORM', 'dex_bccf_filter_content' );
+}
 
 function dex_bccf_filter_content_allcalendars($atts) {
-    global $wpdb;    
+    global $wpdb;
     extract( shortcode_atts( array(
 		'calendar' => '',
 		'id' => '',
 		'pages' => '',
-	), $atts ) ); 
+	), $atts ) );
 	if ($calendar == '') $calendar = $id;
     if (!defined('DEX_CALENDAR_USER')) define ('DEX_CALENDAR_USER',0);
     ob_start();
@@ -816,10 +738,13 @@ function dex_bccf_filter_content_allcalendars($atts) {
     wp_enqueue_script( "jquery-ui-datepicker" );
     $myrows = $wpdb->get_results( "SELECT * FROM ".DEX_BCCF_CONFIG_TABLE_NAME.($calendar!=''?" WHERE id=".$calendar:"") );
     if (!defined('DEX_AUTH_INCLUDE')) define('DEX_AUTH_INCLUDE', true);
-    @include dirname( __FILE__ ) . '/addons/dex_allcals.inc.php';    
+    @include dirname( __FILE__ ) . '/addons/sc-res-all-calendars.php';
     $buffered_contents = ob_get_contents();
     ob_end_clean();
     return $buffered_contents;
+}
+if ( ! is_admin() ) {
+    add_shortcode( 'CP_BCCF_ALLCALS', 'dex_bccf_filter_content_allcalendars' );
 }
 
 function dex_bccf_get_public_form($pages = '') {
@@ -842,8 +767,8 @@ function dex_bccf_get_public_form($pages = '') {
     $previous_label = dex_bccf_get_option('vs_text_previousbtn', 'Previous');
     $previous_label = ($previous_label==''?'Previous':$previous_label);
     $next_label = dex_bccf_get_option('vs_text_nextbtn', 'Next');
-    $next_label = ($next_label==''?'Next':$next_label);  
-    
+    $next_label = ($next_label==''?'Next':$next_label);
+
     // for the additional services field if needed
     $dex_buffer = dex_bccf_get_services();
 
@@ -857,16 +782,16 @@ function dex_bccf_get_public_form($pages = '') {
 
         wp_deregister_script('cp_contactformpp_validate_script');
         wp_register_script('cp_contactformpp_validate_script', plugins_url('/js/jquery.validate.js', __FILE__));
-        
+
         wp_deregister_script('cp_contactformpp_rcalendar');
-        wp_register_script('cp_contactformpp_rcalendar', plugins_url('/js/jquery.rcalendar.js', __FILE__));        
-       
-        $dependencies = array("jquery","jquery-ui-core","jquery-ui-button","jquery-ui-datepicker","jquery-ui-widget","jquery-ui-position","jquery-ui-tooltip","query-stringify","cp_contactformpp_validate_script", "cp_contactformpp_rcalendar"); 
+        wp_register_script('cp_contactformpp_rcalendar', plugins_url('/js/jquery.rcalendar.js', __FILE__));
+
+        $dependencies = array("jquery","jquery-ui-core","jquery-ui-button","jquery-ui-datepicker","jquery-ui-widget","jquery-ui-position","jquery-ui-tooltip","query-stringify","cp_contactformpp_validate_script", "cp_contactformpp_rcalendar");
         if ($calendar_language != '') {
             wp_deregister_script('cp_contactformpp_rclang');
-            wp_register_script('cp_contactformpp_rclang', plugins_url('/js/languages/jquery.ui.datepicker-'.$calendar_language.'.js', __FILE__));        
+            wp_register_script('cp_contactformpp_rclang', plugins_url('/js/languages/jquery.ui.datepicker-'.$calendar_language.'.js', __FILE__));
             $dependencies[] = 'cp_contactformpp_rclang';
-        }    
+        }
 
         wp_enqueue_script( 'dex_bccf_builder_script',
         get_site_url( get_current_blog_id() ).'?bccf_resources=public',$dependencies, false, true );
@@ -899,13 +824,13 @@ function dex_bccf_get_public_form($pages = '') {
     $button_label = dex_bccf_get_option('vs_text_submitbtn', 'Continue');
     $button_label = ($button_label==''?'Continue':$button_label);
     define('DEX_AUTH_INCLUDE', true);
-    
+
     if (!DEX_BCCF_DEFAULT_DEFER_SCRIPTS_LOADING) {
-        
+
         $prefix_ui = '';
         if (file_exists(dirname( __FILE__ ).'/../../../wp-includes/js/jquery/ui/jquery.ui.core.min.js'))
-            $prefix_ui = 'jquery.ui.'; 
-                    
+            $prefix_ui = 'jquery.ui.';
+
 ?>
 <?php $plugin_url = plugins_url('', __FILE__); ?>
 <script> if( typeof jQuery != 'undefined' ) var jQueryBK = jQuery.noConflict(); </script>
@@ -915,8 +840,8 @@ function dex_bccf_get_public_form($pages = '') {
 <script type='text/javascript' src='<?php echo $plugin_url.'/../../../wp-includes/js/jquery/ui/'.$prefix_ui.'widget.min.js'; ?>'></script>
 <script type='text/javascript' src='<?php echo $plugin_url.'/../../../wp-includes/js/jquery/ui/'.$prefix_ui.'position.min.js'; ?>'></script>
 <script type='text/javascript' src='<?php echo $plugin_url.'/../../../wp-includes/js/jquery/ui/'.$prefix_ui.'tooltip.min.js'; ?>'></script>
-<script> 
-        var myjQuery = jQuery.noConflict( ); 
+<script>
+        var myjQuery = jQuery.noConflict( );
         if( typeof jQueryBK != 'undefined' ) {jQuery = jQueryBK;};
 </script>
 <script type='text/javascript' src='<?php echo plugins_url('js/jQuery.stringify.js', __FILE__); ?>'></script>
@@ -931,7 +856,7 @@ var dex_bccf_fbuilder_config = {"obj":"{\"pub\":true,\"messages\": {\n    \t    
 <?php
     }
     @include dirname( __FILE__ ) . '/dex_scheduler.inc.php';
-    if (!DEX_BCCF_DEFAULT_DEFER_SCRIPTS_LOADING) {    
+    if (!DEX_BCCF_DEFAULT_DEFER_SCRIPTS_LOADING) {
         ?><script type='text/javascript' src='<?php echo get_site_url( get_current_blog_id() ).'?bccf_resources=public'; ?>'></script><?php
     }
 }
@@ -943,90 +868,6 @@ function dex_bccf_show_booking_form($id = "")
         define ('DEX_BCCF_CALENDAR_FIXED_ID',$id);
     define('DEX_AUTH_INCLUDE', true);
     @include dirname( __FILE__ ) . '/dex_scheduler.inc.php';
-}
-
-
-/* Code for the admin area */
-
-if ( is_admin() ) {
-    add_action('media_buttons', 'set_dex_bccf_insert_button', 100);
-    add_action('admin_enqueue_scripts', 'set_dex_bccf_insert_adminScripts', 1);
-    // add_action('admin_menu', 'dex_bccf_admin_menu');
-
-    $plugin = plugin_basename(__FILE__);
-    add_filter("plugin_action_links_".$plugin, 'dex_bccf_customAdjustmentsLink');
-    add_filter("plugin_action_links_".$plugin, 'dex_bccf_settingsLink');
-    add_filter("plugin_action_links_".$plugin, 'dex_bccf_helpLink');
-
-
-    function dex_bccf_admin_menu() {
-        add_options_page('Booking Calendar Contact Form Options', 'Booking Calendar Contact Form', 'manage_options', 'dex_bccf', 'dex_bccf_html_post_page' );
-        add_menu_page( 'Booking Calendar Contact Form Options', 'Booking Calend. Contact Form', 'edit_posts', 'dex_bccf', 'dex_bccf_html_post_page' );
-    }
-}
-else
-{
-    add_shortcode( 'CP_BCCF_FORM', 'dex_bccf_filter_content' );
-    add_shortcode( 'CP_BCCF_ALLCALS', 'dex_bccf_filter_content_allcalendars' );
-}
-
-function dex_bccf_settingsLink($links) {
-    $settings_link = '<a href="options-general.php?page=dex_bccf">'.__('Settings','bccf').'</a>';
-	array_unshift($links, $settings_link);
-	return $links;
-}
-
-
-function dex_bccf_helpLink($links) {
-    $help_link = '<a href="http://wordpress.dwbooster.com/calendars/booking-calendar-contact-form">'.__('Help','bccf').'</a>';
-	array_unshift($links, $help_link);
-	return $links;
-}
-
-function dex_bccf_customAdjustmentsLink($links) {
-    $customAdjustments_link = '<a href="http://wordpress.dwbooster.com/contact-us">'.__('Request custom changes','bccf').'</a>';
-	array_unshift($links, $customAdjustments_link);
-	return $links;
-}
-
-function dex_bccf_html_post_page() {
-    if (isset($_GET["cal"]) && $_GET["cal"] != '')
-    {
-        if (isset($_GET["editk"]) && $_GET["editk"] == '1')
-            @include_once dirname( __FILE__ ) . '/cp_admin_int_edition.inc.php';
-        else if (isset($_GET["list"]) && $_GET["list"] == '1')
-            @include_once dirname( __FILE__ ) . '/dex_bccf_admin_int_bookings_list.inc.php';
-        else if (isset($_GET["edit"]) && $_GET["edit"] != '')
-            @include_once dirname( __FILE__ ) . '/dex_bccf_admin_int_edit_booking.inc.php';    
-        else if (isset($_GET["list2"]) && $_GET["list2"] == '1')
-            @include_once dirname( __FILE__ ) . '/dex_bccf_admin_int_non_completed_bookings_list.inc.php';
-        else    
-            @include_once dirname( __FILE__ ) . '/dex_bccf_admin_int.inc.php';
-    }
-    else
-        @include_once dirname( __FILE__ ) . '/dex_bccf_admin_int_calendar_list.inc.php';
-
-}
-
-function set_dex_bccf_insert_button() {
-    print '<a href="javascript:send_to_editor(\'[CP_BCCF_FORM]\')" title="'.__('Insert Booking Calendar','bccf').'"><img hspace="5" src="'.plugins_url('/images/dex_apps.gif', __FILE__).'" alt="'.__('Insert Booking Calendar','bccf').'" /></a>';
-}
-
-function set_dex_bccf_insert_adminScripts($hook) {
-    if (isset($_GET["page"]) && $_GET["page"] == "dex_bccf")
-    {
-        wp_deregister_script('query-stringify');
-        wp_register_script('query-stringify', plugins_url('/js/jQuery.stringify.js', __FILE__));
-        wp_deregister_script('cp_contactformpp_rcalendar');
-        wp_register_script('cp_contactformpp_rcalendar', plugins_url('/js/jquery.rcalendar.js', __FILE__));
-        wp_deregister_script('cp_contactformpp_rcalendaradmin');
-        wp_register_script('cp_contactformpp_rcalendaradmin', plugins_url('/js/jquery.rcalendaradmin.js', __FILE__));
-        wp_enqueue_script( 'dex_bccf_builder_script', get_site_url( get_current_blog_id() ).'?bccf_resources=admin',array("jquery","jquery-ui-core","jquery-ui-sortable","jquery-ui-tabs","jquery-ui-dialog","jquery-ui-droppable","jquery-ui-button","jquery-ui-datepicker","query-stringify","cp_contactformpp_rcalendar","cp_contactformpp_rcalendaradmin") );
-
-        wp_enqueue_style('jquery-style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
-    }
-    if( 'post.php' != $hook  && 'post-new.php' != $hook )
-        return;    
 }
 
 function dex_bccf_get_services() {
@@ -1042,10 +883,10 @@ function dex_bccf_get_services() {
                      $dex_buffer[$k] .= '<input type="checkbox" onclick="updatedate()" name="services'.$k.'[]" id="dex_services'.$k.'" vt="'.esc_attr($item).'" value="'.esc_attr($item).'">'.__(trim(substr($item,strpos($item,"|")+1)),'bccf').'<br />';
                 else if ( dex_bccf_get_option('cp_cal_checkboxes_ftype'.$k, 0) == '2')
                      $dex_buffer[$k] .= '<input type="radio" onclick="updatedate()" name="services'.$k.'" id="dex_services'.$k.'" vt="'.esc_attr($item).'" value="'.esc_attr($item).'">'.__(trim(substr($item,strpos($item,"|")+1)),'bccf').'<br />';
-                else                                                               
+                else
                      $dex_buffer[$k] .= '<option value="'.esc_attr($item).'">'.__(trim(substr($item,strpos($item,"|")+1)),'bccf').'</option>';
             }
-    }    
+    }
     return $dex_buffer;
 }
 
@@ -1063,7 +904,7 @@ function dex_bccf_echo_services($dex_buffer) {
              echo ':</label><div class="dfield">'.$dex_buffer[$k].'</div><div class="clearer"></div></div>';
          else
              echo ':</label><div class="dfield"><select name="services'.$k.'"  id="dex_services'.$k.'" onchange="updatedate()">'.$dex_buffer[$k].'</select></div><div class="clearer"></div></div>';
-      }    
+      }
 }
 
 function dex_bccf_export_iCal() {
@@ -1148,36 +989,36 @@ function dex_bccf_check_posted_data()
 		}
 		exit;
 	}
-	
+
     if (isset($_GET["dex_item"]) && $_GET["dex_item"] != '')
         $_POST["dex_item"] = $_GET["dex_item"];
     if (!defined('CP_BCCF_CALENDAR_ID') && isset($_POST["dex_item"]) && $_POST["dex_item"] != '')
         define ('CP_BCCF_CALENDAR_ID',intval($_POST["dex_item"]));
-        
-    dex_bccf_check_reminders();        
+
+    dex_bccf_check_reminders();
 
     // define which action is being requested
     //-------------------------------------------------
     if (isset($_GET["dex_bccf"]) && $_GET["dex_bccf"] == 'getcost')
     {
         $default_price = dex_bccf_get_option('request_cost', DEX_BCCF_DEFAULT_COST);
-        $services_formatted = array();        
+        $services_formatted = array();
         for ($k=1;$k<=DEX_BCCF_DEFAULT_SERVICES_FIELDS; $k++)
-        {            
+        {
             $services_formatted[$k] = array();
             if (isset($_GET["ser".$k]))
             {
                 if ( dex_bccf_get_option('cp_cal_checkboxes_ftype'.$k, 0) == '1')
                 {
-                    $multiservices = explode("|||",$_GET["ser".$k]);                    
+                    $multiservices = explode("|||",$_GET["ser".$k]);
                     foreach ($multiservices as $value)
-                       if (trim ($value) != '')                   
+                       if (trim ($value) != '')
                           $services_formatted[$k][] = explode("|",$value);
                 }
                 else
-                    $services_formatted[$k] = explode("|",$_GET["ser".$k]); 
-            }    
-        }        
+                    $services_formatted[$k] = explode("|",$_GET["ser".$k]);
+            }
+        }
         echo number_format (dex_bccf_caculate_price_overall(strtotime($_GET["from"]), strtotime($_GET["to"]), $_POST["dex_item"], $default_price, $services_formatted), 2, ".", ",");
         // echo "<br /><b>Selected period:</b > ".date("Y/m/d",strtotime($_GET["from"]))." - ".date("Y/m/d",strtotime($_GET["to"]));
         exit;
@@ -1186,33 +1027,33 @@ function dex_bccf_check_posted_data()
 
     if (isset($_GET["dex_bccf"]) && $_GET["dex_bccf"] == 'getservices')
     {
-        dex_bccf_echo_services(dex_bccf_get_services());    
+        dex_bccf_echo_services(dex_bccf_get_services());
         exit;
-    }    
-    
+    }
+
     if (isset($_GET["dex_bccf"]) && $_GET["dex_bccf"] == 'calfeed')
         dex_bccf_export_iCal();
 
-    
+
     if (isset($_GET["bccf_export"]) && $_GET["bccf_export"] == '1')
     {
         $myrows = $wpdb->get_row( "SELECT * FROM ".DEX_BCCF_CONFIG_TABLE_NAME." WHERE id=".intval($_GET['name']), ARRAY_A);
-        $form = serialize($myrows);        
+        $form = serialize($myrows);
         header("Content-type: application/octet-stream");
-        header("Content-Disposition: attachment; filename=export.bccf");        
+        header("Content-Disposition: attachment; filename=export.bccf");
         echo $form;
-        exit;         
+        exit;
     }
-    
-    
+
+
     if (isset($_GET["dex_bccf"]) && $_GET["dex_bccf"] == 'loadcoupons')
         dex_bccf_load_discount_codes();
-        
+
     if (isset( $_GET['bccf_appointments_csv'] ) && is_admin() )
     {
         dex_bccf_appointments_export_csv();
         return;
-    }        
+    }
 
     if (isset($_GET["dex_bccf"]) && $_GET["dex_bccf"] == 'loadseasonprices')
         dex_bccf_load_season_prices();
@@ -1222,13 +1063,13 @@ function dex_bccf_check_posted_data()
         dex_bccf_save_options();
         return;
     }
-    
+
     if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_POST['CP_BCCF_post_edition'] ) && is_admin() )
     {
         dex_bccf_save_edition();
         return;
-    }  
-    
+    }
+
     // if this isn't the expected post and isn't the captcha verification then nothing to do
 	if ( 'POST' != $_SERVER['REQUEST_METHOD'] || ! isset( $_POST['dex_bccf_post'] ) )
 		if ( 'GET' != $_SERVER['REQUEST_METHOD'] || !isset( $_GET['hdcaptcha_dex_bccf_post'] ) )
@@ -1238,7 +1079,7 @@ function dex_bccf_check_posted_data()
     {
         // woocommerce trying to get the price, no need to process
         return;
-    }    
+    }
 
     // captcha verification
     //-------------------------------------------------
@@ -1251,7 +1092,7 @@ function dex_bccf_check_posted_data()
                ( (strtolower($_GET['hdcaptcha_dex_bccf_post']) != strtolower($_SESSION['rand_code'])) ||
                  ($_SESSION['rand_code'] == '')
                )
-           )   
+           )
        )
     {
         $_SESSION['rand_code'] = '';
@@ -1308,7 +1149,7 @@ function dex_bccf_check_posted_data()
     }
 
     $params = array();
-    
+
     $services_formatted = array();
     $services_text = "";
     for ($k=1;$k<=DEX_BCCF_DEFAULT_SERVICES_FIELDS; $k++)
@@ -1318,33 +1159,33 @@ function dex_bccf_check_posted_data()
         {
                 if ( dex_bccf_get_option('cp_cal_checkboxes_ftype'.$k, 0) == '1')
                 {
-                    $multiservices = $_POST["services".$k.""];                                                            
+                    $multiservices = $_POST["services".$k.""];
                     $params["service".$k] = dex_bccf_get_option('cp_cal_checkboxes_label'.$k, 'Service').": ";
                     foreach ($multiservices as $value)
-                       if (trim ($value) != '')     
-                       {                                  
+                       if (trim ($value) != '')
+                       {
                           $services_formatted[$k][] = explode("|",$value);
                           $services_text .= dex_bccf_get_option('cp_cal_checkboxes_label'.$k, 'Service').": ".trim($services_formatted[$k][count($services_formatted[$k])-1][1])."\n\n";
                           $params["service".$k] .= trim(trim($services_formatted[$k][count($services_formatted[$k])-1][1]))." / ";
-                       }   
+                       }
                 }
                 else
                 {
-                    $services_formatted[$k] = explode("|",$_POST["services".$k]);                         
+                    $services_formatted[$k] = explode("|",$_POST["services".$k]);
                     $services_text .= dex_bccf_get_option('cp_cal_checkboxes_label'.$k, 'Service').": ".trim($services_formatted[$k][1])."\n\n";
                     $params["service".$k] = dex_bccf_get_option('cp_cal_checkboxes_label'.$k, 'Service').": ".trim($services_formatted[$k][1]);
-                }    
+                }
         }
     }
     $services_text = trim($services_text);
 
     // calculate price from services field or dates
-    //-------------------------------------------------    
+    //-------------------------------------------------
     $price = dex_bccf_caculate_price_overall(strtotime($_POST["dateAndTime_s"]), strtotime($_POST["dateAndTime_e"]), CP_BCCF_CALENDAR_ID, @$default_price, $services_formatted);
 
 
     $taxes = trim(str_replace("%","",dex_bccf_get_option('request_taxes', '0')));
-    
+
     // check discount codes
     //-------------------------------------------------
     $discount_note = "";
@@ -1395,7 +1236,7 @@ function dex_bccf_check_posted_data()
 
     foreach ($_FILES as $item => $value)
     {
-        //$item = str_replace( $sequence,'',$item );        
+        //$item = str_replace( $sequence,'',$item );
 		if ( isset( $fields[ $item ] ) )
         {
 			$files_names_arr = array();
@@ -1404,30 +1245,30 @@ function dex_bccf_check_posted_data()
 			for( $f = 0; $f < count( $value[ 'name' ] ); $f++ )
 			{
 				if( !empty( $value[ 'name' ][ $f ] ) )
-				{	
+				{
 					$uploaded_file = array(
 						'name' 		=> $value[ 'name' ][ $f ],
 						'type' 		=> $value[ 'type' ][ $f ],
 						'tmp_name' 	=> $value[ 'tmp_name' ][ $f ],
 						'error' 	=> $value[ 'error' ][ $f ],
 						'size' 		=> $value[ 'size' ][ $f ],
-					);					
+					);
 					if( dex_bccf_check_upload( $uploaded_file ) )
-					{					    	
+					{
 						$movefile = wp_handle_upload( $uploaded_file, array( 'test_form' => false ) );
-						if ( empty( $movefile[ 'error' ] ) ) 
+						if ( empty( $movefile[ 'error' ] ) )
 						{
 							$files_links_arr[] = $params[ $item."_link" ][ $f ] = $movefile["file"];
 							$files_urls_arr[]  = $params[ $item."_url" ][ $f ] = $movefile["url"];
 							$files_names_arr[] = $uploaded_file[ 'name' ];
-							
+
 							/**
 							 * Action called when the file is uploaded, the file's data is passed as parameter
 							 */
 							do_action( 'dexbccf_file_uploaded', $movefile );
 						} //else echo $movefile[ 'error' ];
 					}
-				}	
+				}
 			}
 			$joinned_files_names = implode( ", ", $files_names_arr );
 			$buffer .= $fields[ $item ] . ": ". $joinned_files_names . "\n\n";
@@ -1436,7 +1277,7 @@ function dex_bccf_check_posted_data()
 			//$params[ $item."_urls"] = implode( ",",  $files_urls_arr );
 		}
 	}
-	
+
     $buffer_A = trim($buffer)."\n\n";
     $buffer_A .= ($services_text != ''?$services_text."\n\n":"").
                  ($coupon?"\nCoupon code: ".$coupon->code.$discount_note."\n\n":"");
@@ -1455,21 +1296,21 @@ function dex_bccf_check_posted_data()
         else
             $price =  dex_bccf_get_option('calendar_depositamount','0');
     }
-    
+
     $params["initialpayment"] = $price;
     $params["finalpayment"] = $originalprice - $price;
-        
+
 	/**
-	 * Action called before insert the data into database. 
+	 * Action called before insert the data into database.
 	 * To the function is passed an array with submitted data.
-	 */							
+	 */
 	$params['formid'] = $selectedCalendar;
 	do_action( 'dexbccf_process_data_before_insert', $params );
-	    
+
     // insert into database
     //---------------------------
-    $to = dex_bccf_get_option('cu_user_email_field', DEX_BCCF_DEFAULT_cu_user_email_field);    
-    $to = explode(",", $to);  
+    $to = dex_bccf_get_option('cu_user_email_field', DEX_BCCF_DEFAULT_cu_user_email_field);
+    $to = explode(",", $to);
     $rows_affected = $wpdb->insert( DEX_BCCF_TABLE_NAME, array( 'calendar' => $selectedCalendar,
                                                                         'time' => current_time('mysql'),
                                                                         'booked_time_s' => $_POST["Date_s"],
@@ -1479,7 +1320,7 @@ function dex_bccf_check_posted_data()
                                                                         'question' => $buffer_A,
                                                                         'notifyto' => "". $_POST[ $to[0] ],
                                                                         'buffered_date' => serialize($params)
-                                                                         ) );                                                                         
+                                                                         ) );
     if (!$rows_affected)
     {
         echo 'Error saving data! Please try again.';
@@ -1492,23 +1333,23 @@ function dex_bccf_check_posted_data()
 
  	// save data here
     $item_number = $myrows[0]->max_id;
-   
+
 	// Call action for data processing
 	//---------------------------------
 	$params[ 'itemnumber' ] = $item_number;
-	
+
 	/**
-	 * Action called after inserted the data into database. 
+	 * Action called after inserted the data into database.
 	 * To the function is passed an array with submitted data.
-	 */							
-	do_action( 'dexbccf_process_data', $params );	
-	   
-   
+	 */
+	do_action( 'dexbccf_process_data', $params );
+
+
     $paypal_optional = (dex_bccf_get_option('enable_paypal',DEX_BCCF_DEFAULT_ENABLE_PAYPAL) == '2');
 
-    
+
     if (floatval($price) > 0 && dex_bccf_get_option('enable_paypal',DEX_BCCF_DEFAULT_ENABLE_PAYPAL) == '3')
-    {      
+    {
        header('Location: https://www.beanstream.com/scripts/payment/payment.asp?merchant_id='.dex_bccf_get_option('enable_beanstream_id', '').
                                                                            '&trnOrderNumber='.$item_number.
                                                                            '&trnAmount='.$price.
@@ -1557,19 +1398,19 @@ document.ppform3.submit();
         dex_process_ready_to_go_bccf($item_number, "", $params);
         $_SESSION[ 'cp_cff_form_data' ] = $item_number;
         $redirect = true;
-		
-		/** 
-		 * Filters applied to decide if the website should be redirected to the thank you page after submit the form, 
+
+		/**
+		 * Filters applied to decide if the website should be redirected to the thank you page after submit the form,
 		 * pass a boolean as parameter and returns a boolean
 		 */
         $redirect = apply_filters( 'dexbccf_redirect', $redirect );
-		
+
         if( $redirect )
         {
             $location = dex_bccf_get_option('url_ok', DEX_BCCF_DEFAULT_OK_URL);
             header("Location: ".$location);
             exit;
-        }        
+        }
     }
 
 }
@@ -1609,8 +1450,8 @@ function dex_bccf_caculate_price_overall($startday, $enddate, $calendar, $defaul
     if ($days >= $min_nights && $days <= $max_nights)
         $suplement  = floatval(dex_bccf_get_option('calendar_suplement', 0));
 
-    $default_price = dex_bccf_get_option('request_cost', DEX_BCCF_DEFAULT_COST);    
-    $price = dex_bccf_caculate_price($startday, $enddate, CP_BCCF_CALENDAR_ID, $default_price);    
+    $default_price = dex_bccf_get_option('request_cost', DEX_BCCF_DEFAULT_COST);
+    $price = dex_bccf_caculate_price($startday, $enddate, CP_BCCF_CALENDAR_ID, $default_price);
     for ($k=1;$k<=DEX_BCCF_DEFAULT_SERVICES_FIELDS; $k++)
     {
         $option_services = dex_bccf_get_option('cp_cal_checkboxes_type'.$k, DEX_BCCF_DEFAULT_CP_CAL_CHECKBOXES_TYPE);
@@ -1626,11 +1467,11 @@ function dex_bccf_caculate_price_overall($startday, $enddate, $calendar, $defaul
             if ($option_services == '1')
                 $price = floatval ($price)*$days;
             else
-                $price = floatval ($price);                
+                $price = floatval ($price);
         }
         else
         {
-            $price_service = 0;            
+            $price_service = 0;
             if ($services_formatted[$k])
             {
                 if (is_array($services_formatted[$k][0]))
@@ -1639,9 +1480,9 @@ function dex_bccf_caculate_price_overall($startday, $enddate, $calendar, $defaul
                         $price_service += floatval (trim($value[0]));
                 }
                 else
-                    $price_service = floatval(trim($services_formatted[$k][0]));   
-                if ($option_services == '5')  
-                    $price += floatval ($price_service) * ceil($days/7);                    
+                    $price_service = floatval(trim($services_formatted[$k][0]));
+                if ($option_services == '5')
+                    $price += floatval ($price_service) * ceil($days/7);
                 else if ($option_services == '4')
                     $price += floatval ($price_service)*$days;
                 else
@@ -1654,7 +1495,7 @@ function dex_bccf_caculate_price_overall($startday, $enddate, $calendar, $defaul
 
 function dex_bccf_caculate_price($startday, $enddate, $calendar, $default_price) {
     global $wpdb;
- 
+
     $default_price_array = explode (';', $default_price);
     $default_price = $default_price_array[0];
     $season_prices = array();
@@ -1675,25 +1516,25 @@ function dex_bccf_caculate_price($startday, $enddate, $calendar, $default_price)
            $sto = strtotime($value->date_to);
            if ($startday >= $sfrom && $startday <= $sto)
            {
-               $sprice = explode (';', $value->price);               
+               $sprice = explode (';', $value->price);
                $daily_price = $sprice[0];
-           }    
-        }       
-        $season_prices[] = $sprice; 
-        $price += $daily_price;        
-        $startday = strtotime (date("Y-m-d", $startday)." +1 day"); //60*60*24;        
+           }
+        }
+        $season_prices[] = $sprice;
+        $price += $daily_price;
+        $startday = strtotime (date("Y-m-d", $startday)." +1 day"); //60*60*24;
         $days++;
     }
-    
+
     if (trim(@$default_price_array[$days]))
         $price = trim($default_price_array[$days]);
     if (trim(@$season_prices[0][$days]))
         $price = trim($season_prices[0][$days]);
-    if (trim(@$season_prices[count($season_prices)-1][$days]) 
-        && 
+    if (trim(@$season_prices[count($season_prices)-1][$days])
+        &&
         floatval($price) < floatval(trim(@$season_prices[count($season_prices)-1][$days]))) // get higher price if different seasons
         $price = trim($season_prices[count($season_prices)-1][$days]);
-        
+
     return $price;
 }
 
@@ -1826,14 +1667,14 @@ function dex_bccf_check_IPN_verification() {
     {
 	    if ($payment_status != 'Completed' && $payment_type != 'echeck')
 	        return;
-        
+
 	    if ($payment_type == 'echeck' && $payment_status != 'Pending')
 	        return;
     }
 
     $myrows = $wpdb->get_results( "SELECT * FROM ".DEX_BCCF_TABLE_NAME." WHERE id=".$itemnumber );
     $params = unserialize($myrows[0]->buffered_date);
-    
+
     dex_process_ready_to_go_bccf($itemnumber, $payer_email, $params);
 
     if (@$_GET["beanstrean"] != '1')
@@ -1847,8 +1688,8 @@ function dex_bccf_check_IPN_verification() {
 function dex_process_ready_to_go_bccf($itemnumber, $payer_email = "", $params)
 {
    global $wpdb;
-   
-   dex_bccf_add_field_verify(TDE_BCCFCALENDAR_DATA_TABLE, "reference", "varchar(20) DEFAULT '' NOT NULL"); 
+
+   dex_bccf_add_field_verify(TDE_BCCFCALENDAR_DATA_TABLE, "reference", "varchar(20) DEFAULT '' NOT NULL");
    dex_bccf_add_field_verify(TDE_BCCFCALENDAR_DATA_TABLE, "reminder", "VARCHAR(1) DEFAULT '' NOT NULL");
    dex_bccf_add_field_verify(TDE_BCCFCALENDAR_DATA_TABLE, "status", "VARCHAR(10) DEFAULT '' NOT NULL");
 
@@ -1898,10 +1739,10 @@ function dex_process_ready_to_go_bccf($itemnumber, $payer_email = "", $params)
    $newitemnum = $wpdb->insert_id;
    $email_content1 = str_replace("<%itemnumber%>", $newitemnum, $email_content1);
    $email_content2 = str_replace("<%itemnumber%>", $newitemnum, $email_content2);
- 
+
    $email_subject1 = str_replace("<%itemnumber%>", $newitemnum, $email_subject1);
    $email_subject2 = str_replace("<%itemnumber%>", $newitemnum, $email_subject2);
-   
+
    $email_content1 = str_replace("<%item%>", $mycalendarrows[0]->uname, $email_content1);
    $email_content2 = str_replace("<%item%>", $mycalendarrows[0]->uname, $email_content2);
 
@@ -1910,28 +1751,28 @@ function dex_process_ready_to_go_bccf($itemnumber, $payer_email = "", $params)
     {
         $email_content1 = str_replace('<%'.$item.'%>',(is_array($value)?(implode(", ",$value)):($value)),$email_content1);
         $email_content2 = str_replace('<%'.$item.'%>',(is_array($value)?(implode(", ",$value)):($value)),$email_content2);
-        
+
         $email_subject1 = str_replace('<%'.$item.'%>',(is_array($value)?(implode(", ",$value)):($value)),$email_subject1);
         $email_subject2 = str_replace('<%'.$item.'%>',(is_array($value)?(implode(", ",$value)):($value)),$email_subject2);
-        
+
         if (strpos($item,"_link"))
         {
             foreach ($value as $filevalue)
-                $attachments[] = $filevalue;            
+                $attachments[] = $filevalue;
         }
     }
 
    // SEND EMAIL TO USER
-   
+
    if ('html' == $mycalendarrows[0]->copyuser_emailformat) $content_type = "Content-Type: text/html; charset=utf-8\n"; else $content_type = "Content-Type: text/plain; charset=utf-8\n";
-    
+
    if (!strpos($SYSTEM_EMAIL,">"))
-       $SYSTEM_EMAIL = '"'.$SYSTEM_EMAIL.'" <'.$SYSTEM_EMAIL.'>';     
-    
+       $SYSTEM_EMAIL = '"'.$SYSTEM_EMAIL.'" <'.$SYSTEM_EMAIL.'>';
+
    $to = explode(",",dex_bccf_get_option('cu_user_email_field', DEX_BCCF_DEFAULT_cu_user_email_field));
    $used_emails = array();
    $replyto  = '';
-   foreach ($to as $destination)   
+   foreach ($to as $destination)
        if (trim($params[$destination]) != '')
        {
            $replyto = trim($params[$destination]);
@@ -1940,8 +1781,8 @@ function dex_process_ready_to_go_bccf($itemnumber, $payer_email = "", $params)
                     $content_type.
                     "X-Mailer: PHP/" . phpversion());
            $used_emails[] = $params[$destination];
-       }             
-          
+       }
+
    if ($payer_email && !in_array(strtolower($payer_email), $used_emails))
        wp_mail($payer_email , $email_subject1, $email_content1,
                 "From: ".$SYSTEM_EMAIL."\r\n".
@@ -1955,13 +1796,13 @@ function dex_process_ready_to_go_bccf($itemnumber, $payer_email = "", $params)
    $to = explode(",",$SYSTEM_RCPT_EMAIL);
    foreach ($to as $item)
         if (trim($item) != '')
-        {    
+        {
             wp_mail($item, $email_subject2, $email_content2,
                      "From: ".$SYSTEM_EMAIL."\r\n".
                      ($replyto!=''?"Reply-To: \"$replyto\" <".$replyto.">\r\n":'').
                      $content_type.
                      "X-Mailer: PHP/" . phpversion(), $attachments);
-        } 
+        }
 
 }
 
@@ -1983,10 +1824,10 @@ function dex_bccf_save_edition()
 {
     if (substr_count($_POST['editionarea'],"\\\""))
         $_POST["editionarea"] = stripcslashes($_POST["editionarea"]);
-    if ($_POST["cfwpp_edit"] == 'js')   
-        update_option('CP_BCCF_JS', base64_encode($_POST["editionarea"]));  
-    else if ($_POST["cfwpp_edit"] == 'css')  
-        update_option('CP_BCCF_CSS', base64_encode($_POST["editionarea"]));  
+    if ($_POST["cfwpp_edit"] == 'js')
+        update_option('CP_BCCF_JS', base64_encode($_POST["editionarea"]));
+    else if ($_POST["cfwpp_edit"] == 'css')
+        update_option('CP_BCCF_CSS', base64_encode($_POST["editionarea"]));
 }
 
 
@@ -1997,64 +1838,64 @@ function dex_bccf_save_options()
         define ('CP_BCCF_CALENDAR_ID',$_POST["dex_item"]);
 
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "master", "varchar(50) DEFAULT '0' NOT NULL");
-    
+
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "calendar_minnights", "varchar(255) DEFAULT '0' NOT NULL");
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "calendar_maxnights", "varchar(255) DEFAULT '365' NOT NULL");
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "calendar_suplement", "varchar(255) DEFAULT '0' NOT NULL");
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "calendar_suplementminnight", "varchar(255) DEFAULT '0' NOT NULL");
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "calendar_suplementmaxnight", "varchar(255) DEFAULT '0' NOT NULL");
-    
+
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "calendar_startres");
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "calendar_holidays");
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "calendar_fixedmode", "varchar(10) DEFAULT '0' NOT NULL");
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "calendar_holidaysdays", "varchar(20) DEFAULT '1111111' NOT NULL");
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "calendar_startresdays", "varchar(20) DEFAULT '1111111' NOT NULL");
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "calendar_fixedreslength", "varchar(20) DEFAULT '1' NOT NULL");
-    
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "max_slots", "varchar(20) DEFAULT '0' NOT NULL");    
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "enable_paypal_option_yes", "varchar(250) DEFAULT '' NOT NULL");  
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "enable_paypal_option_no", "varchar(250) DEFAULT '' NOT NULL");  
-    
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "vs_text_submitbtn", "varchar(250) DEFAULT '' NOT NULL");  
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "vs_text_previousbtn", "varchar(250) DEFAULT '' NOT NULL");  
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "vs_text_nextbtn", "varchar(250) DEFAULT '' NOT NULL");  
-    
+
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "max_slots", "varchar(20) DEFAULT '0' NOT NULL");
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "enable_paypal_option_yes", "varchar(250) DEFAULT '' NOT NULL");
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "enable_paypal_option_no", "varchar(250) DEFAULT '' NOT NULL");
+
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "vs_text_submitbtn", "varchar(250) DEFAULT '' NOT NULL");
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "vs_text_previousbtn", "varchar(250) DEFAULT '' NOT NULL");
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "vs_text_nextbtn", "varchar(250) DEFAULT '' NOT NULL");
+
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "calendar_depositenable", "varchar(20) DEFAULT '' NOT NULL");
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "calendar_depositamount", "varchar(20) DEFAULT '' NOT NULL");
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "calendar_deposittype", "varchar(20) DEFAULT '' NOT NULL");   
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "calendar_deposittype", "varchar(20) DEFAULT '' NOT NULL");
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "calendar_showcost", "varchar(1) DEFAULT '' NOT NULL");
-    
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "enable_reminder", "varchar(10) DEFAULT '' NOT NULL");   
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "enable_reminder2", "varchar(10) DEFAULT '' NOT NULL");   
-    
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "copyuser_emailformat", "varchar(20) DEFAULT '' NOT NULL"); 
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "notification_emailformat", "varchar(20) DEFAULT '' NOT NULL"); 
-         
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "nremind_emailformat", "varchar(20) DEFAULT '' NOT NULL");       
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_hours", "varchar(20) DEFAULT '' NOT NULL");   
+
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "enable_reminder", "varchar(10) DEFAULT '' NOT NULL");
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "enable_reminder2", "varchar(10) DEFAULT '' NOT NULL");
+
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "copyuser_emailformat", "varchar(20) DEFAULT '' NOT NULL");
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "notification_emailformat", "varchar(20) DEFAULT '' NOT NULL");
+
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "nremind_emailformat", "varchar(20) DEFAULT '' NOT NULL");
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_hours", "varchar(20) DEFAULT '' NOT NULL");
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_subject");
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_content");
-         
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "nremind_emailformat2", "varchar(20) DEFAULT '' NOT NULL");   
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_hours2", "varchar(20) DEFAULT '' NOT NULL");   
+
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "nremind_emailformat2", "varchar(20) DEFAULT '' NOT NULL");
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_hours2", "varchar(20) DEFAULT '' NOT NULL");
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_subject2");
     dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_content2");
-    
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "enable_beanstream_id", "varchar(250) DEFAULT '' NOT NULL");    
-    
-    dex_bccf_add_field_verify(TDE_BCCFCALENDAR_DATA_TABLE, "reference", "varchar(20) DEFAULT '' NOT NULL");    
+
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "enable_beanstream_id", "varchar(250) DEFAULT '' NOT NULL");
+
+    dex_bccf_add_field_verify(TDE_BCCFCALENDAR_DATA_TABLE, "reference", "varchar(20) DEFAULT '' NOT NULL");
     dex_bccf_add_field_verify(TDE_BCCFCALENDAR_DATA_TABLE, "reminder", "VARCHAR(1) DEFAULT '' NOT NULL");
-    
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME,'request_taxes'," varchar(20) NOT NULL default ''"); 
-    
+
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME,'request_taxes'," varchar(20) NOT NULL default ''");
+
     $calendar_holidaysdays = (@$_POST["wd1"]?"1":"0").(@$_POST["wd2"]?"1":"0").(@$_POST["wd3"]?"1":"0").(@$_POST["wd4"]?"1":"0").(@$_POST["wd5"]?"1":"0").(@$_POST["wd6"]?"1":"0").(@$_POST["wd7"]?"1":"0");
-    $calendar_startresdays = (@$_POST["sd1"]?"1":"0").(@$_POST["sd2"]?"1":"0").(@$_POST["sd3"]?"1":"0").(@$_POST["sd4"]?"1":"0").(@$_POST["sd5"]?"1":"0").(@$_POST["sd6"]?"1":"0").(@$_POST["sd7"]?"1":"0");    
+    $calendar_startresdays = (@$_POST["sd1"]?"1":"0").(@$_POST["sd2"]?"1":"0").(@$_POST["sd3"]?"1":"0").(@$_POST["sd4"]?"1":"0").(@$_POST["sd5"]?"1":"0").(@$_POST["sd6"]?"1":"0").(@$_POST["sd7"]?"1":"0");
 
     for ($k=1;$k<=DEX_BCCF_DEFAULT_SERVICES_FIELDS; $k++)
     {
         dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "cp_cal_checkboxes_label".$k);
         dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "cp_cal_checkboxes_type".$k);
-        dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "cp_cal_checkboxes_ftype".$k);        
+        dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "cp_cal_checkboxes_ftype".$k);
         dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "cp_cal_checkboxes".$k);
     }
 
@@ -2085,15 +1926,15 @@ function dex_bccf_save_options()
          'calendar_suplement' => @$_POST["calendar_suplement"],
          'calendar_suplementminnight' => @$_POST["calendar_suplementminnight"],
          'calendar_suplementmaxnight' => @$_POST["calendar_suplementmaxnight"],
-         'calendar_fixedmode' => (@$_POST["calendar_fixedmode"]?"1":"0"),         
+         'calendar_fixedmode' => (@$_POST["calendar_fixedmode"]?"1":"0"),
          'calendar_holidaysdays' => $calendar_holidaysdays,
          'calendar_startresdays' => $calendar_startresdays,
          'calendar_fixedreslength' => @$_POST["calendar_fixedreslength"],
-         
+
          'calendar_startres' => @$_POST["calendar_startres"],
          'calendar_holidays' => @$_POST["calendar_holidays"],
          'calendar_showcost' => $_POST["calendar_showcost"],
-         
+
          'enable_beanstream_id' => @$_POST["enable_beanstream_id"],
 
          'cu_user_email_field' => implode(",",$_POST['cu_user_email_field']),
@@ -2115,7 +1956,7 @@ function dex_bccf_save_options()
          'email_confirmation_to_user' => $_POST["email_confirmation_to_user"],
          'email_subject_notification_to_admin' => $_POST["email_subject_notification_to_admin"],
          'email_notification_to_admin' => $_POST["email_notification_to_admin"],
-         
+
          'copyuser_emailformat' => $_POST["copyuser_emailformat"],
          'notification_emailformat' => $_POST["notification_emailformat"],
 
@@ -2139,21 +1980,21 @@ function dex_bccf_save_options()
          'calendar_depositenable' => $_POST['calendar_depositenable'],
          'calendar_depositamount' => $_POST['calendar_depositamount'],
          'calendar_deposittype' => $_POST['calendar_deposittype'],
-         
-         
+
+
          'enable_reminder' => @$_POST["enable_reminder"],
          'enable_reminder2' => @$_POST["enable_reminder2"],
-         
+
          'nremind_emailformat' => @$_POST["nremind_emailformat"],
          'reminder_hours' => @$_POST["reminder_hours"],
          'reminder_subject' => @$_POST["reminder_subject"],
          'reminder_content' => @$_POST["reminder_content"],
-         
+
          'nremind_emailformat2' => @$_POST["nremind_emailformat2"],
          'reminder_hours2' => @$_POST["reminder_hours2"],
          'reminder_subject2' => @$_POST["reminder_subject2"],
          'reminder_content2' => @$_POST["reminder_content2"],
-                           
+
          'dexcv_enable_captcha' => $_POST["dexcv_enable_captcha"],
          'dexcv_width' => $_POST["dexcv_width"],
          'dexcv_height' => $_POST["dexcv_height"],
@@ -2170,7 +2011,7 @@ function dex_bccf_save_options()
          'cp_cal_checkboxes' => @$_POST["cp_cal_checkboxes"],
          'cp_cal_checkboxes_type' => @$_POST["cp_cal_checkboxes_type"]
 	);
-	
+
     for ($k=1;$k<=DEX_BCCF_DEFAULT_SERVICES_FIELDS; $k++)
     {
         $data["cp_cal_checkboxes_label".$k] = $_POST["cp_cal_checkboxes_label".$k];
@@ -2214,7 +2055,7 @@ function dex_bccf_appointments_export_csv ()
     if (CP_BCCF_CALENDAR_ID != 0) $cond .= " AND calendar=".CP_BCCF_CALENDAR_ID;
 
     $events_query = "SELECT ".DEX_BCCF_TABLE_NAME.".*,".DEX_BCCF_CONFIG_TABLE_NAME.".uname FROM "
-                              .DEX_BCCF_TABLE_NAME." INNER JOIN ".DEX_BCCF_CONFIG_TABLE_NAME." ON ".DEX_BCCF_TABLE_NAME.".calendar=".DEX_BCCF_CONFIG_TABLE_NAME.".id INNER JOIN  ".DEX_BCCF_CALENDARS_TABLE_NAME." on  ".DEX_BCCF_TABLE_NAME.".id=".DEX_BCCF_CALENDARS_TABLE_NAME.".reference  ". 
+                              .DEX_BCCF_TABLE_NAME." INNER JOIN ".DEX_BCCF_CONFIG_TABLE_NAME." ON ".DEX_BCCF_TABLE_NAME.".calendar=".DEX_BCCF_CONFIG_TABLE_NAME.".id INNER JOIN  ".DEX_BCCF_CALENDARS_TABLE_NAME." on  ".DEX_BCCF_TABLE_NAME.".id=".DEX_BCCF_CALENDARS_TABLE_NAME.".reference  ".
                               " WHERE 1=1 ".$cond." ORDER BY `datatime_s` DESC";
 	/**
 	 * Allows modify the query of messages, passing the query as parameter
@@ -2222,7 +2063,7 @@ function dex_bccf_appointments_export_csv ()
 	 */
 	$events_query = apply_filters( 'dexbccf_csv_query', $events_query );
 	$events = $wpdb->get_results( $events_query );
-    
+
 
     $fields = array("Calendar ID","Calendar Name"/**, "Time Start", "Time End"*/);
     $values = array();
@@ -2275,26 +2116,26 @@ function dex_bccf_appointments_export_csv ()
 
 function dex_bccf_check_reminders() {
     global $wpdb;
-    
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "nremind_emailformat", "varchar(20) DEFAULT '' NOT NULL");       
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "nremind_emailformat2", "varchar(20) DEFAULT '' NOT NULL");       
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_subject");       
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_subject2");       
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_content");       
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_content2");       
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "enable_reminder", "varchar(10) DEFAULT '' NOT NULL");   
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "enable_reminder2", "varchar(10) DEFAULT '' NOT NULL");   
-    dex_bccf_add_field_verify(TDE_BCCFCALENDAR_DATA_TABLE, "reminder", "varchar(10) DEFAULT '' NOT NULL");   
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_hours", "varchar(10) DEFAULT '' NOT NULL");   
-    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_hours2", "varchar(10) DEFAULT '' NOT NULL");   
-    
-    
+
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "nremind_emailformat", "varchar(20) DEFAULT '' NOT NULL");
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "nremind_emailformat2", "varchar(20) DEFAULT '' NOT NULL");
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_subject");
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_subject2");
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_content");
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_content2");
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "enable_reminder", "varchar(10) DEFAULT '' NOT NULL");
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "enable_reminder2", "varchar(10) DEFAULT '' NOT NULL");
+    dex_bccf_add_field_verify(TDE_BCCFCALENDAR_DATA_TABLE, "reminder", "varchar(10) DEFAULT '' NOT NULL");
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_hours", "varchar(10) DEFAULT '' NOT NULL");
+    dex_bccf_add_field_verify(DEX_BCCF_CONFIG_TABLE_NAME, "reminder_hours2", "varchar(10) DEFAULT '' NOT NULL");
+
+
     // first reminder email
     $query = "SELECT nremind_emailformat,notification_from_email,reminder_subject,reminder_content,uname,".TDE_BCCFCALENDAR_DATA_TABLE.".* FROM ".
               TDE_BCCFCALENDAR_DATA_TABLE." INNER JOIN ".DEX_BCCF_CONFIG_TABLE_NAME." ON ".TDE_BCCFCALENDAR_DATA_TABLE.".reservation_calendar_id=".DEX_BCCF_CONFIG_TABLE_NAME.".id ".
               " WHERE enable_reminder=1 AND (reminder='0' OR reminder='' OR reminder is null) AND datatime_s<DATE_ADD(now(),INTERVAL reminder_hours HOUR) AND datatime_s>'".date("Y-m-d H:i:s")."'";
-    $apps = $wpdb->get_results( $query);    
-        
+    $apps = $wpdb->get_results( $query);
+
     foreach ($apps as $app) {
         // send email
         if ('html' == $app->nremind_emailformat) $content_type = "Content-Type: text/html; charset=utf-8\n"; else $content_type = "Content-Type: text/plain; charset=utf-8\n";
@@ -2307,12 +2148,12 @@ function dex_bccf_check_reminders() {
             $email_content = str_replace('<%'.$item.'%>',(is_array($value)?(implode(", ",$value)):($value)),$email_content);
             $email_content = str_replace('%'.$item.'%',(is_array($value)?(implode(", ",$value)):($value)),$email_content);
         }
-        $email_content = str_replace("%CALENDAR%", $app->uname, $email_content); 
-        
+        $email_content = str_replace("%CALENDAR%", $app->uname, $email_content);
+
         $SYSTEM_EMAIL = $app->notification_from_email;
         if (!strpos($SYSTEM_EMAIL,">"))
             $SYSTEM_EMAIL = '"'.$SYSTEM_EMAIL.'" <'.$SYSTEM_EMAIL.'>';
-                           
+
         wp_mail($app_source[0]->notifyto, $app->reminder_subject, $email_content,
                 "From: ".$SYSTEM_EMAIL."\r\n".
                 $content_type.
@@ -2320,14 +2161,14 @@ function dex_bccf_check_reminders() {
         // mark as sent
         $wpdb->query("UPDATE ".TDE_BCCFCALENDAR_DATA_TABLE." SET reminder='1' WHERE id=".$app->id);
     }
-    
-    
+
+
     // second reminder email
     $query = "SELECT nremind_emailformat2,notification_from_email,reminder_subject2,reminder_content2,uname,".TDE_BCCFCALENDAR_DATA_TABLE.".* FROM ".
               TDE_BCCFCALENDAR_DATA_TABLE." INNER JOIN ".DEX_BCCF_CONFIG_TABLE_NAME." ON ".TDE_BCCFCALENDAR_DATA_TABLE.".reservation_calendar_id=".DEX_BCCF_CONFIG_TABLE_NAME.".id ".
               " WHERE enable_reminder2=1 AND (reminder='0' OR reminder='' OR reminder='1' OR reminder is null) AND datatime_e<DATE_SUB(now(),INTERVAL reminder_hours2 HOUR)"; // AND datatime_e>'".date("Y-m-d H:i:s")."'";
-    $apps = $wpdb->get_results( $query);    
-        
+    $apps = $wpdb->get_results( $query);
+
     foreach ($apps as $app) {
         // send email
         if ('html' == $app->nremind_emailformat2) $content_type = "Content-Type: text/html; charset=utf-8\n"; else $content_type = "Content-Type: text/plain; charset=utf-8\n";
@@ -2340,19 +2181,19 @@ function dex_bccf_check_reminders() {
             $email_content = str_replace('<%'.$item.'%>',(is_array($value)?(implode(", ",$value)):($value)),$email_content);
             $email_content = str_replace('%'.$item.'%',(is_array($value)?(implode(", ",$value)):($value)),$email_content);
         }
-        $email_content = str_replace("%CALENDAR%", $app->uname, $email_content);   
-        
+        $email_content = str_replace("%CALENDAR%", $app->uname, $email_content);
+
         $SYSTEM_EMAIL = $app->notification_from_email;
         if (!strpos($SYSTEM_EMAIL,">"))
             $SYSTEM_EMAIL = '"'.$SYSTEM_EMAIL.'" <'.$SYSTEM_EMAIL.'>';
-                         
+
         wp_mail($app_source[0]->notifyto, $app->reminder_subject2, $email_content,
                 "From: ".$SYSTEM_EMAIL."\r\n".
                 $content_type.
                 "X-Mailer: PHP/" . phpversion());
         // mark as sent
         $wpdb->query("UPDATE ".TDE_BCCFCALENDAR_DATA_TABLE." SET reminder='2' WHERE id=".$app->id);
-    }    
+    }
 }
 
 
@@ -2362,12 +2203,12 @@ function dex_bccf_calendar_ajaxevent() {
     if ( ! isset( $_GET['dex_bccf_calendar_load2'] ))
 		return;
 
-	if (!ini_get("zlib.output_compression")) 
-	{ 
+	if (!ini_get("zlib.output_compression"))
+	{
 	    @ob_clean();
         header("Cache-Control: no-store, no-cache, must-revalidate");
         header("Pragma: no-cache");
-    }   
+    }
 
     $ret = array();
     $ret['events'] = array();
@@ -2417,21 +2258,21 @@ function dex_bccf_calendar_ajaxevent() {
 function dex_bccf_calendar_load2($ret) {
     global $wpdb;
 
-    $calid = str_replace  (TDE_BCCFCAL_PREFIX, "",@$_GET["id"]);    
-    
-   
+    $calid = str_replace  (TDE_BCCFCAL_PREFIX, "",@$_GET["id"]);
+
+
     $query = "SELECT * FROM ".DEX_BCCF_CONFIG_TABLE_NAME." where id='".esc_sql($calid)."'";
-    $row = $wpdb->get_results($query,ARRAY_A);      
+    $row = $wpdb->get_results($query,ARRAY_A);
     if ($row[0] && $row[0]["master"] != '0' && $row[0]["master"] != '')
-    {            
+    {
         $query = "SELECT * FROM ".DEX_BCCF_CONFIG_TABLE_NAME." where id='".esc_sql($row[0]["master"])."'";
         $row_master = $wpdb->get_results($query,ARRAY_A);
-        if ($row_master[0]) $calid = $row[0]["master"];        
-    }    
-    
-    
+        if ($row_master[0]) $calid = $row[0]["master"];
+    }
+
+
     if (!defined('CP_BCCF_CALENDAR_ID') && $calid != '-1')
-        define ('CP_BCCF_CALENDAR_ID',$calid);    
+        define ('CP_BCCF_CALENDAR_ID',$calid);
 
     $option = dex_bccf_get_option('calendar_overlapped', DEX_BCCF_DEFAULT_CALENDAR_OVERLAPPED);
 
@@ -2441,7 +2282,7 @@ function dex_bccf_calendar_load2($ret) {
         $query = "SELECT * FROM ".TDE_BCCFCALENDAR_DATA_TABLE." where ".TDE_BCCFDATA_IDCALENDAR."='".esc_sql($calid)."'";
     if ($option == 'true')
         $query.= " AND viadmin='1'";
-    
+
     $result = $wpdb->get_results($query, ARRAY_A);
     foreach ($result as $row)
     {
@@ -2455,8 +2296,8 @@ function dex_bccf_calendar_load2($ret) {
                                   "description"=>$row["description"],
                                   "c"=>@$row["color"]    // falta annadir este campo
                                 );
-    }    
-    
+    }
+
     return $ret;
 }
 
@@ -2497,10 +2338,10 @@ function dex_bccf_calendar_delete($ret) {
 function cp_bccf_get_site_url($admin = false)
 {
     $blog = get_current_blog_id();
-    if( $admin ) 
-        $url = get_admin_url( $blog );	
-    else 
-        $url = get_home_url( $blog );	
+    if( $admin )
+        $url = get_admin_url( $blog );
+    else
+        $url = get_home_url( $blog );
 
     $url = parse_url($url);
     $url = rtrim(@$url["path"],"/");
@@ -2510,18 +2351,18 @@ function cp_bccf_get_site_url($admin = false)
 function cp_bccf_get_FULL_site_url($admin = false)
 {
     $blog = get_current_blog_id();
-    if( $admin ) 
-        $url = get_admin_url( $blog );	
-    else 
-        $url = get_home_url( $blog );	
+    if( $admin )
+        $url = get_admin_url( $blog );
+    else
+        $url = get_home_url( $blog );
 
     $url = parse_url($url);
     $url = rtrim($url["path"],"/");
     $pos = strpos($url, "://");
     if ($pos === false)
         $url = 'http://'.$_SERVER["HTTP_HOST"].$url;
-//    if (!empty($_SERVER['HTTPS']))     
-//        $url = str_replace("http://","https://",$url);        
+//    if (!empty($_SERVER['HTTPS']))
+//        $url = str_replace("http://","https://",$url);
     return $url;
 }
 
@@ -2535,16 +2376,16 @@ function dex_bccf_cleanJSON($str)
 }
 
 function dex_bccf_available_templates()
-{	
+{
 	global $CP_BCCF_global_templates;
-	
+
 	if( empty( $CP_BCCF_global_templates ) )
 	{
 		// Get available designs
 		$tpls_dir = dir( plugin_dir_path( __FILE__ ).'templates' );
 		$CP_BCCF_global_templates = array();
-		while( false !== ( $entry = $tpls_dir->read() ) ) 
-		{    
+		while( false !== ( $entry = $tpls_dir->read() ) )
+		{
 			if ( $entry != '.' && $entry != '..' && is_dir( $tpls_dir->path.'/'.$entry ) && file_exists( $tpls_dir->path.'/'.$entry.'/config.ini' ) )
 			{
 				if( ( $ini_array = parse_ini_file( $tpls_dir->path.'/'.$entry.'/config.ini' ) ) !== false )
@@ -2553,35 +2394,35 @@ function dex_bccf_available_templates()
 					if( !empty( $ini_array[ 'thumbnail' ] ) ) $ini_array[ 'thumbnail' ] = plugins_url( 'templates/'.$entry.'/'.$ini_array[ 'thumbnail' ], __FILE__ );
 					$CP_BCCF_global_templates[ $ini_array[ 'prefix' ] ] = $ini_array;
 				}
-			}			
+			}
 		}
 	}
-		
+
 	return $CP_BCCF_global_templates;
 }
 
 function dex_bccf_translate_json($str)
 {
-    $form_data = json_decode(dex_bccf_cleanJSON($str));          
-    
-    $form_data[1][0]->title = __($form_data[1][0]->title,'bccf');   
-    $form_data[1][0]->description = __($form_data[1][0]->description,'bccf');   
-    
-    
-    for ($i=0; $i < count($form_data[0]); $i++)    
+    $form_data = json_decode(dex_bccf_cleanJSON($str));
+
+    $form_data[1][0]->title = __($form_data[1][0]->title,'bccf');
+    $form_data[1][0]->description = __($form_data[1][0]->description,'bccf');
+
+
+    for ($i=0; $i < count($form_data[0]); $i++)
     {
-        $form_data[0][$i]->title = __($form_data[0][$i]->title,'bccf');   
-        $form_data[0][$i]->userhelpTooltip = __($form_data[0][$i]->userhelpTooltip,'bccf'); 
-        $form_data[0][$i]->userhelp = __($form_data[0][$i]->userhelp,'bccf'); 
+        $form_data[0][$i]->title = __($form_data[0][$i]->title,'bccf');
+        $form_data[0][$i]->userhelpTooltip = __($form_data[0][$i]->userhelpTooltip,'bccf');
+        $form_data[0][$i]->userhelp = __($form_data[0][$i]->userhelp,'bccf');
         if ($form_data[0][$i]->ftype == 'fCommentArea')
-            $form_data[0][$i]->userhelp = __($form_data[0][$i]->userhelp,'bccf');   
-        else 
-            if ($form_data[0][$i]->ftype == 'fdropdown' || $form_data[0][$i]->ftype == 'fcheck' || $form_data[0][$i]->ftype == 'fradio')    
+            $form_data[0][$i]->userhelp = __($form_data[0][$i]->userhelp,'bccf');
+        else
+            if ($form_data[0][$i]->ftype == 'fdropdown' || $form_data[0][$i]->ftype == 'fcheck' || $form_data[0][$i]->ftype == 'fradio')
             {
-                for ($j=0; $j < count($form_data[0][$i]->choices); $j++)  
-                    $form_data[0][$i]->choices[$j] = __($form_data[0][$i]->choices[$j],'bccf'); 
-            }    
-    }    
+                for ($j=0; $j < count($form_data[0][$i]->choices); $j++)
+                    $form_data[0][$i]->choices[$j] = __($form_data[0][$i]->choices[$j],'bccf');
+            }
+    }
     $str = json_encode($form_data);
     return $str;
 }
@@ -2589,21 +2430,21 @@ function dex_bccf_translate_json($str)
 function dex_bccf_autodetect_language()
 {
     $basename = '/js/languages/jquery.ui.datepicker-';
-    
+
     $options = array (get_bloginfo('language'),
                       strtolower(get_bloginfo('language')),
                       substr(strtolower(get_bloginfo('language')),0,2)."-".substr(strtoupper(get_bloginfo('language')),strlen(strtoupper(get_bloginfo('language')))-2,2),
                       substr(strtolower(get_bloginfo('language')),0,2),
-                      substr(strtolower(get_bloginfo('language')),strlen(strtolower(get_bloginfo('language')))-2,2)                      
+                      substr(strtolower(get_bloginfo('language')),strlen(strtolower(get_bloginfo('language')))-2,2)
                       );
     foreach ($options as $option)
     {
         if (file_exists(dirname( __FILE__ ).$basename.$option.'.js'))
             return $option;
-        $option = str_replace ("-","_", $option);    
+        $option = str_replace ("-","_", $option);
         if (file_exists(dirname( __FILE__ ).$basename.$option.'.js'))
             return $option;
-    }  
+    }
     return '';
 }
 
@@ -2622,22 +2463,22 @@ function dex_bccf_get_option ($field, $default_value, $id = '')
     else
     {
        $myrows = $wpdb->get_results( "SELECT * FROM ".DEX_BCCF_CONFIG_TABLE_NAME." WHERE id=".CP_BCCF_CALENDAR_ID );
-       if (count($myrows)) 
+       if (count($myrows))
        {
            $value = @$myrows[0]->$field;
            $dex_option_buffered_item = $myrows[0];
            $dex_option_buffered_id  = CP_BCCF_CALENDAR_ID;
        }
-       else  
-           $value = $default_value; 
+       else
+           $value = $default_value;
     }
     if ($value == '' && $dex_option_buffered_item->calendar_language == '')
         $value = $default_value;
-        
-    if ($id == '')    
-        $id = CP_BCCF_CALENDAR_ID;    
-    $value = apply_filters( 'dexbccf_get_option', $value, $field, $id ); 
-        
+
+    if ($id == '')
+        $id = CP_BCCF_CALENDAR_ID;
+    $value = apply_filters( 'dexbccf_get_option', $value, $field, $id );
+
     return $value;
 }
 
@@ -2652,15 +2493,15 @@ function cp_bccf_is_administrator()
 
 
 function dex_bccf_form_result( $atts, $content = "", $id = 0 )
-	{		
-    
+	{
+
 		global $wpdb;
 		if( $id == 0 && !empty( $_SESSION[ 'cp_cff_form_data' ] ) ) $id = $_SESSION[ 'cp_cff_form_data' ];
 		if( !empty( $id ) )
 		{
 			$content = html_entity_decode( $content );
 			$result = $wpdb->get_row( $wpdb->prepare( "SELECT form_settings.form_structure AS form_structure, form_data.question AS data, form_data.buffered_date AS paypal_post FROM ".$wpdb->prefix.DEX_BCCF_CONFIG_TABLE_NAME_NO_PREFIX." AS form_settings,".DEX_BCCF_TABLE_NAME." AS form_data WHERE form_data.id=%d AND form_data.formid=form_settings.id", $id ) );
-			
+
 			if( !is_null( $result ) )
 			{
 				$atts = shortcode_atts( array( 'fields' => '' ), $atts );
@@ -2682,7 +2523,7 @@ function dex_bccf_form_result( $atts, $content = "", $id = 0 )
 				}
 				else
 				{
-					$fields = array();   
+					$fields = array();
 					foreach($form_data[0] as $item)
 					{
 						$fields[$item->name] = $item;
@@ -2691,7 +2532,7 @@ function dex_bccf_form_result( $atts, $content = "", $id = 0 )
 					$result->paypal_post = unserialize( $result->paypal_post );
 					$str = '';
 					$atts[ 'fields' ] = explode( ",", str_replace( " ", "", $atts[ 'fields' ] ) );
-					foreach( $atts[ 'fields' ] as $field ) 
+					foreach( $atts[ 'fields' ] as $field )
 					{
                         if( isset( $fields[ $field ] ) )
                         {
@@ -2703,9 +2544,9 @@ function dex_bccf_form_result( $atts, $content = "", $id = 0 )
                             elseif( in_array( $fields[ $field ]->ftype, array( 'fSectionBreak' ) ) )
                             {
                                 $str .= "<p><strong>".$fields[ $field ]->title."</strong>".(( !empty($fields[ $field ]->userhelp) ) ? "<br /><pan class='uh'>".$fields[ $field ]->userhelp."</span>" : '' )."</p>";
-                            }    
-						}	
-                        
+                            }
+						}
+
 					}
 
                     if( $content != '' )
@@ -2713,23 +2554,23 @@ function dex_bccf_form_result( $atts, $content = "", $id = 0 )
 	                    $replaced_values = _dex_bccf_replace_vars( $fields, $result->paypal_post, $content, $result->data, 'html', $id );
 	                    $str .= $replaced_values[ 'message' ];
                     }
-                    
+
 					return $str;
 				}
 			}
 		}
-			
+
 		return '';
 	}
 
 
 function _dex_bccf_extract_tags( $message )
 {
-	$tags_arr = array();	
+	$tags_arr = array();
 	if(
 		preg_match_all(	"/<%(info|fieldname\d+|fieldname\d+_label|fieldname\d+_shortlabel|fieldname\d+_value|fieldname\d+_url|fieldname\d+_urls|coupon|itemnumber|final_price|payment_option|ipaddress|currentdate_mmddyyyy|currentdate_ddmmyyyy)\b(?:(?!%>).)*%>/i",
-			$message, 
-			$matches 
+			$message,
+			$matches
 		)
 	)
 	{
@@ -2742,9 +2583,9 @@ function _dex_bccf_extract_tags( $message )
 			$tag[ 'before' ]    	= ( preg_match( "/before\s*=\s*\{\{((?:(?!\}\}).)*)\}\}/i",  $value, $match ) ) ? $match[ 1 ] : '';
 			$tag[ 'after' ]   		= ( preg_match( "/after\s*=\s*\{\{((?:(?!\}\}).)*)\}\}/i", $value, $match ) ) ? $match[ 1 ] : '';
 			$tag[ 'separator' ]    	= ( preg_match( "/separator\s*=\s*\{\{((?:(?!\}\}).)*)\}\}/i",  $value, $match ) ) ? $match[ 1 ] : '';
-			
+
 			$baseTag = ( preg_match( "/(fieldname\d+)_(label|value|shortlabel)/i", $tag[ 'tag' ], $match ) ) ? $match[ 1 ] : $tag[ 'tag' ];
-			
+
 			if( empty( $tags_arr[ $baseTag ] ) ) $tags_arr[ $baseTag ] = array();
 			$tags_arr[ $baseTag ][] = $tag;
 		}
@@ -2752,26 +2593,26 @@ function _dex_bccf_extract_tags( $message )
 	return $tags_arr;
 }
 
-function _dex_bccf_replace_vars( $fields, $params, $message, $buffer = '', $contentType = 'html', $itemnumber = '' ) 
+function _dex_bccf_replace_vars( $fields, $params, $message, $buffer = '', $contentType = 'html', $itemnumber = '' )
 {
 	// Lambda functions
 	$arrayReplacementFunction = create_function('&$tags, $tagName, $replacement, &$message', 'if(isset($tags[ $tagName ])){foreach( $tags[ $tagName ] as $tagData ){ $message = str_replace( $tagData[ "node" ], $tagData[ "before" ].$replacement.$tagData[ "after" ], $message );}unset( $tags[ $tagName ] );}');
-	
+
 	$singleReplacementFunction = create_function('$tagData, $value, &$message', '$message = str_replace( $tagData[ "node" ], $tagData[ "before" ].$value.$tagData[ "after" ],$message );');
-	
+
 	$message = str_replace( '< %', '<%', $message );
     $attachments = array();
-	
+
 	// Remove empty blocks
 	while( preg_match( "/<%\s*fieldname(\d+)_block\s*%>/", $message, $matches ) )
 	{
 		if( empty( $params[ 'fieldname'.$matches[ 1 ] ] ) )
-		{	
+		{
 			$from = strpos( $message, $matches[ 0 ] );
 			if( preg_match( "/<%\s*fieldname(".$matches[ 1 ].")_endblock\s*%>/", $message, $matches_end ) )
 			{
 				$lenght = strpos( $message, $matches_end[ 0 ] ) + strlen( $matches_end[ 0 ] ) - $from;
-			}	
+			}
 			else
 			{
 				$lenght = strlen( $matches[ 0 ] );
@@ -2781,17 +2622,17 @@ function _dex_bccf_replace_vars( $fields, $params, $message, $buffer = '', $cont
 		else
 		{
 			$message = preg_replace( array( "/<%\s*fieldname".$matches[ 1 ]."_block\s*%>/", "/<%\s*fieldname".$matches[ 1 ]."_endblock\s*%>/"), "", $message );
-		}	
+		}
 	}
-	
+
 	$tags = _dex_bccf_extract_tags( $message );
-	
+
 	if ( 'html' == $contentType )
     {
         $message = str_replace( "\n", "", $message );
         $buffer = str_replace( array('&lt;', '&gt;', '\"', "\'"), array('<', '>', '"', "'" ), $buffer );
     }
-    
+
 	// Replace the INFO tags
     if( !empty( $tags[ 'info' ] ) )
 	{
@@ -2808,19 +2649,19 @@ function _dex_bccf_replace_vars( $fields, $params, $message, $buffer = '', $cont
 					"",
 					"\n",
 					""
-				),    
+				),
 				$buffer1
 			);
 		}while( $buffer1 <> $tmp );
-	
-		foreach( $tags[ 'info' ] as $tagData ) 
+
+		foreach( $tags[ 'info' ] as $tagData )
 		{
 			$singleReplacementFunction( $tagData, ( ( $tagData[ 'if_not_empty' ] ) ? $buffer1 : $buffer ), $message );
 		}
 		unset( $tags[ 'info' ] );
-	}	
-		
-	foreach ($params as $item => $value)        
+	}
+
+	foreach ($params as $item => $value)
     {
 		$value_bk = $value;
 		if( isset( $tags[ $item ] ) )
@@ -2828,18 +2669,18 @@ function _dex_bccf_replace_vars( $fields, $params, $message, $buffer = '', $cont
 			$label 		= ( isset( $fields[ $item ] ) && property_exists( $fields[ $item ], 'title' ) ) ? $fields[ $item ]->title : '';
 			$shortlabel = ( isset( $fields[ $item ] ) && property_exists( $fields[ $item ], 'shortlabel' ) ) ? $fields[ $item ]->shortlabel : '';
 			$value = ( !empty( $value ) || is_numeric( $value ) && $value == 0 ) ? ( ( is_array( $value ) ) ? implode( ", ", $value ) : $value ) : '';
-			
+
 			if ( 'html' == $contentType )
 			{
 				$label = str_replace( array('&lt;', '&gt;', '\"', "\'"), array('<', '>', '"', "'" ), $label );
 				$shortlabel = str_replace( array('&lt;', '&gt;', '\"', "\'"), array('<', '>', '"', "'" ), $shortlabel );
 				$value = str_replace( array('&lt;', '&gt;', '\"', "\'"), array('<', '>', '"', "'" ), $value );
 			}
-			
+
 			foreach( $tags[ $item ] as $tagData )
 			{
 				if( $tagData[ 'if_not_empty' ] == 0 || $value !== '' )
-				{	
+				{
 					switch( $tagData[ 'tag' ] )
 					{
 						case $item:
@@ -2857,44 +2698,44 @@ function _dex_bccf_replace_vars( $fields, $params, $message, $buffer = '', $cont
 					}
 				}
 				else
-				{	
+				{
 					$message = str_replace( $tagData[ 'node' ], '', $message );
-				}	
+				}
 			}
 			unset( $tags[ $item ] );
-		}	
+		}
 
         if( preg_match( "/_link\b/i", $item ) )
         {
             $attachments = array_merge( $attachments, $value_bk );
-        }    
+        }
     }
 
 	$arrayReplacementFunction( $tags, 'itemnumber', $itemnumber, $message );
 	$arrayReplacementFunction( $tags, 'currentdate_mmddyyyy', date("m/d/Y H:i:s"), $message );
 	$arrayReplacementFunction( $tags, 'currentdate_ddmmyyyy', date("d/m/Y H:i:s"), $message );
 	$arrayReplacementFunction( $tags, 'ipaddress', $fields[ 'ipaddr' ], $message );
-	
+
     // Replace coupons code
 	if( isset( $_REQUEST[ 'couponcode' ] ) && isset( $tags[ 'couponcode' ] ) )
     {
 		$arrayReplacementFunction( $tags, 'couponcode', $_REQUEST[ 'couponcode' ], $message );
     }
-    
+
 	foreach( $tags as $tagArr )
     {
         foreach( $tagArr as $tagData )
 		{
 			$message = str_replace( $tagData[ 'node' ], '', $message );
 		}
-	}    
-    
+	}
+
     if ( 'html' == $contentType )
     {
         $message = str_replace( "\n", "<br>", $message );
     }
     $message = str_replace( '\\', '', stripslashes( stripcslashes( $message ) ) );
-	
+
 	return array( 'message' => $message, 'attachments' => $attachments );
 }
 

@@ -107,13 +107,13 @@ if ($message) echo "<div id='setting-error-settings_updated' class='updated sett
 	{
 		if( dexbccf_addons[ i ].checked ) dexbccf_addons_active_list.push( 'dexbccf_addons_active_list[]='+encodeURIComponent( dexbccf_addons[ i ].value ) );
 	}	
-	document.location = 'options-general.php?page=dex_bccf&b=1&r='+Math.random()+( ( dexbccf_addons_active_list.length ) ? '&'+dexbccf_addons_active_list.join( '&' ) : '' )+'&_dexbccf_nonce=<?php echo wp_create_nonce( 'session_id_'.session_id() ); ?>#addons-section';       
+	document.location = 'options-general.php?page=reservations&b=1&r='+Math.random()+( ( dexbccf_addons_active_list.length ) ? '&'+dexbccf_addons_active_list.join( '&' ) : '' )+'&_dexbccf_nonce=<?php echo wp_create_nonce( 'session_id_'.session_id() ); ?>#addons-section';       
  }    
      
  function cp_addItem()
  {
     var calname = document.getElementById("cp_itemname").value;
-    document.location = 'admin.php?page=dex_bccf&a=1&r='+Math.random()+'&name='+encodeURIComponent(calname);       
+    document.location = 'admin.php?page=reservations&a=1&r='+Math.random()+'&name='+encodeURIComponent(calname);       
  }
  
  function cp_updateItem(id)
@@ -123,29 +123,29 @@ if ($message) echo "<div id='setting-error-settings_updated' class='updated sett
     if (owner == '')
         owner = 0;
     var is_public = (document.getElementById("calpublic_"+id).checked?"0":"1");
-    document.location = 'admin.php?page=dex_bccf&u='+id+'&r='+Math.random()+'&public='+is_public+'&owner='+owner+'&name='+encodeURIComponent(calname);    
+    document.location = 'admin.php?page=reservations&u='+id+'&r='+Math.random()+'&public='+is_public+'&owner='+owner+'&name='+encodeURIComponent(calname);    
  }
  
  function cp_cloneItem(id)
  {
-    document.location = 'admin.php?page=dex_bccf&c='+id+'&r='+Math.random();  
+    document.location = 'admin.php?page=reservations&c='+id+'&r='+Math.random();  
  }  
  
  function cp_manageSettings(id)
  {
-    document.location = 'admin.php?page=dex_bccf&cal='+id+'&r='+Math.random();
+    document.location = 'admin.php?page=reservations&cal='+id+'&r='+Math.random();
  }
  
  function cp_BookingsList(id)
  {
-    document.location = 'admin.php?page=dex_bccf&cal='+id+'&list=1&r='+Math.random();
+    document.location = 'admin.php?page=reservations&cal='+id+'&list=1&r='+Math.random();
  }
  
  function cp_deleteItem(id)
  {
     if (confirm('Are you sure that you want to delete this item?'))
     {        
-        document.location = 'admin.php?page=dex_bccf&d='+id+'&r='+Math.random();
+        document.location = 'admin.php?page=reservations&d='+id+'&r='+Math.random();
     }
  }
  
@@ -155,14 +155,14 @@ if ($message) echo "<div id='setting-error-settings_updated' class='updated sett
     {        
         var scr = document.getElementById("ccscriptload").value;    
         var chs = document.getElementById("cccharsets").value;    
-        document.location = 'admin.php?page=dex_bccf&ac=st&scr='+scr+'&chs='+chs+'&r='+Math.random();
+        document.location = 'admin.php?page=reservations&ac=st&scr='+scr+'&chs='+chs+'&r='+Math.random();
     }    
  }
  
  function cp_exportItem()
  {
     var calname = document.getElementById("exportid").options[document.getElementById("exportid").options.selectedIndex].value;
-    document.location = 'admin.php?page=dex_bccf&bccf_export=1&r='+Math.random()+'&name='+encodeURIComponent(calname);       
+    document.location = 'admin.php?page=reservations&bccf_export=1&r='+Math.random()+'&name='+encodeURIComponent(calname);       
  }
  
 </script>
@@ -313,7 +313,7 @@ if ($message) echo "<div id='setting-error-settings_updated' class='updated sett
   <script type="text/javascript">
    function cp_editArea(id)
    {       
-          document.location = 'admin.php?page=dex_bccf&editk=1&cal=1&item='+id+'&r='+Math.random();
+          document.location = 'admin.php?page=reservations&editk=1&cal=1&item='+id+'&r='+Math.random();
    }
   </script>
   <div id="metabox_basic_settings" class="postbox" >
@@ -347,7 +347,7 @@ if ($message) echo "<div id='setting-error-settings_updated' class='updated sett
       <br /><br />      
     </form>
     <hr />
-    <form name="importitem" action="admin.php?page=dex_bccf" method="post" enctype="multipart/form-data">      
+    <form name="importitem" action="admin.php?page=reservations" method="post" enctype="multipart/form-data">      
       <input type="hidden" name="bccf_fileimport" id="bccf_fileimport"  value="1" />
       Import a form structure and settings (will OVERWRITE the related form. Only <em>.bccf</em> files ):<br />
       <input type="file" name="cp_filename" id="cp_filename"  value="" /> <input type="submit" name="gobtn" value="Import" />

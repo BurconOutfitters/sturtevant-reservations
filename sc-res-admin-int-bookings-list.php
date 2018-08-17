@@ -66,23 +66,23 @@ $option_calendar_enabled = dex_bccf_get_option('calendar_enabled', DEX_BCCF_DEFA
  {
     if (confirm('Are you sure that you want to delete this item?'))
     {        
-        document.location = 'admin.php?page=dex_bccf&cal=<?php echo $_GET["cal"]; ?>&list=1&ld='+id+'&r='+Math.random();
+        document.location = 'admin.php?page=reservations&cal=<?php echo $_GET["cal"]; ?>&list=1&ld='+id+'&r='+Math.random();
     }
  }
  function cp_editItem(id, cal)
  {
-     document.location = 'admin.php?page=dex_bccf&cal='+cal+'&edit='+id+'&r='+Math.random();
+     document.location = 'admin.php?page=reservations&cal='+cal+'&edit='+id+'&r='+Math.random();
  } 
  function cp_updatePaid(id,paid) {
-    document.location = 'admin.php?page=dex_bccf&cal=<?php echo $_GET["cal"]; ?>&list=1&paid='+paid+'&lup='+id+'&r='+Math.random();
+    document.location = 'admin.php?page=reservations&cal=<?php echo $_GET["cal"]; ?>&list=1&paid='+paid+'&lup='+id+'&r='+Math.random();
  }
 </script>
 <div class="wrap">
 <h2>Booking Calendar Contact Form - Bookings List</h2>
 
-<input type="button" name="backbtn" value="Back to items list..." onclick="document.location='admin.php?page=dex_bccf';">
+<input type="button" name="backbtn" value="Back to items list..." onclick="document.location='admin.php?page=reservations';">
 
-<input type="button" name="noncbtn" style="color:#ff0000;" value="Check non-completed bookings list..." onclick="document.location='admin.php?page=dex_bccf&cal=<?php echo $_GET["cal"]; ?>&list2=1';">
+<input type="button" name="noncbtn" style="color:#ff0000;" value="Check non-completed bookings list..." onclick="document.location='admin.php?page=reservations&cal=<?php echo $_GET["cal"]; ?>&list2=1';">
 
 <div id="normal-sortables" class="meta-box-sortables">
  <hr />
@@ -107,7 +107,7 @@ $option_calendar_enabled = dex_bccf_get_option('calendar_enabled', DEX_BCCF_DEFA
 
 
 echo paginate_links(  array(
-    'base'         => 'admin.php?page=dex_bccf&cal='.CP_BCCF_CALENDAR_ID.'&list=1%_%&dfrom='.urlencode($_GET["dfrom"]).'&dto='.urlencode($_GET["dto"]).'&search='.urlencode($_GET["search"]),
+    'base'         => 'admin.php?page=reservations&cal='.CP_BCCF_CALENDAR_ID.'&list=1%_%&dfrom='.urlencode($_GET["dfrom"]).'&dto='.urlencode($_GET["dto"]).'&search='.urlencode($_GET["search"]),
     'format'       => '&p=%#%',
     'total'        => $total_pages,
     'current'      => $current_page,

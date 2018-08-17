@@ -89,7 +89,7 @@ if (true) {   // (cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $c
        $wpdb->update ( TDE_BCCFCALENDAR_DATA_TABLE, $data1, array( 'id' => $_GET["edit"] ));
        if ($event->reference != '') $wpdb->update ( DEX_BCCF_TABLE_NAME, $data2, array( 'id' => $event->reference ));
        
-       echo '<script type="text/javascript">  document.location = "admin.php?page=dex_bccf&cal='.$_GET["cal"].'&list=1&message=Item updated&r="+Math.random();</script>';
+       echo '<script type="text/javascript">  document.location = "admin.php?page=reservations&cal='.$_GET["cal"].'&list=1&message=Item updated&r="+Math.random();</script>';
        exit;
     }    
     
@@ -160,7 +160,7 @@ if (true) {   // (cp_bccf_is_administrator() || $mycalendarrows[0]->conwer == $c
  });
  function gobackapp()
  {
-     document.location = 'admin.php?page=dex_bccf&cal=<?php echo $_GET["cal"]; ?>&list=1&r='+Math.random();
+     document.location = 'admin.php?page=reservations&cal=<?php echo $_GET["cal"]; ?>&list=1&r='+Math.random();
  }
 </script>
 

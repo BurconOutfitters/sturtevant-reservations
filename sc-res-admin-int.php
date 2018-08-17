@@ -51,7 +51,7 @@ for ($k=1;$k<100;$k++)
 <div class="wrap">
 <h2>Booking Calendar Contact Form - Manage Calendar Availability</h2>
 
-<input type="button" name="backbtn" value="Back to items list..." onclick="document.location='admin.php?page=dex_bccf';">
+<input type="button" name="backbtn" value="Back to items list..." onclick="document.location='admin.php?page=reservations';">
 
 <form method="post" name="dexconfigofrm" action="">
 <input name="dex_bccf_post_options" type="hidden" value="1" />
@@ -132,7 +132,7 @@ for ($k=1;$k<100;$k++)
   //  } else if ($option_overlapped == 'true') {
 ?>
    <!-- <div style="background-color:#ffff55;width:450px;border: 1px solid black;padding:10px;margin:10px;">
-    <strong>Note:</strong> Overlapped reservations are enabled below, so you cannot use the calendar to block dates and the booking should be checked in the <a href="admin.php?page=dex_bccf&cal=<?php echo CP_BCCF_CALENDAR_ID; ?>&list=1">bookings list area</a>.
+    <strong>Note:</strong> Overlapped reservations are enabled below, so you cannot use the calendar to block dates and the booking should be checked in the <a href="admin.php?page=reservations&cal=<?php echo CP_BCCF_CALENDAR_ID; ?>&list=1">bookings list area</a>.
    </div>
     -->
 <?php } else { ?>
@@ -171,7 +171,7 @@ for ($k=1;$k<100;$k++)
 
 <?php if ($option_overlapped == 'true') { ?>
 <div style="background-color:#ffffdd;width:450px;border: 1px solid black;padding:10px;margin:10px;">
-    <strong>Note:</strong> Overlapped reservations are enabled below and you can use the calendar for blocking dates, however only the blocked dates are shown in the calendar. The bookings should be checked in the <a href="admin.php?page=dex_bccf&cal=<?php echo CP_BCCF_CALENDAR_ID; ?>&list=1">bookings list area</a>.
+    <strong>Note:</strong> Overlapped reservations are enabled below and you can use the calendar for blocking dates, however only the blocked dates are shown in the calendar. The bookings should be checked in the <a href="admin.php?page=reservations&cal=<?php echo CP_BCCF_CALENDAR_ID; ?>&list=1">bookings list area</a>.
    </div>
 <?php } ?>
 
@@ -1094,7 +1094,8 @@ for ($k=1;$k<100;$k++)
 </div>
 
 
-<p class="submit"><input type="submit" name="submit" id="submit" class="button-primary" value="Save Changes"  /></p>
+<p class="submit"><input type="submit" name="submit" id="submit" class="button-primary" value="Save Changes"  /></p>
+
 
 [<a href="http://wordpress.dwbooster.com/contact-us" target="_blank">Request Custom Modifications</a>] | [<a href="http://wordpress.dwbooster.com/calendars/booking-calendar-contact-form" target="_blank">Help</a>]
 </form>
