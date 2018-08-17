@@ -2,43 +2,43 @@
 /*
 Documentation: https://goo.gl/w3kKoH
 */
-require_once dirname( __FILE__ ) . '/sc-res-base-addon.php';
+require_once dirname( __FILE__ ).'/base.addon.php';
 
 if( !class_exists( 'DEXBCCF_SabTPV' ) )
 {
     class DEXBCCF_SabTPV extends DEXBCCF_BaseAddon
     {
-
+       
         /************* ADDON SYSTEM - ATTRIBUTES AND METHODS *************/
 		protected $addonID = "addon-sabtpv-20160715";
 		protected $name = "RedSys TPV";
 		protected $description;
-
+		
 		public function get_addon_form_settings( $form_id )
 		{
-			global $wpdb;
+			global $wpdb;			
 			// Insertion in database
-			if(
+			if( 
 				isset( $_REQUEST[ 'dexbccf_sabtpv_id' ] )
 			)
 			{
 			    $wpdb->delete( $wpdb->prefix.$this->form_table, array( 'formid' => $form_id ), array( '%d' ) );
-				$wpdb->insert(
-								$wpdb->prefix.$this->form_table,
-								array(
+				$wpdb->insert( 	
+								$wpdb->prefix.$this->form_table, 
+								array( 
 									'formid' => $form_id,
 									'sabtpv_api_username'	 => $_REQUEST["sabtpv_api_username"],
-									'sabtpv_api_password'	 => $_REQUEST["sabtpv_api_password"],
+									'sabtpv_api_password'	 => $_REQUEST["sabtpv_api_password"],																		
 									'enabled'	 => $_REQUEST["redsys_enabled"],
 									'paypal_mode'	 => $_REQUEST["redsys_paypal_mode"]
-								),
-								array( '%d', '%s', '%s','%s', '%s' )
-							);
-			}
+								), 
+								array( '%d', '%s', '%s','%s', '%s' ) 
+							);					
+			}		
 
-
-			$rows = $wpdb->get_results(
-						$wpdb->prepare( "SELECT * FROM ".$wpdb->prefix.$this->form_table." WHERE formid=%d", $form_id )
+			
+			$rows = $wpdb->get_results( 
+						$wpdb->prepare( "SELECT * FROM ".$wpdb->prefix.$this->form_table." WHERE formid=%d", $form_id ) 
 					);
 			if (!count($rows))
 			{
@@ -55,121 +55,121 @@ if( !class_exists( 'DEXBCCF_SabTPV' ) )
 			    $row["currency"] = $rows[0]->currency;
 			    $row["enabled"] = $rows[0]->enabled;
 			    $row["paypal_mode"] = $rows[0]->paypal_mode;
-			}
-
+			}   
+			
 			?>
-			<div id="metabox_basic_settings" class="postbox" >
+			<div id="metabox_basic_settings" class="postbox" >			
 				<h3 class='hndle' style="padding:5px;"><span><?php print $this->name; ?></span></h3>
-				<div class="inside">
+				<div class="inside"> 
 				   <input type="hidden" name="dexbccf_sabtpv_id" value="1" />
                    <table class="form-table">
-                    <tr valign="top">
+                    <tr valign="top">        
                     <th scope="row"><?php _e('Enable TPV? (if enabled PayPal Standard is disabled)', 'bccf'); ?></th>
                     <td><select name="redsys_enabled">
                          <option value="0" <?php if (!$row["enabled"]) echo 'selected'; ?>><?php _e('No', 'bccf'); ?></option>
                          <option value="1" <?php if ($row["enabled"]) echo 'selected'; ?>><?php _e('Yes', 'bccf'); ?></option>
-                         </select>
+                         </select> 
                     </td>
-                    </tr>
-                    <tr valign="top">
+                    </tr>   
+                    <tr valign="top">        
                     <th scope="row"><?php _e('C&Oacute;DIGO COMERCIO', 'bccf'); ?></th>
                     <td><input type="text" name="sabtpv_api_username" size="20" value="<?php echo esc_attr($row["sabtpv_api_username"]); ?>" /></td>
-                    </tr>
-                    <tr valign="top">
+                    </tr>   
+                    <tr valign="top">        
                     <th scope="row"><?php _e('CLAVE SECRETA', 'bccf');?></th>
                     <td><input type="text" name="sabtpv_api_password" size="40" value="<?php echo esc_attr($row["sabtpv_api_password"]); ?>" /></td>
-                    </tr>
-                    <tr valign="top">
+                    </tr>                                           
+                    <tr valign="top">        
                     <th scope="row"><?php _e('Mode', 'bccf'); ?></th>
                     <td><select name="redsys_paypal_mode">
-                         <option value="production" <?php if ($row["paypal_mode"] != 'sandbox') echo 'selected'; ?>><?php _e('Production - real payments processed', 'bccf'); ?></option>
-                         <option value="sandbox" <?php if ($row["paypal_mode"] == 'sandbox') echo 'selected'; ?>><?php _e('SandBox - Testing sandbox area', 'bccf'); ?></option>
+                         <option value="production" <?php if ($row["paypal_mode"] != 'sandbox') echo 'selected'; ?>><?php _e('Production - real payments processed', 'bccf'); ?></option> 
+                         <option value="sandbox" <?php if ($row["paypal_mode"] == 'sandbox') echo 'selected'; ?>><?php _e('SandBox - Testing sandbox area', 'bccf'); ?></option> 
                         </select>
                     </td>
-                    </tr>
-                   </table>
+                    </tr>                    
+                   </table>  
 				</div>
-			</div>
+			</div>	
 			<?php
 		} // end get_addon_form_settings
+		
 
-
-
+		
 		/************************ ADDON CODE *****************************/
-
-        /************************ ATTRIBUTES *****************************/
-
-        private $form_table = 'bccf_dex_form_sabtpv';
+		
+        /************************ ATTRIBUTES *****************************/    
+        
+        private $form_table = 'bccf_dex_form_sabtpv';        
         private $_inserted = false;
-
+        
         /************************ CONSTRUCT *****************************/
-
+		
         function __construct()
         {
 			$this->description = __("The add-on adds support for RedSys TPV payments", 'bccf' );
             // Check if the plugin is active
 			if( !$this->addon_is_active() ) return;
-
-			add_action( 'dexbccf_process_data', array( &$this, 'pp_sabtpv' ), 1, 2 );
+			
+			add_action( 'dexbccf_process_data', array( &$this, 'pp_sabtpv' ), 1, 2 );						
 
 			add_action( 'init', array( &$this, 'pp_sabtpv_update_status' ), 10, 1 );
-
-			add_filter( 'dexbccf_get_option', array( &$this, 'get_option' ), 10, 3 );
-
+			
+			add_filter( 'dexbccf_get_option', array( &$this, 'get_option' ), 10, 3 );					
+			
             $this->update_database();
-
+			
         } // End __construct
+        
 
-
-
+        
         /************************ PRIVATE METHODS *****************************/
-
+        
 		/**
          * Create the database tables
          */
         protected function update_database()
 		{
-			global $wpdb;
+			global $wpdb;			
 			$sql = "CREATE TABLE IF NOT EXISTS ".$wpdb->prefix.$this->form_table." (
 					id mediumint(9) NOT NULL AUTO_INCREMENT,
 					formid INT NOT NULL,
 					enabled varchar(10) DEFAULT '0' NOT NULL ,
 					sabtpv_api_username varchar(255) DEFAULT '' NOT NULL ,
-					sabtpv_api_password varchar(255) DEFAULT '' NOT NULL ,
-					paypal_mode varchar(255) DEFAULT '' NOT NULL ,
+					sabtpv_api_password varchar(255) DEFAULT '' NOT NULL ,					
+					paypal_mode varchar(255) DEFAULT '' NOT NULL ,				
 					UNIQUE KEY id (id)
 				);";
 				//  sabtpv_api_signature varchar(255) DEFAULT '' NOT NULL ,
 				//	currency varchar(255) DEFAULT '' NOT NULL ,
-
+				
 			$wpdb->query($sql);
-		} // end update_database
+		} // end update_database		        	
+        
+        
+		/************************ PUBLIC METHODS  *****************************/                               
 
-
-		/************************ PUBLIC METHODS  *****************************/
-
-
+               
 		/**
          * process payment
-         */
+         */		
 		public function pp_sabtpv($params)
-		{
-            global $wpdb;
-
-			// documentation: https://goo.gl/w3kKoH
-
-            $rows = $wpdb->get_results(
-						$wpdb->prepare( "SELECT * FROM ".$wpdb->prefix.$this->form_table." WHERE formid=%d", $params["formid"] )
+		{               
+            global $wpdb;						
+					
+			// documentation: https://goo.gl/w3kKoH                     
+           
+            $rows = $wpdb->get_results( 
+						$wpdb->prepare( "SELECT * FROM ".$wpdb->prefix.$this->form_table." WHERE formid=%d", $params["formid"] ) 
 					);
-			if (!$rows[0]->enabled)
+			if (!$rows[0]->enabled)		
 			    return;
-
+			    
             $key = $rows[0]->sabtpv_api_password;
-
+           
             $redsys = new DEXBCCF_SermepaTPV();
             $redsys->setAmount($params["final_price"]);
             $redsys->setOrder('111'.$params["itemnumber"]);
-            $redsys->setMerchantcode($rows[0]->sabtpv_api_username);
+            $redsys->setMerchantcode($rows[0]->sabtpv_api_username); 
             $redsys->setCurrency('978');
             $redsys->setTransactiontype('0');
             $redsys->setTerminal('1');
@@ -177,27 +177,27 @@ if( !class_exists( 'DEXBCCF_SabTPV' ) )
             $redsys->setNotification( (cp_bccf_get_FULL_site_url().'/?cp_sabtpv_ipncheck=1&itemnumber='.$params["itemnumber"]) ); //Url de notificacion
 			$url_ok = dex_bccf_get_option('url_ok', DEX_BCCF_DEFAULT_OK_URL);
             $redsys->setUrlOk( $url_ok ); //Url OK
-			$url_ko .= (( strpos( '?', $url_ok ) === false ) ? '?' : '&' ).'payment_canceled=1';
-            $redsys->setUrlKo( $url_ok ); //Url KO
+			$url_ko .= (( strpos( '?', $url_ok ) === false ) ? '?' : '&' ).'payment_canceled=1'; 
+            $redsys->setUrlKo( $url_ok ); //Url KO            
             $redsys->setVersion('HMAC_SHA256_V1');
             //$redsys->setTradeName('Tienda S.L');
             //$redsys->setTitular('Pedro Risco');
             $redsys->setProductDescription( dex_bccf_get_option('paypal_product_name', DEX_BCCF_DEFAULT_PRODUCT_NAME).$params[ 'external_id' ] );
-
+           
             if ($rows[0]->paypal_mode == 'sandbox')
-                $redsys->setEnviroment('test'); //Entorno test
-            else
+                $redsys->setEnviroment('test'); //Entorno test                
+            else  
                 $redsys->setEnviroment('live'); //Entorno production
-
+           
             $signature = $redsys->generateMerchantSignature($key);
             $redsys->setMerchantSignature($signature);
+           
+            $form = $redsys->executeRedirection();			    
 
-            $form = $redsys->executeRedirection();
-
-            exit;
-		} // end pp_sabtpv
-
-
+            exit;   
+		} // end pp_sabtpv               
+		
+		
 		/**
 		 * log
 		 */
@@ -217,51 +217,51 @@ if( !class_exists( 'DEXBCCF_SabTPV' ) )
 			fwrite( $h, $log );
 			fclose( $h );
 		}
-
+		
 		public function pp_sabtpv_update_status( )
 		{
-            global $wpdb;
+            global $wpdb;      
             if ( !isset( $_GET['cp_sabtpv_ipncheck'] ) || $_GET['cp_sabtpv_ipncheck'] != '1' || !isset( $_GET["itemnumber"] ) )
                 return;
-
+                
             $redsys = new DEXBCCF_SermepaTPV();
             $redsys_params = $redsys->getMerchantParameters($_REQUEST["Ds_MerchantParameters"]);
 			//$this->_log($redsys_params);
-
+			
 			if (!isset($redsys_params["Ds_Response"]))
 			    return;
-
-            $itemnumber = intval(@$_GET['itemnumber'] );
+			
+            $itemnumber = intval(@$_GET['itemnumber'] );    
             $myrows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM ".DEX_BCCF_TABLE_NAME." WHERE id=%d", $itemnumber ) );
-            $params = unserialize($myrows[0]->buffered_date);
+            $params = unserialize($myrows[0]->buffered_date);       
 
 			$paymentok = (intval($redsys_params["Ds_Response"]) < 100);
 			if (!$paymentok)
-			{
+			{				
 				echo 'Payment failed';
 				exit();
-			}
+			}    
 
 			//if ($myrows[0]->paid == 0)
-			//{
+			//{			    
 				$params[ 'tpv_response_code' ] = $redsys_params["Ds_Response"];
-				$wpdb->query( $wpdb->prepare( "UPDATE ".DEX_BCCF_TABLE_NAME." SET buffered_date=%s WHERE id=%d", serialize( $params ), $itemnumber ) );
+				$wpdb->query( $wpdb->prepare( "UPDATE ".DEX_BCCF_TABLE_NAME." SET buffered_date=%s WHERE id=%d", serialize( $params ), $itemnumber ) );		
 				if (!defined('CP_BCCF_CALENDAR_ID'))
 					define ('CP_BCCF_CALENDAR_ID',$myrows[0]->formid);
-				dex_process_ready_to_go_bccf( $itemnumber, $payer_email, $params );
+				dex_process_ready_to_go_bccf( $itemnumber, $payer_email, $params );				
 				echo 'OK - processed';
 			//}
 			//else
 			//	echo 'OK - already processed';
-
-            exit();
-
+	
+            exit();              
+              
 		}
-
+               
         /**
          * Translate response codes
-         */
-       public function getResponseText($responseCode)
+         */       
+       public function getResponseText($responseCode) 
        {
             switch($responseCode)
             {
@@ -404,11 +404,11 @@ if( !class_exists( 'DEXBCCF_SabTPV' ) )
             		$reason =  'Operación que ha sido redirigida al emisor a autenticar.';
             	default:
             		$reason =  'Transaccion denegada codigo:'.$_REQUEST["Ds_Response"];
-            	break;
+            	break;	
             }
             return $reason;
-       }
-
+       } 
+               
 		/**
 		 * Used to deactivate PayPal Standard if PayPal Pro is enabled for the form
 		 */
@@ -417,22 +417,22 @@ if( !class_exists( 'DEXBCCF_SabTPV' ) )
 			if( $field == 'enable_paypal' )
 			{
 			    global $wpdb;
-			    $rows = $wpdb->get_results(
-						$wpdb->prepare( "SELECT enabled FROM ".$wpdb->prefix.$this->form_table." WHERE formid=%d", $id )
+			    $rows = $wpdb->get_results( 
+						$wpdb->prepare( "SELECT enabled FROM ".$wpdb->prefix.$this->form_table." WHERE formid=%d", $id ) 
 					);
 			    if ( !empty( $rows ) && $rows[0]->enabled)
 				    $value = 0;
-			}
+			}	
 			return $value;
-		} // End get_option
-
-
-
+		} // End get_option		
+				              	          		        			
+		
+		
     } // End Class
-
+    
     // Main add-on code
     $dexbccf_sabtpv_obj = new DEXBCCF_SabTPV();
-
+    
 	// Add addon object to the objects list
 	global $dexbccf_addons_objs_list;
 	$dexbccf_addons_objs_list[ $dexbccf_sabtpv_obj->get_addon_id() ] = $dexbccf_sabtpv_obj;
@@ -440,7 +440,7 @@ if( !class_exists( 'DEXBCCF_SabTPV' ) )
 
 if( !class_exists( 'DEXBCCF_SermepaTPV' ) )
 {
-
+    
     class DEXBCCF_SermepaTPV{
         private $_setEnviroment;
         private $_setMerchantData;
@@ -477,8 +477,8 @@ if( !class_exists( 'DEXBCCF_SermepaTPV' ) )
             $this->_setNameSubmit = 'btn_submit';
             $this->_setIdSubmit = 'btn_submit';
             $this->_setValueSubmit = 'Send';
-            $this->_setStyleSubmit = '';
-
+            $this->_setStyleSubmit = '';            
+            
         }
         /************* NEW METHODS ************* */
         /**

@@ -4,49 +4,49 @@ fbuilderjQuery(function(){
 (function($) {
 	// Namespace of fbuilder
 	$.fbuilder = $.fbuilder || {};
-	$.fbuilder[ 'objName' ] = 'fbuilderjQuery';
-
+	$.fbuilder[ 'objName' ] = 'fbuilderjQuery';	
+	
 <?php
 	// Load Module files
-	try
+	try 
 	{
         $md = dir( dirname( __FILE__ )."/modules" );
 		$modules_files = array();
-        while( false !== ( $entry = $md->read() ) )
-		{
+        while( false !== ( $entry = $md->read() ) ) 
+		{    
             if ( strlen( $entry ) > 3 && is_dir( $md->path.'/'.$entry ) )
 			{
 				if ( file_exists( $md->path.'/'.$entry.'/public' ) )
 				{
 					$m = dir( $md->path.'/'.$entry.'/public' );
 					while( false !== ( $mentry = $m->read() ) )
-					{
+					{	
 						if( strlen( $mentry ) > 3 && strtolower( substr( $mentry, strlen( $mentry ) - 3 ) ) == '.js' )
 						{
 							$modules_files[] = $m->path.'/'.$mentry;
 						}
 					}
-				}
-
-			}
+				}	
+						
+			}			
         }
 		sort( $modules_files );
 		foreach( $modules_files as $file )
 		{
 			require $file;
 		}
-	}
-	catch (Exception $e)
+	} 
+	catch (Exception $e) 
 	{
         // ignore the error
     }
 
 	// Load Control files
-    require 'fbuilder-pro-public.jquery.min.js';
+    require 'fbuilder-pro-public.jquery.js';
     try {
         $d = dir( dirname( __FILE__ )."/fields-public" );
 		$controls_files = array();
-        while (false !== ($entry = $d->read())) {
+        while (false !== ($entry = $d->read())) {            
             if (strlen($entry) > 3 && strtolower(substr($entry,strlen($entry)-3)) == '.js')
                 if ( file_exists( $d->path.'/'.$entry ) )
                     $controls_files[] = $d->path.'/'.$entry;
@@ -71,7 +71,7 @@ fbuilderjQuery(function(){
 			$("#dex_bccf_pform"+fnum).validate({
                 ignore:".ignore,.ignorepb",
 			    errorElement: "div",
-			    errorPlacement: function(e, element)
+			    errorPlacement: function(e, element) 
 					{
 						if (element.hasClass('group'))
 							element = element.parent();

@@ -1,0 +1,132 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Booking Calendar Contact Form\n"
+"POT-Creation-Date: 2013-09-01 17:05+0100\n"
+"PO-Revision-Date: 2014-11-22 18:53+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.9\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;_e;__\n"
+"X-Poedit-Basepath: C:\\xampp\\htdocs\\wp3.6\\wp-content\\plugins\\booking-"
+"calendar-contact-form\\\n"
+"Language: bn_IN\n"
+"X-Poedit-SearchPath-0: .\n"
+
+# RevTran=E-mail
+#: database
+msgid "Email"
+msgstr "ই-মেইল"
+
+# RevTran=~Subject
+#: database
+msgid "Subject"
+msgstr "বিষয় (~স)"
+
+#: database
+msgid "Message"
+msgstr "বার্তা"
+
+#: dex_bccf.php:418
+msgid "Settings"
+msgstr "সেটিংস"
+
+# RevTran=~Help
+#: dex_bccf.php:425
+msgid "Help"
+msgstr "সহায়িকা (~স)"
+
+# RevTran=Custom Change Request
+#: dex_bccf.php:431
+msgid "Request custom changes"
+msgstr "কাস্টম পরিবর্তন অনুরোধ"
+
+# RevTran=Booking Calendar Insert
+#: dex_bccf.php:450 dex_bccf_admin_int.inc.php:562
+msgid "Insert Booking Calendar"
+msgstr "বুকিং ক্যালেন্ডার ঢোকান"
+
+# RevTran=Save insert calendar
+#: dex_bccf.php:450
+msgid "Insert  Reservation Calendar"
+msgstr "সন্নিবেশ সংরক্ষণ ক্যালেন্ডার"
+
+#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:11
+msgid "Select Start Date"
+msgstr "নির্বাচন স্টার্ট তারিখ"
+
+# RevTran=Select an end date
+#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:12
+msgid "Select End Date"
+msgstr "নির্বাচন শেষ তারিখ"
+
+# RevTran=Undo Selection
+#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:13
+msgid "Cancel Selection"
+msgstr "নির্বাচন বাতিল করুন"
+
+#: dex_bccf_admin_int.inc.php:96 dex_scheduler.inc.php:14
+msgid "Successfully"
+msgstr "সফলভাবে"
+
+#: dex_bccf_admin_int_bookings_list.inc.php:91
+msgid "Previous"
+msgstr "পূর্ববর্তী"
+
+#: dex_bccf_admin_int_bookings_list.inc.php:92
+msgid "Next"
+msgstr "পরবর্তী"
+
+#: dex_scheduler.inc.php:6
+msgid "Calendar"
+msgstr "পঞ্জিকা"
+
+# RevTran=Minimum number of nights booked
+#: dex_scheduler.inc.php:7
+msgid "The minimum number of nights to book is"
+msgstr "বুক রাত্রি সর্বনিম্ন সংখ্যা"
+
+# RevTran=Book is the maximum number of nights
+#: dex_scheduler.inc.php:8
+msgid "The maximum number of nights to book is"
+msgstr "বুক রাত্রি সর্বোচ্চ সংখ্যক হয়"
+
+# RevTran=Select the start and end dates
+#: dex_scheduler.inc.php:9
+msgid "Select start and end dates"
+msgstr "নির্বাচন শুরু এবং শেষ তারিখগুলি"
+
+# RevTran=Please select the start and end dates
+#: dex_scheduler.inc.php:10
+msgid "Please select start and end dates"
+msgstr "শুরু এবং শেষ তারিখগুলি দয়া করে নির্বাচন করুন"
+
+# RevTran=Price
+#: dex_scheduler.inc.php:15
+msgid "Cost"
+msgstr "মূল্য"
+
+#: dex_scheduler.inc.php:16
+msgid "Coupon code (optional)"
+msgstr "কুপন কোড (ঐচ্ছিক)"
+
+# RevTran=Services
+#: dex_scheduler.inc.php:17
+msgid "Service"
+msgstr "সেবা"
+
+# RevTran=Enter the security code
+#: dex_scheduler.inc.php:18
+msgid "Please enter the security code"
+msgstr "নিরাপত্তা কোড লিখুন"
+
+# RevTran=Security Code (lowercase)
+#: dex_scheduler.inc.php:19
+msgid "Security Code (lowercase letters)"
+msgstr "যোগাযোগ কোড (ছোট হাতের অক্ষর)"
+
+#: dex_scheduler.inc.php:20
+msgid "Continue"
+msgstr "চালিয়ে"

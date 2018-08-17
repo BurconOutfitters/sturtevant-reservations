@@ -1,4 +1,5 @@
-.cpcff-salesforce-attribute {
+/**/
+.cpcff-salesforce-attribute{
 	z-index: 9999;
 	position: absolute;
 	width: calc( 100% - 25px );
