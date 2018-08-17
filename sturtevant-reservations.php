@@ -186,6 +186,12 @@ final class Sturtevant_Reservations {
         // Reguire data source file.
         require_once SC_RES_PATH . 'sc-res-source.php';
 
+        // Form & calendar shortcodes.
+        require_once SC_RES_PATH . 'includes/class-shortcodes.php';
+
+        // Form & calendar widget.
+        require_once SC_RES_PATH . 'includes/class-widget.php';
+
     }
 
     function admin_scripts($hook) {
@@ -673,78 +679,6 @@ function sc_res_deactivate_plugin() {
 	// Run the deactivation class.
 	sc_res_deactivate();
 
-}
-
-/* Filter for placing the maps into the contents */
-
-function dex_bccf_filter_content($atts) {
-
-    global $wpdb;
-
-    extract( shortcode_atts( array(
-		'calendar' => '',
-		'user' => '',
-		'pages' => '',
-	), $atts ) );
-
-	/**
-	 * Filters applied before generate the form,
-	 * is passed as parameter an array with the forms attributes, and return the list of attributes
-	 */
-	$atts = apply_filters( 'dexbccf_pre_form',  $atts );
-
-    if ($calendar != '')
-        define ('DEX_BCCF_CALENDAR_FIXED_ID',$calendar);
-    else if ($user != '')
-    {
-        $users = $wpdb->get_results( "SELECT user_login,ID FROM ".$wpdb->users." WHERE user_login='".esc_sql($user)."'" );
-        if (isset($users[0]))
-            define ('DEX_CALENDAR_USER',$users[0]->ID);
-        else
-            define ('DEX_CALENDAR_USER',0);
-    }
-    else
-        define ('DEX_CALENDAR_USER',0);
-    ob_start();
-    dex_bccf_get_public_form($pages);
-    $buffered_contents = ob_get_contents();
-    ob_end_clean();
-
-	/**
-	 * Filters applied after generate the form,
-	 * is passed as parameter the HTML code of the form with the corresponding <LINK> and <SCRIPT> tags,
-	 * and returns the HTML code to includes in the webpage
-	 */
-	$buffered_contents = apply_filters( 'dexbccf_the_form', $buffered_contents,  $atts[ 'id' ] );
-
-    return $buffered_contents;
-}
-if ( ! is_admin() ) {
-    add_shortcode( 'CP_BCCF_FORM', 'dex_bccf_filter_content' );
-}
-
-function dex_bccf_filter_content_allcalendars($atts) {
-    global $wpdb;
-    extract( shortcode_atts( array(
-		'calendar' => '',
-		'id' => '',
-		'pages' => '',
-	), $atts ) );
-	if ($calendar == '') $calendar = $id;
-    if (!defined('DEX_CALENDAR_USER')) define ('DEX_CALENDAR_USER',0);
-    ob_start();
-    wp_enqueue_script( "jquery" );
-    wp_enqueue_script( "jquery-ui-core" );
-    wp_enqueue_script( "jquery-ui-datepicker" );
-    $myrows = $wpdb->get_results( "SELECT * FROM ".DEX_BCCF_CONFIG_TABLE_NAME.($calendar!=''?" WHERE id=".$calendar:"") );
-    if (!defined('DEX_AUTH_INCLUDE')) define('DEX_AUTH_INCLUDE', true);
-    @include dirname( __FILE__ ) . '/addons/sc-res-all-calendars.php';
-    $buffered_contents = ob_get_contents();
-    ob_end_clean();
-    return $buffered_contents;
-}
-if ( ! is_admin() ) {
-    add_shortcode( 'CP_BCCF_ALLCALS', 'dex_bccf_filter_content_allcalendars' );
 }
 
 function dex_bccf_get_public_form($pages = '') {
@@ -2738,60 +2672,3 @@ function _dex_bccf_replace_vars( $fields, $params, $message, $buffer = '', $cont
 
 	return array( 'message' => $message, 'attachments' => $attachments );
 }
-
-
-//* WIDGET CODE BELOW
-
-class DEX_Bccf_Widget extends WP_Widget
-{
-  function __construct()
-  {
-    $widget_ops = array('classname' => 'DEX_Bccf_Widget', 'description' => 'Displays a booking form' );
-    parent::__construct('DEX_Bccf_Widget', 'Booking Calendar Contact Form', $widget_ops);
-  }
-
-  function form($instance)
-  {
-    $instance = wp_parse_args( (array) $instance, array( 'title' => '', 'calendarid' => '' ) );
-    $title = $instance['title'];
-    $calendarid = $instance['calendarid'];
-?>
-  <p><label for="<?php echo $this->get_field_id('title'); ?>">Title: <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" /></label>
-  <label for="<?php echo $this->get_field_id('calendarid'); ?>">Calendar ID: <input class="widefat" id="<?php echo $this->get_field_id('calendarid'); ?>" name="<?php echo $this->get_field_name('calendarid'); ?>" type="text" value="<?php echo esc_attr($calendarid); ?>" /></label>
-  </p>
-<?php
-  }
-
-  function update($new_instance, $old_instance)
-  {
-    $instance = $old_instance;
-    $instance['title'] = $new_instance['title'];
-    $instance['calendarid'] = $new_instance['calendarid'];
-    return $instance;
-  }
-
-  function widget($args, $instance)
-  {
-    extract($args, EXTR_SKIP);
-
-    echo $before_widget;
-    $title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
-    $calendarid = $instance['calendarid'];
-
-    if (!empty($title))
-      echo $before_title . $title . $after_title;
-
-    if ($calendarid != '')
-        define ('DEX_BCCF_CALENDAR_FIXED_ID',$calendarid);
-
-    // WIDGET CODE GOES HERE
-    dex_bccf_get_public_form();
-
-    echo $after_widget;
-  }
-
-}
-add_action( 'widgets_init', create_function('', 'return register_widget("DEX_Bccf_Widget");') );
-
-
-?>
